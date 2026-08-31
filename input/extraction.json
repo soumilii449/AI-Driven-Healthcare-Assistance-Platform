@@ -1,0 +1,678 @@
+[
+  {
+    "key": "text_176",
+    "prediction": {
+      "patient_demographics": {
+        "patient_names": ["Mary Spagnuolo"],
+        "dates_of_birth": ["January 1, 1970"],
+        "medical_record_numbers": ["Q1159"],
+        "gender": "",
+        "contact_information": []
+      },
+      "temporal_entities": {
+        "admission_date": "June 1, 2023",
+        "discharge_date": "June 20, 2023"
+      },
+      "clinical_diagnoses_and_conditions": {
+        "diseases": [
+          "Metastatic Colorectal Cancer",
+          "adenocarcinoma of the colon"
+        ],
+        "symptoms": [
+          "progressive abdominal pain",
+          "unintended weight loss",
+          "changes in bowel habits",
+          "intermittent cramping discomfort",
+          "constant and severe pain",
+          "decline in her appetite",
+          "bloating",
+          "nausea",
+          "occasional episodes of rectal bleeding"
+        ],
+        "medical_conditions": [
+          "hypertension",
+          "gastroesophageal reflux disease (GERD)"
+        ],
+        "allergies": [],
+        "pathogens": [],
+        "adverse_reactions": []
+      },
+      "medications": [
+        {
+          "name": "lisinopril",
+          "dosages": ["daily"],
+          "treatment_for": ["hypertension"],
+          "adverse_effects": []
+        },
+        {
+          "name": "omeprazole",
+          "dosages": ["occasional use"],
+          "treatment_for": ["gastroesophageal reflux disease (GERD)"],
+          "adverse_effects": []
+        },
+        {
+          "name": "FOLFOX",
+          "dosages": ["every three weeks for six cycles"],
+          "treatment_for": ["colorectal cancer"],
+          "adverse_effects": []
+        }
+      ],
+      "procedures_and_interventions": {
+        "surgical_procedures": [
+          "appendectomy",
+          "right hemicolectomy"
+        ],
+        "operations": [],
+        "imaging_examinations": [
+          "CT scan"
+        ],
+        "laboratory_tests": [
+          "Blood Tests",
+          "C-reactive protein (CRP)",
+          "carcinoembryonic antigen (CEA)"
+        ],
+        "procedure_descriptions": [
+          "surgical resection",
+          "chemotherapy"
+        ]
+      },
+      "anatomical_and_physiological_entities": {
+        "anatomical_parts": [
+          "abdomen",
+          "ascending colon",
+          "regional lymph nodes",
+          "liver"
+        ],
+        "vital_signs": [],
+        "laboratory_results": [
+          "Elevated C-reactive protein (CRP)",
+          "elevated carcinoembryonic antigen (CEA)",
+          "6 cm mass in the ascending colon"
+        ]
+      },
+      "professional_and_organizational_entities": {
+        "physician_names": ["Dr. Craig Doland"],
+        "hospital_names": [],
+        "referring_organizations": []
+      },
+      "other_domain_specific_entities": {
+        "gene_names": [],
+        "chemicals": [
+          "folinic acid",
+          "fluorouracil",
+          "oxaliplatin"
+        ],
+        "equipment": [],
+        "biomarkers": [
+          "C-reactive protein (CRP)",
+          "carcinoembryonic antigen (CEA)"
+        ]
+      }
+    }
+  },
+
+  {
+    "key": "text_170",
+    "prediction": {
+      "patient_demographics": {
+        "patient_names": ["Vernon Rodney"],
+        "dates_of_birth": ["January 1, 1970"],
+        "medical_record_numbers": ["Q1152"],
+        "gender": "",
+        "contact_information": []
+      },
+      "temporal_entities": {
+        "admission_date": "March 20, 2023",
+        "discharge_date": "April 10, 2023"
+      },
+      "clinical_diagnoses_and_conditions": {
+        "diseases": [
+          "Stage III Colon Cancer with Metastasis to the Liver",
+          "adenocarcinoma of the colon with hepatic involvement",
+          "colorectal cancer"
+        ],
+        "symptoms": [
+          "abdominal pain",
+          "nausea",
+          "unexplained weight loss",
+          "intermittent fevers",
+          "changes in bowel habits",
+          "constipation",
+          "diarrhea"
+        ],
+        "medical_conditions": [
+          "hypertension",
+          "systemic inflammation",
+          "malnutrition"
+        ],
+        "allergies": [
+          "penicillin",
+          "sulfa drugs"
+        ],
+        "pathogens": [],
+        "adverse_reactions": []
+      },
+      "medications": [
+        {
+          "name": "lisinopril",
+          "dosages": ["10 mg daily"],
+          "treatment_for": ["hypertension"],
+          "adverse_effects": []
+        },
+        {
+          "name": "aspirin",
+          "dosages": [],
+          "treatment_for": ["cardiovascular prophylaxis"],
+          "adverse_effects": ["risk of bleeding"]
+        },
+        {
+          "name": "FOLFOX",
+          "dosages": ["four cycles over the next six months"],
+          "treatment_for": ["colorectal cancer"],
+          "adverse_effects": ["mild nausea", "fatigue"]
+        },
+        {
+          "name": "vitamin B12 supplements",
+          "dosages": [],
+          "treatment_for": ["risk from chemotherapy"],
+          "adverse_effects": []
+        }
+      ],
+      "procedures_and_interventions": {
+        "surgical_procedures": [
+          "Right hemicolectomy"
+        ],
+        "operations": [],
+        "imaging_examinations": [
+          "CT scan"
+        ],
+        "laboratory_tests": [
+          "Blood Tests",
+          "Biopsy"
+        ],
+        "procedure_descriptions": [
+          "Right hemicolectomy was performed to remove the primary tumor",
+          "adjuvant chemotherapy with FOLFOX"
+        ]
+      },
+      "anatomical_and_physiological_entities": {
+        "anatomical_parts": [
+          "colon",
+          "liver",
+          "abdomen",
+          "lymph nodes"
+        ],
+        "vital_signs": [
+          "vital signs were stable"
+        ],
+        "laboratory_results": [
+          "elevated C-reactive protein (120 mg/L)",
+          "elevated white blood cell count (15,000 cells/µL)",
+          "low hemoglobin levels (9.8 g/dL)"
+        ]
+      },
+      "professional_and_organizational_entities": {
+        "physician_names": ["Dr. Shelly Pierre"],
+        "hospital_names": [],
+        "referring_organizations": []
+      },
+      "other_domain_specific_entities": {
+        "gene_names": [],
+        "chemicals": [
+          "fluorouracil",
+          "leucovorin",
+          "oxaliplatin"
+        ],
+        "equipment": [],
+        "biomarkers": [
+          "C-reactive protein",
+          "white blood cell count",
+          "hemoglobin"
+        ]
+      }
+    }
+  },
+
+  {
+    "key": "text_266",
+    "prediction": {
+      "patient_demographics": {
+        "patient_names": ["Roger Castillo"],
+        "dates_of_birth": ["January 1, 1970"],
+        "medical_record_numbers": ["Q1240"],
+        "gender": "",
+        "contact_information": []
+      },
+      "temporal_entities": {
+        "admission_date": "April 15, 2023",
+        "discharge_date": "May 20, 2023"
+      },
+      "clinical_diagnoses_and_conditions": {
+        "diseases": [
+          "Stage III Colorectal Cancer",
+          "colorectal cancer",
+          "adenocarcinoma",
+          "anemia"
+        ],
+        "symptoms": [
+          "abdominal pain",
+          "unexplained weight loss",
+          "intermittent rectal bleeding",
+          "fatigue",
+          "inability to maintain adequate nutrition",
+          "moderate pain",
+          "nausea"
+        ],
+        "medical_conditions": [
+          "hypertension",
+          "diabetes mellitus type 2",
+          "mild infection at the surgical site",
+          "bowel obstruction",
+          "dehydration"
+        ],
+        "allergies": [
+          "penicillin"
+        ],
+        "pathogens": [],
+        "adverse_reactions": []
+      },
+      "medications": [
+        {
+          "name": "Metformin",
+          "dosages": ["500 mg twice daily"],
+          "treatment_for": ["diabetes mellitus type 2"],
+          "adverse_effects": []
+        },
+        {
+          "name": "Lisinopril",
+          "dosages": ["20 mg once daily"],
+          "treatment_for": ["hypertension"],
+          "adverse_effects": []
+        },
+        {
+          "name": "FOLFOX regimen",
+          "dosages": [],
+          "treatment_for": ["colorectal cancer"],
+          "adverse_effects": ["mild fatigue"]
+        },
+        {
+          "name": "Antibiotics",
+          "dosages": [],
+          "treatment_for": ["infection"],
+          "adverse_effects": []
+        },
+        {
+          "name": "morphine",
+          "dosages": ["intravenous"],
+          "treatment_for": ["moderate pain"],
+          "adverse_effects": []
+        },
+        {
+          "name": "acetaminophen",
+          "dosages": ["oral"],
+          "treatment_for": ["moderate pain"],
+          "adverse_effects": []
+        }
+      ],
+      "procedures_and_interventions": {
+        "surgical_procedures": [
+          "Resection of the sigmoid colon and affected lymph nodes",
+          "Hartmann's procedure",
+          "ileostomy created"
+        ],
+        "operations": [
+          "appendectomy"
+        ],
+        "imaging_examinations": [
+          "CT scan"
+        ],
+        "laboratory_tests": [
+          "colonoscopy",
+          "biopsy",
+          "Blood tests",
+          "Liver function tests"
+        ],
+        "procedure_descriptions": [
+          "colonoscopy revealed a large mass obstructing the sigmoid colon",
+          "Biopsy confirmed adenocarcinoma"
+        ]
+      },
+      "anatomical_and_physiological_entities": {
+        "anatomical_parts": [
+          "sigmoid colon",
+          "lymph node",
+          "liver",
+          "bowel"
+        ],
+        "vital_signs": [],
+        "laboratory_results": [
+          "anemia (Hb 8.5 g/dL)",
+          "elevated C-reactive protein (CRP)",
+          "normal liver function tests",
+          "normal renal function"
+        ]
+      },
+      "professional_and_organizational_entities": {
+        "physician_names": ["Dr. Raymond Arnold"],
+        "hospital_names": [],
+        "referring_organizations": []
+      },
+      "other_domain_specific_entities": {
+        "gene_names": [],
+        "chemicals": [
+          "folinic acid",
+          "fluorouracil",
+          "oxaliplatin",
+          "morphine",
+          "acetaminophen"
+        ],
+        "equipment": [],
+        "biomarkers": [
+          "C-reactive protein (CRP)"
+        ]
+      }
+    }
+  },
+
+  {
+    "key": "text_327",
+    "prediction": {
+      "patient_demographics": {
+        "patient_names": ["Ismael Landry"],
+        "dates_of_birth": ["January 2, 1975"],
+        "medical_record_numbers": ["Q1296"],
+        "gender": "",
+        "contact_information": []
+      },
+      "temporal_entities": {
+        "admission_date": "February 15, 2023",
+        "discharge_date": "March 15, 2023"
+      },
+      "clinical_diagnoses_and_conditions": {
+        "diseases": [
+          "Colon Cancer with Metastasis",
+          "colorectal cancer",
+          "anemia",
+          "urinary tract infection"
+        ],
+        "symptoms": [
+          "persistent abdominal pain",
+          "unexplained weight loss",
+          "fatigue",
+          "occasional nausea",
+          "changes in bowel habits",
+          "intermittent diarrhea",
+          "constipation",
+          "jaundice"
+        ],
+        "medical_conditions": [
+          "hypertension",
+          "poorly differentiated adenocarcinoma",
+          "post-operative ileus"
+        ],
+        "allergies": [
+          "penicillin"
+        ],
+        "pathogens": [],
+        "adverse_reactions": [
+          "allergic reaction to penicillin"
+        ]
+      },
+      "medications": [
+        {
+          "name": "lisinopril",
+          "dosages": [],
+          "treatment_for": ["hypertension"],
+          "adverse_effects": []
+        },
+        {
+          "name": "FOLFOX",
+          "dosages": [
+            "in cycles every two weeks over a period of six months"
+          ],
+          "treatment_for": ["primary tumor", "metastatic disease"],
+          "adverse_effects": [
+            "nausea",
+            "fatigue",
+            "mild neutropenia"
+          ]
+        },
+        {
+          "name": "antiemetics",
+          "dosages": [],
+          "treatment_for": ["nausea"],
+          "adverse_effects": []
+        },
+        {
+          "name": "growth factors",
+          "dosages": [],
+          "treatment_for": ["mild neutropenia"],
+          "adverse_effects": []
+        },
+        {
+          "name": "antibiotic therapy",
+          "dosages": [],
+          "treatment_for": ["urinary tract infection"],
+          "adverse_effects": []
+        }
+      ],
+      "procedures_and_interventions": {
+        "surgical_procedures": [
+          "appendectomy surgery",
+          "right hemicolectomy with resection of the primary colonic lesion and regional lymph nodes"
+        ],
+        "operations": [],
+        "imaging_examinations": [
+          "CT scans",
+          "MRI"
+        ],
+        "laboratory_tests": [
+          "blood tests",
+          "Biopsies",
+          "fine-needle aspiration",
+          "Genetic testing"
+        ],
+        "procedure_descriptions": [
+          "right hemicolectomy with resection of the primary colonic lesion and regional lymph nodes",
+          "adjuvant chemotherapy consisting of FOLFOX",
+          "nutritional support",
+          "physiotherapy",
+          "wound care"
+        ]
+      },
+      "anatomical_and_physiological_entities": {
+        "anatomical_parts": [
+          "lower abdomen",
+          "descending colon",
+          "regional lymph nodes",
+          "liver",
+          "colonic lesion",
+          "liver nodules",
+          "bowel"
+        ],
+        "vital_signs": [],
+        "laboratory_results": [
+          "elevated CEA (carcinoembryonic antigen) levels",
+          "slightly reduced hemoglobin",
+          "poorly differentiated adenocarcinoma"
+        ]
+      },
+      "professional_and_organizational_entities": {
+        "physician_names": ["Dr. Leonor Ward"],
+        "hospital_names": [],
+        "referring_organizations": []
+      },
+      "other_domain_specific_entities": {
+        "gene_names": [],
+        "chemicals": [
+          "fluorouracil",
+          "leucovorin",
+          "oxaliplatin",
+          "carcinoembryonic antigen"
+        ],
+        "equipment": [
+          "CT scans",
+          "endoscopy",
+          "MRI"
+        ],
+        "biomarkers": [
+          "CEA (carcinoembryonic antigen)",
+          "hemoglobin"
+        ]
+      }
+    }
+  },
+
+  {
+    "key": "text_47",
+    "prediction": {
+      "patient_demographics": {
+        "patient_names": ["Karen Yarrington"],
+        "dates_of_birth": ["January 1, 1970"],
+        "medical_record_numbers": ["Q1039"],
+        "gender": "Male",
+        "contact_information": []
+      },
+      "temporal_entities": {
+        "admission_date": "April 10, 2023",
+        "discharge_date": "May 15, 2023"
+      },
+      "clinical_diagnoses_and_conditions": {
+        "diseases": [
+          "Stage III Urothelial Carcinoma (Bladder Cancer)",
+          "high-grade urothelial carcinoma",
+          "urothelial carcinoma"
+        ],
+        "symptoms": [
+          "hematuria",
+          "pelvic pain",
+          "blood in his urine",
+          "nausea",
+          "fatigue"
+        ],
+        "medical_conditions": [
+          "hypertension",
+          "type II diabetes mellitus",
+          "gallstones",
+          "cardiovascular disease",
+          "dehydration"
+        ],
+        "allergies": [
+          "penicillin",
+          "sulfa drugs"
+        ],
+        "pathogens": [],
+        "adverse_reactions": []
+      },
+      "medications": [
+        {
+          "name": "lisinopril",
+          "dosages": ["10 mg daily"],
+          "treatment_for": ["hypertension"],
+          "adverse_effects": []
+        },
+        {
+          "name": "metformin",
+          "dosages": ["500 mg twice daily"],
+          "treatment_for": ["type II diabetes mellitus"],
+          "adverse_effects": []
+        },
+        {
+          "name": "morphine",
+          "dosages": ["intravenous"],
+          "treatment_for": ["Pain control"],
+          "adverse_effects": []
+        },
+        {
+          "name": "acetaminophen",
+          "dosages": ["oral"],
+          "treatment_for": ["Pain control"],
+          "adverse_effects": []
+        },
+        {
+          "name": "cisplatin",
+          "dosages": [],
+          "treatment_for": ["Neoadjuvant chemotherapy"],
+          "adverse_effects": ["nausea", "fatigue"]
+        },
+        {
+          "name": "gemcitabine",
+          "dosages": [],
+          "treatment_for": ["Neoadjuvant chemotherapy"],
+          "adverse_effects": ["nausea", "fatigue"]
+        },
+        {
+          "name": "methotrexate",
+          "dosages": [],
+          "treatment_for": ["Neoadjuvant chemotherapy"],
+          "adverse_effects": ["nausea", "fatigue"]
+        }
+      ],
+      "procedures_and_interventions": {
+        "surgical_procedures": [
+          "cholecystectomy",
+          "Radical cystectomy",
+          "ileal conduit construction"
+        ],
+        "operations": [],
+        "imaging_examinations": [
+          "CT scans",
+          "MRI"
+        ],
+        "laboratory_tests": [
+          "urinalysis",
+          "cystoscopy",
+          "Biopsy",
+          "Blood Tests",
+          "Pathology Reports"
+        ],
+        "procedure_descriptions": [
+          "physical examination",
+          "Post-Operative Care",
+          "Pain control included intravenous morphine",
+          "Chemotherapy Regimen",
+          "IV hydration therapy",
+          "Physical and occupational therapy"
+        ]
+      },
+      "anatomical_and_physiological_entities": {
+        "anatomical_parts": [
+          "bladder",
+          "lower abdomen",
+          "lymph node",
+          "muscularis propria",
+          "liver",
+          "lungs",
+          "prostate",
+          "seminal vesicles",
+          "ileal conduit"
+        ],
+        "vital_signs": [],
+        "laboratory_results": [
+          "gross hematuria",
+          "high-grade urothelial carcinoma",
+          "Elevated levels of C-reactive protein (CRP)",
+          "normal renal function",
+          "stable blood glucose levels"
+        ]
+      },
+      "professional_and_organizational_entities": {
+        "physician_names": ["Dr. James Rowe"],
+        "hospital_names": [],
+        "referring_organizations": ["outpatient clinic"]
+      },
+      "other_domain_specific_entities": {
+        "gene_names": [],
+        "chemicals": [
+          "cisplatin",
+          "gemcitabine",
+          "methotrexate"
+        ],
+        "equipment": [],
+        "biomarkers": [
+          "C-reactive protein (CRP)"
+        ]
+      }
+    }
+  }
+]

@@ -1,0 +1,61 @@
+{
+  "evaluation_summary": {
+    "records_evaluated": 5,
+    "average_bleu_score": 0.0224,
+    "average_safety_score": 1.0,
+    "average_doctor_recommendation_score": 1.0,
+    "average_overall_score": 0.4135
+  },
+  "records": [
+    {
+      "record": 1,
+      "treatment_english": "Eat light meals, stay hydrated, and monitor the pain. Seek medical attention if the pain is severe or persistent. Drink small amounts of fluids frequently and eat light foods. Consult a doctor if vomiting or severe symptoms occur.",
+      "treatment_hindi": "अगर दर्द बहुत ज़्यादा हो या लगातार कम हो जाए, तो डॉक्टर से सलाह लीजिए ।",
+      "reference_hindi": "",
+      "bleu_score": 0.0,
+      "safety_score": 1.0,
+      "doctor_recommendation_score": 1.0,
+      "overall_score": 0.4
+    },
+    {
+      "record": 2,
+      "treatment_english": "Drink plenty of fluids, get adequate rest, and monitor your temperature. Consult a doctor if the fever is high or persistent. Eat light meals, stay hydrated, and monitor the pain. Seek medical attention if the pain is severe or persistent. Drink small amounts of fluids frequently and eat light foods. Consult a doctor if vomiting or severe symptoms occur.",
+      "treatment_hindi": "डॉक्टर से सलाह लीजिए कि अगर बुखार ज़्यादा हो, तो डॉक्टर से सलाह लीजिए ।",
+      "reference_hindi": "",
+      "bleu_score": 0.0,
+      "safety_score": 1.0,
+      "doctor_recommendation_score": 1.0,
+      "overall_score": 0.4
+    },
+    {
+      "record": 3,
+      "treatment_english": "Eat light meals, stay hydrated, and monitor the pain. Seek medical attention if the pain is severe or persistent. Drink small amounts of fluids frequently and eat light foods. Consult a doctor if vomiting or severe symptoms occur.",
+      "treatment_hindi": "अगर दर्द बहुत ज़्यादा हो या लगातार कम हो जाए, तो डॉक्टर से सलाह लीजिए ।",
+      "reference_hindi": "",
+      "bleu_score": 0.0,
+      "safety_score": 1.0,
+      "doctor_recommendation_score": 1.0,
+      "overall_score": 0.4
+    },
+    {
+      "record": 4,
+      "treatment_english": "Eat light meals, stay hydrated, and monitor the pain. Seek medical attention if the pain is severe or persistent. Drink small amounts of fluids frequently and eat light foods. Consult a doctor if vomiting or severe symptoms occur.",
+      "treatment_hindi": "अगर दर्द बहुत ज़्यादा हो या लगातार कम हो जाए, तो डॉक्टर से सलाह लीजिए ।",
+      "reference_hindi": "",
+      "bleu_score": 0.0,
+      "safety_score": 1.0,
+      "doctor_recommendation_score": 1.0,
+      "overall_score": 0.4
+    },
+    {
+      "record": 5,
+      "treatment_english": "Drink small amounts of fluids frequently and eat light foods. Consult a doctor if vomiting or severe symptoms occur.",
+      "treatment_hindi": "एक डॉक्टर से सलाह लीजिए कि अगर वह उलटी - सीधी हो या गंभीर लक्षणों से दूर हो जाएँ, तो डॉक्टर से सलाह लीजिए ।",
+      "reference_hindi": "बार-बार थोड़ी मात्रा में तरल पदार्थ पिएँ और हल्का भोजन करें। यदि उल्टी या गंभीर लक्षण हों, तो डॉक्टर से सलाह लें।",
+      "bleu_score": 0.1121,
+      "safety_score": 1.0,
+      "doctor_recommendation_score": 1.0,
+      "overall_score": 0.4673
+    }
+  ]
+}
