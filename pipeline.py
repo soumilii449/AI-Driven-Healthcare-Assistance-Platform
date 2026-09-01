@@ -8,103 +8,12 @@ from treatment import generate_treatment
 
 
 # ---------------------------------------
-# 1. Create output folder
-# ---------------------------------------
-
-os.makedirs("output", exist_ok=True)
-
-
-# ---------------------------------------
-# 2. Read extracted medical information
-# ---------------------------------------
-
-with open(
-    "input/extraction.json",
-    "r",
-    encoding="utf-8"
-) as file:
-
-    data = json.load(file)
-
-
-# ---------------------------------------
-# 3. Standardize the extracted records
-# ---------------------------------------
-
-standardized_data = []
-
-for record in data:
-
-    result = standardize_record(record)
-
-    standardized_data.append(result)
-
-
-# ---------------------------------------
-# 4. Save standardized JSON
-# ---------------------------------------
-
-with open(
-    "output/standardized.json",
-    "w",
-    encoding="utf-8"
-) as file:
-
-    json.dump(
-        standardized_data,
-        file,
-        indent=2,
-        ensure_ascii=False
-    )
-
-
-print("Standardization completed!")
-print("Records processed:", len(standardized_data))
-print("Output saved to: output/standardized.json")
-
-
-# ---------------------------------------
-# 5. Simplify medical terminology
-# ---------------------------------------
-
-simplified_data = []
-
-for record in standardized_data:
-
-    result = simplify_record(record)
-
-    simplified_data.append(result)
-
-
-# ---------------------------------------
-# 6. Save simplified JSON
-# ---------------------------------------
-
-with open(
-    "output/simplified.json",
-    "w",
-    encoding="utf-8"
-) as file:
-
-    json.dump(
-        simplified_data,
-        file,
-        indent=2,
-        ensure_ascii=False
-    )
-
-
-print("Medical terminology simplification completed!")
-print("Simplified output saved to: output/simplified.json")
-
-
-# ---------------------------------------
-# 7. Recursive English → Hindi translation
+# 1. Translate values recursively
 # ---------------------------------------
 
 def translate_value(value):
 
-    # If value is a string, translate it
+    # Translate string
     if isinstance(value, str):
 
         if not value.strip():
@@ -116,13 +25,12 @@ def translate_value(value):
         except Exception as e:
 
             print(
-                f"\nTranslation error for '{value}': {e}"
+                f"Translation error for '{value}': {e}"
             )
 
             return value
 
-
-    # If value is a list, translate every item
+    # Translate list
     elif isinstance(value, list):
 
         translated_list = []
@@ -135,154 +43,240 @@ def translate_value(value):
 
         return translated_list
 
-
-    # If value is a dictionary, translate every value
+    # Translate dictionary values
     elif isinstance(value, dict):
 
         translated_dict = {}
 
-        for key, value in value.items():
+        for key, item in value.items():
 
-            translated_dict[key] = translate_value(value)
+            translated_dict[key] = translate_value(item)
 
         return translated_dict
 
-
-    # Keep numbers, None, boolean, etc. unchanged
+    # Keep numbers, boolean, None unchanged
     else:
 
         return value
 
 
 # ---------------------------------------
-# 8. Translate all records
+# 2. Process one medical record
 # ---------------------------------------
 
-translated_data = []
+def process_record(record):
 
-print("\nLoading translations...")
-print("----------------------------------------")
+    print("\nProcessing medical record...")
 
-for record_number, record in enumerate(
-    simplified_data,
-    start=1
-):
+    # ---------------------------------------
+    # Standardization
+    # ---------------------------------------
 
-    print(
-        f"Translating record {record_number}/{len(simplified_data)}..."
+    if "prediction" in record:
+
+        print("Step 1: Standardizing medical information...")
+
+        standardized = standardize_record(record)
+
+    else:
+
+        print(
+            "Step 1: Input already standardized. "
+            "Skipping standardization..."
+        )
+
+        standardized = record
+
+
+    # ---------------------------------------
+    # Simplification
+    # ---------------------------------------
+
+    print("Step 2: Simplifying medical terminology...")
+
+    simplified = simplify_record(
+        standardized
     )
 
-    hindi_record = translate_value(record)
 
-    translated_record = {
-        "english": record,
-        "hindi": hindi_record
+    # ---------------------------------------
+    # English → Hindi translation
+    # ---------------------------------------
+
+    print("Step 3: Translating medical information...")
+
+    hindi_record = translate_value(
+        simplified
+    )
+
+
+    # ---------------------------------------
+    # Treatment generation
+    # ---------------------------------------
+
+    print("Step 4: Generating treatment/advice...")
+
+    treatment_english = generate_treatment(
+        simplified
+    )
+
+
+    # ---------------------------------------
+    # Treatment → Hindi
+    # ---------------------------------------
+
+    print("Step 5: Translating treatment into Hindi...")
+
+    treatment_hindi = translate_to_hindi(
+        treatment_english
+    )
+
+
+    # ---------------------------------------
+    # Final result
+    # ---------------------------------------
+
+    result = {
+
+        "english": simplified,
+
+        "hindi": hindi_record,
+
+        "treatment_english": treatment_english,
+
+        "treatment_hindi": treatment_hindi
     }
 
-    translated_data.append(translated_record)
+
+    print("Medical record processing completed!")
+
+    return result
 
 
 # ---------------------------------------
-# 9. Save English + Hindi output
+# 3. Run complete pipeline on JSON file
 # ---------------------------------------
 
-with open(
-    "output/translated.json",
-    "w",
-    encoding="utf-8"
-) as file:
-
-    json.dump(
-        translated_data,
-        file,
-        indent=2,
-        ensure_ascii=False
-    )
-
-
-# ---------------------------------------
-# 10. Print actual output in terminal
-# ---------------------------------------
-
-print("\n")
-print("========================================")
-print("       ENGLISH → HINDI OUTPUT")
-print("========================================")
-
-
-for i, record in enumerate(
-    translated_data,
-    start=1
+def run_pipeline(
+    input_file="input/extraction.json"
 ):
 
-    print(f"\n\n========== RECORD {i} ==========")
+    # Create output folder
+    os.makedirs(
+        "output",
+        exist_ok=True
+    )
 
-    print("\n--------------- ENGLISH ---------------")
+
+    # ---------------------------------------
+    # Read input file
+    # ---------------------------------------
+
+    print("\n========================================")
+    print("       AI HEALTHCARE PIPELINE")
+    print("========================================")
 
     print(
-        json.dumps(
-            record["english"],
+        f"\nReading input file: {input_file}"
+    )
+
+
+    with open(
+        input_file,
+        "r",
+        encoding="utf-8"
+    ) as file:
+
+        data = json.load(file)
+
+
+    # ---------------------------------------
+    # Process all records
+    # ---------------------------------------
+
+    results = []
+
+    total_records = len(data)
+
+
+    for record_number, record in enumerate(
+        data,
+        start=1
+    ):
+
+        print("\n----------------------------------------")
+
+        print(
+            f"Processing record "
+            f"{record_number}/{total_records}"
+        )
+
+        print("----------------------------------------")
+
+
+        result = process_record(
+            record
+        )
+
+
+        results.append(
+            result
+        )
+
+
+    # ---------------------------------------
+    # Save final output
+    # ---------------------------------------
+
+    output_file = (
+        "output/final_pipeline.json"
+    )
+
+
+    with open(
+        output_file,
+        "w",
+        encoding="utf-8"
+    ) as file:
+
+        json.dump(
+            results,
+            file,
             indent=2,
             ensure_ascii=False
         )
-    )
 
-    print("\n---------------- HINDI ----------------")
+
+    # ---------------------------------------
+    # Print completion
+    # ---------------------------------------
+
+    print("\n========================================")
 
     print(
-        json.dumps(
-            record["hindi"],
-            indent=2,
-            ensure_ascii=False
-        )
+        "      PIPELINE COMPLETED SUCCESSFULLY"
     )
 
+    print("========================================")
 
-# ---------------------------------------
-# 11. Completion message
-# ---------------------------------------
-
-print("\n")
-print("========================================")
-print("English → Hindi translation completed!")
-print("Translated output saved to:")
-print("output/translated.json")
-print("========================================")
-
-# ---------------------------------------
-# 7. Generate treatment/advice
-# ---------------------------------------
-
-treatment_data = []
-
-for record in simplified_data:
-
-    treatment = generate_treatment(record)
-
-    treatment_data.append({
-        "medical_information": record,
-        "treatment_english": treatment,
-        "treatment_hindi": translate_to_hindi(treatment)
-    })
-
-
-# ---------------------------------------
-# 8. Save treatment output
-# ---------------------------------------
-
-with open(
-    "output/treatment.json",
-    "w",
-    encoding="utf-8"
-) as file:
-
-    json.dump(
-        treatment_data,
-        file,
-        indent=2,
-        ensure_ascii=False
+    print(
+        f"Records processed: {len(results)}"
     )
 
+    print(
+        f"Final output saved to: {output_file}"
+    )
 
-print("Treatment generation completed!")
-print("Treatment output saved to: output/treatment.json")
+    print("========================================")
+
+
+    return results
+
+
+# ---------------------------------------
+# 4. Run pipeline directly
+# ---------------------------------------
+
+if __name__ == "__main__":
+
+    run_pipeline()
