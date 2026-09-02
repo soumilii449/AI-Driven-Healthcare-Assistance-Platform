@@ -1,7 +1,7 @@
 def generate_treatment(record):
     """
-    Generate basic healthcare advice from the available
-    symptoms and diagnoses.
+    Generate basic healthcare advice from available
+    symptoms, diagnoses, and medications.
 
     This is a prototype rule-based treatment module.
     It does not replace a doctor's diagnosis or prescription.
@@ -9,12 +9,16 @@ def generate_treatment(record):
 
     symptoms = record.get("symptoms", [])
     diagnoses = record.get("diagnoses", [])
+    medications = record.get("medications", [])
 
     if isinstance(symptoms, str):
         symptoms = [symptoms]
 
     if isinstance(diagnoses, str):
         diagnoses = [diagnoses]
+
+    if not isinstance(medications, list):
+        medications = []
 
     symptoms_text = " ".join(
         str(item).lower()
@@ -89,7 +93,80 @@ def generate_treatment(record):
             "Seek medical help promptly, especially if symptoms are severe."
         )
 
-    # No matching condition
+    # Medication-based information
+    medication_advice = []
+
+    for medication in medications:
+
+        if not isinstance(medication, dict):
+            continue
+
+        name = str(medication.get("name", "")).lower()
+
+        if not name:
+            continue
+
+        if "omeprazole" in name:
+            medication_advice.append(
+                "Omeprazole is commonly used to reduce stomach acid "
+                "and is used for acid-related stomach conditions."
+            )
+
+        elif "pantoprazole" in name:
+            medication_advice.append(
+                "Pantoprazole is commonly used to reduce stomach acid "
+                "and is used for acid-related digestive conditions."
+            )
+
+        elif "paracetamol" in name:
+            medication_advice.append(
+                "Paracetamol is commonly used to relieve pain and reduce fever."
+            )
+
+        elif "ibuprofen" in name:
+            medication_advice.append(
+                "Ibuprofen is commonly used to relieve pain, inflammation, "
+                "and fever."
+            )
+
+        elif "azithromycin" in name:
+            medication_advice.append(
+                "Azithromycin is an antibiotic used for certain bacterial "
+                "infections and should be taken only as prescribed."
+            )
+
+        elif "amoxicillin" in name:
+            medication_advice.append(
+                "Amoxicillin is an antibiotic used for certain bacterial "
+                "infections and should be taken only as prescribed."
+            )
+
+        elif "cetirizine" in name:
+            medication_advice.append(
+                "Cetirizine is commonly used to relieve allergy symptoms."
+            )
+
+        elif "diclofenac" in name:
+            medication_advice.append(
+                "Diclofenac is commonly used to relieve pain and inflammation."
+            )
+
+        elif "atorvastatin" in name:
+            medication_advice.append(
+                "Atorvastatin is commonly used to help lower cholesterol "
+                "and reduce cardiovascular risk."
+            )
+
+        elif "metformin" in name:
+            medication_advice.append(
+                "Metformin is commonly used to help control blood glucose "
+                "in people with type 2 diabetes."
+            )
+
+    if medication_advice:
+        advice.extend(medication_advice)
+
+    # If nothing was recognized
     if not advice:
         advice.append(
             "Please consult a qualified healthcare professional "
