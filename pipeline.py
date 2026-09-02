@@ -5,278 +5,341 @@ from standardizer import standardize_record
 from simplifier import simplify_record
 from translator import translate_to_hindi
 from treatment import generate_treatment
+from medical_extractor import extract_medical_information
 
 
-# ---------------------------------------
-# 1. Translate values recursively
-# ---------------------------------------
+os.makedirs("output", exist_ok=True)
 
-def translate_value(value):
 
-    # Translate string
-    if isinstance(value, str):
+def translate_medical_record(record):
 
-        if not value.strip():
-            return value
+    hindi_record = {}
 
-        try:
-            return translate_to_hindi(value)
+    patient = record.get("patient", {})
+    hindi_record["patient"] = patient.copy()
 
-        except Exception as e:
+    hindi_record["hospitalization"] = record.get(
+        "hospitalization",
+        {}
+    ).copy()
 
-            print(
-                f"Translation error for '{value}': {e}"
+    hindi_record["diagnoses"] = [
+        translate_to_hindi(str(item))
+        for item in record.get("diagnoses", [])
+    ]
+
+    hindi_record["symptoms"] = [
+        translate_to_hindi(str(item))
+        for item in record.get("symptoms", [])
+    ]
+
+    hindi_record["medical_conditions"] = [
+        translate_to_hindi(str(item))
+        for item in record.get("medical_conditions", [])
+    ]
+
+    hindi_record["allergies"] = [
+        translate_to_hindi(str(item))
+        for item in record.get("allergies", [])
+    ]
+
+    hindi_record["medications"] = []
+
+    for medication in record.get("medications", []):
+
+        if not isinstance(medication, dict):
+            continue
+
+        hindi_medication = {
+
+            "name": medication.get(
+                "name",
+                ""
+            ),
+
+            "dosage": medication.get(
+                "dosage",
+                ""
+            ),
+
+            "frequency": medication.get(
+                "frequency",
+                ""
+            ),
+
+            "duration": medication.get(
+                "duration",
+                ""
+            ),
+
+            "route": medication.get(
+                "route",
+                ""
+            ),
+
+            "purpose": (
+                translate_to_hindi(
+                    medication.get(
+                        "purpose",
+                        ""
+                    )
+                )
+                if medication.get(
+                    "purpose",
+                    ""
+                )
+                else ""
+            ),
+
+            "adverse_effects": [
+                translate_to_hindi(str(effect))
+                for effect in medication.get(
+                    "adverse_effects",
+                    []
+                )
+            ]
+        }
+
+        hindi_record["medications"].append(
+            hindi_medication
+        )
+
+    hindi_record["procedures"] = [
+        translate_to_hindi(str(item))
+        for item in record.get("procedures", [])
+    ]
+
+    investigations = record.get(
+        "investigations",
+        {}
+    )
+
+    hindi_record["investigations"] = {
+
+        "imaging": [
+            translate_to_hindi(str(item))
+            for item in investigations.get(
+                "imaging",
+                []
             )
+        ],
 
-            return value
-
-    # Translate list
-    elif isinstance(value, list):
-
-        translated_list = []
-
-        for item in value:
-
-            translated_list.append(
-                translate_value(item)
+        "laboratory_tests": [
+            translate_to_hindi(str(item))
+            for item in investigations.get(
+                "laboratory_tests",
+                []
             )
+        ],
 
-        return translated_list
+        "laboratory_results": [
+            translate_to_hindi(str(item))
+            for item in investigations.get(
+                "laboratory_results",
+                []
+            )
+        ]
+    }
 
-    # Translate dictionary values
-    elif isinstance(value, dict):
+    hindi_record["anatomy"] = [
+        translate_to_hindi(str(item))
+        for item in record.get("anatomy", [])
+    ]
 
-        translated_dict = {}
+    hindi_record["biomarkers"] = [
+        translate_to_hindi(str(item))
+        for item in record.get("biomarkers", [])
+    ]
 
-        for key, item in value.items():
+    hindi_record["physicians"] = record.get(
+        "physicians",
+        []
+    )
 
-            translated_dict[key] = translate_value(item)
-
-        return translated_dict
-
-    # Keep numbers, boolean, None unchanged
-    else:
-
-        return value
+    return hindi_record
 
 
-# ---------------------------------------
-# 2. Process one medical record
-# ---------------------------------------
+# ========================================
+# PROCESS ONE MEDICAL RECORD
+# ========================================
 
 def process_record(record):
 
-    print("\nProcessing medical record...")
+    ocr_text = record.get(
+        "ocr_text",
+        ""
+    )
 
-    # ---------------------------------------
-    # Standardization
-    # ---------------------------------------
+    if not ocr_text.strip():
 
-    if "prediction" in record:
+        return {
+            "error": "OCR text is empty."
+        }
 
-        print("Step 1: Standardizing medical information...")
+    # ----------------------------------------
+    # 1. Medical Extraction
+    # ----------------------------------------
 
-        standardized = standardize_record(record)
-
-    else:
-
-        print(
-            "Step 1: Input already standardized. "
-            "Skipping standardization..."
+    medical_information = (
+        extract_medical_information(
+            ocr_text
         )
-
-        standardized = record
-
-
-    # ---------------------------------------
-    # Simplification
-    # ---------------------------------------
-
-    print("Step 2: Simplifying medical terminology...")
-
-    simplified = simplify_record(
-        standardized
     )
 
+    extracted_record = {
 
-    # ---------------------------------------
-    # English → Hindi translation
-    # ---------------------------------------
+        "image": record.get(
+            "image",
+            ""
+        ),
 
-    print("Step 3: Translating medical information...")
+        "ocr_text": ocr_text,
 
-    hindi_record = translate_value(
-        simplified
+        "prediction": medical_information
+    }
+
+    # ----------------------------------------
+    # 2. Standardization
+    # ----------------------------------------
+
+    standardized_data = standardize_record(
+        extracted_record
     )
 
+    # ----------------------------------------
+    # 3. Simplification
+    # ----------------------------------------
 
-    # ---------------------------------------
-    # Treatment generation
-    # ---------------------------------------
+    simplified_data = simplify_record(
+        standardized_data
+    )
 
-    print("Step 4: Generating treatment/advice...")
+    # ----------------------------------------
+    # 4. Hindi Translation
+    # ----------------------------------------
+
+    hindi_data = translate_medical_record(
+        simplified_data
+    )
+
+    # ----------------------------------------
+    # 5. Treatment / Advice
+    # ----------------------------------------
 
     treatment_english = generate_treatment(
-        simplified
+        simplified_data
     )
-
-
-    # ---------------------------------------
-    # Treatment → Hindi
-    # ---------------------------------------
-
-    print("Step 5: Translating treatment into Hindi...")
 
     treatment_hindi = translate_to_hindi(
         treatment_english
     )
 
+    # ----------------------------------------
+    # 6. Final Result
+    # ----------------------------------------
 
-    # ---------------------------------------
-    # Final result
-    # ---------------------------------------
+    return {
 
-    result = {
+        "image": record.get(
+            "image",
+            ""
+        ),
 
-        "english": simplified,
+        "ocr_text": ocr_text,
 
-        "hindi": hindi_record,
+        "medical_information":
+            standardized_data,
 
-        "treatment_english": treatment_english,
+        "simplified_information":
+            simplified_data,
 
-        "treatment_hindi": treatment_hindi
+        "hindi_information":
+            hindi_data,
+
+        "treatment_english":
+            treatment_english,
+
+        "treatment_hindi":
+            treatment_hindi
     }
 
 
-    print("Medical record processing completed!")
+# ========================================
+# PROCESS COMPLETE OCR FILE
+# ========================================
 
-    return result
-
-
-# ---------------------------------------
-# 3. Run complete pipeline on JSON file
-# ---------------------------------------
-
-def run_pipeline(
-    input_file="input/extraction.json"
-):
-
-    # Create output folder
-    os.makedirs(
-        "output",
-        exist_ok=True
-    )
-
-
-    # ---------------------------------------
-    # Read input file
-    # ---------------------------------------
-
-    print("\n========================================")
-    print("       AI HEALTHCARE PIPELINE")
-    print("========================================")
-
-    print(
-        f"\nReading input file: {input_file}"
-    )
-
+def process_all_records():
 
     with open(
-        input_file,
+        "output/ocr_results.json",
         "r",
         encoding="utf-8"
     ) as file:
 
-        data = json.load(file)
+        ocr_data = json.load(file)
 
+    final_pipeline = []
 
-    # ---------------------------------------
-    # Process all records
-    # ---------------------------------------
+    print("\n========================================")
+    print("     OCR → MEDICAL EXTRACTION")
+    print("========================================")
 
-    results = []
-
-    total_records = len(data)
-
-
-    for record_number, record in enumerate(
-        data,
+    for index, record in enumerate(
+        ocr_data,
         start=1
     ):
 
-        print("\n----------------------------------------")
-
         print(
-            f"Processing record "
-            f"{record_number}/{total_records}"
+            f"\nProcessing record "
+            f"{index}/{len(ocr_data)}..."
         )
 
-        print("----------------------------------------")
+        try:
 
+            result = process_record(
+                record
+            )
 
-        result = process_record(
-            record
-        )
+            final_pipeline.append(
+                result
+            )
 
+        except Exception as e:
 
-        results.append(
-            result
-        )
-
-
-    # ---------------------------------------
-    # Save final output
-    # ---------------------------------------
-
-    output_file = (
-        "output/final_pipeline.json"
-    )
-
+            print(
+                "Processing error:",
+                e
+            )
 
     with open(
-        output_file,
+        "output/final_pipeline.json",
         "w",
         encoding="utf-8"
     ) as file:
 
         json.dump(
-            results,
+            final_pipeline,
             file,
             indent=2,
             ensure_ascii=False
         )
 
-
-    # ---------------------------------------
-    # Print completion
-    # ---------------------------------------
+    print(
+        "\nFinal pipeline output saved to:"
+        " output/final_pipeline.json"
+    )
 
     print("\n========================================")
-
-    print(
-        "      PIPELINE COMPLETED SUCCESSFULLY"
-    )
-
+    print("        COMPLETE PIPELINE FINISHED")
     print("========================================")
 
-    print(
-        f"Records processed: {len(results)}"
-    )
-
-    print(
-        f"Final output saved to: {output_file}"
-    )
-
-    print("========================================")
+    return final_pipeline
 
 
-    return results
-
-
-# ---------------------------------------
-# 4. Run pipeline directly
-# ---------------------------------------
+# ========================================
+# RUN PIPELINE DIRECTLY
+# ========================================
 
 if __name__ == "__main__":
 
-    run_pipeline()
+    process_all_records()
