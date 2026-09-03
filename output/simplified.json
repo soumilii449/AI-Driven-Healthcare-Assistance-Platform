@@ -1,613 +1,260 @@
 [
   {
     "patient": {
-      "name": "Mary Spagnuolo",
-      "date_of_birth": "January 1, 1970",
-      "medical_record_number": "Q1159",
+      "name": "",
+      "date_of_birth": "",
+      "medical_record_number": "",
       "gender": "",
-      "contact_information": []
+      "contact_information": ""
     },
     "hospitalization": {
-      "admission_date": "June 1, 2023",
-      "discharge_date": "June 20, 2023"
+      "admission_date": "",
+      "discharge_date": ""
     },
-    "diagnoses": [
-      "cancer of the colon or rectum",
-      "a type of cancer that starts in gland cells"
-    ],
-    "symptoms": [
-      "progressive abdominal pain",
-      "unintended weight loss",
-      "changes in bowel habits",
-      "intermittent cramping discomfort",
-      "constant and severe pain",
-      "decline in her appetite",
-      "bloating",
-      "nausea",
-      "occasional episodes of rectal bleeding"
-    ],
-    "medical_conditions": [
-      "high blood pressure",
-      "acid reflux"
-    ],
+    "diagnoses": [],
+    "symptoms": [],
+    "medical_conditions": [],
     "allergies": [],
     "medications": [
       {
-        "name": "lisinopril",
-        "dosage": "daily",
-        "frequency": "",
+        "name": "Omeprazole",
+        "dosage": "500mg",
+        "frequency": "1-0-0",
         "duration": "",
         "route": "",
-        "purpose": "high blood pressure",
+        "purpose": "",
         "adverse_effects": []
       },
       {
-        "name": "omeprazole",
-        "dosage": "occasional use",
-        "frequency": "",
+        "name": "Paracetamol",
+        "dosage": "10mg",
+        "frequency": "0-1-0",
         "duration": "",
         "route": "",
-        "purpose": "acid reflux",
+        "purpose": "",
         "adverse_effects": []
       },
       {
-        "name": "a combination of chemotherapy medicines used to treat colorectal cancer",
-        "dosage": "every three weeks for six cycles",
-        "frequency": "",
+        "name": "Pantoprazole",
+        "dosage": "200mg",
+        "frequency": "0-0-1",
         "duration": "",
         "route": "",
-        "purpose": "cancer of the colon or rectum",
+        "purpose": "",
         "adverse_effects": []
       }
     ],
-    "procedures": [
-      "appendectomy",
-      "surgery to remove part of the colon"
-    ],
+    "procedures": [],
     "investigations": {
-      "imaging": [
-        "an imaging test that creates detailed pictures inside the body"
-      ],
-      "laboratory_tests": [
-        "Blood Tests",
-        "a blood test that can indicate inflammation",
-        "a blood marker that can be used to monitor some cancers"
-      ],
-      "laboratory_results": [
-        "a blood test that can indicate inflammation",
-        "a blood marker that can be used to monitor some cancers",
-        "6 cm mass in the ascending colon"
-      ]
+      "imaging": [],
+      "laboratory_tests": [],
+      "laboratory_results": []
     },
-    "anatomy": [
-      "abdomen",
-      "ascending colon",
-      "small structures that help the body fight infection",
-      "liver"
-    ],
-    "biomarkers": [
-      "a blood test that can indicate inflammation",
-      "a blood marker that can be used to monitor some cancers"
-    ],
+    "anatomy": [],
+    "biomarkers": [],
     "physicians": [
-      "Dr. Craig Doland"
+      "S Patel"
     ]
   },
   {
     "patient": {
-      "name": "Vernon Rodney",
-      "date_of_birth": "January 1, 1970",
-      "medical_record_number": "Q1152",
+      "name": "",
+      "date_of_birth": "",
+      "medical_record_number": "",
       "gender": "",
-      "contact_information": []
+      "contact_information": ""
     },
     "hospitalization": {
-      "admission_date": "March 20, 2023",
-      "discharge_date": "April 10, 2023"
+      "admission_date": "",
+      "discharge_date": ""
     },
-    "diagnoses": [
-      "Stage III Colon Cancer with Metastasis to the Liver",
-      "a type of cancer that starts in gland cells",
-      "cancer of the colon or rectum"
-    ],
-    "symptoms": [
-      "abdominal pain",
-      "nausea",
-      "unexplained weight loss",
-      "intermittent fevers",
-      "changes in bowel habits",
-      "constipation",
-      "diarrhea"
-    ],
-    "medical_conditions": [
-      "high blood pressure",
-      "systemic inflammation",
-      "a condition caused by not getting enough nutrients"
-    ],
-    "allergies": [
-      "penicillin",
-      "sulfa drugs"
-    ],
-    "medications": [
-      {
-        "name": "lisinopril",
-        "dosage": "10 mg daily",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "high blood pressure",
-        "adverse_effects": []
-      },
-      {
-        "name": "aspirin",
-        "dosage": "",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "cardiovascular prophylaxis",
-        "adverse_effects": [
-          "risk of bleeding"
-        ]
-      },
-      {
-        "name": "a combination of chemotherapy medicines used to treat colorectal cancer",
-        "dosage": "four cycles over the next six months",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "cancer of the colon or rectum",
-        "adverse_effects": [
-          "mild nausea",
-          "fatigue"
-        ]
-      },
-      {
-        "name": "vitamin B12 supplements",
-        "dosage": "",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "medicines used to treat cancer",
-        "adverse_effects": []
-      }
-    ],
-    "procedures": [
-      "surgery to remove part of the colon"
-    ],
-    "investigations": {
-      "imaging": [
-        "an imaging test that creates detailed pictures inside the body"
-      ],
-      "laboratory_tests": [
-        "Blood Tests",
-        "removing a small tissue sample to check for disease"
-      ],
-      "laboratory_results": [
-        "a blood marker that can show inflammation",
-        "elevated white blood cell count (15,000 cells/µL)",
-        "low hemoglobin levels (9.8 g/dL)"
-      ]
-    },
-    "anatomy": [
-      "colon",
-      "liver",
-      "abdomen",
-      "small structures that help the body fight infection"
-    ],
-    "biomarkers": [
-      "a blood marker that can show inflammation",
-      "white blood cell count",
-      "hemoglobin"
-    ],
-    "physicians": [
-      "Dr. Shelly Pierre"
-    ]
-  },
-  {
-    "patient": {
-      "name": "Roger Castillo",
-      "date_of_birth": "January 1, 1970",
-      "medical_record_number": "Q1240",
-      "gender": "",
-      "contact_information": []
-    },
-    "hospitalization": {
-      "admission_date": "April 15, 2023",
-      "discharge_date": "May 20, 2023"
-    },
-    "diagnoses": [
-      "cancer of the colon or rectum",
-      "cancer of the colon or rectum",
-      "a type of cancer that starts in gland cells",
-      "low number of healthy red blood cells"
-    ],
-    "symptoms": [
-      "abdominal pain",
-      "unexplained weight loss",
-      "intermittent rectal bleeding",
-      "fatigue",
-      "inability to maintain adequate nutrition",
-      "moderate pain",
-      "nausea"
-    ],
-    "medical_conditions": [
-      "high blood pressure",
-      "type 2 diabetes",
-      "mild infection at the surgical site",
-      "a blockage that prevents food or waste from moving through the intestine",
-      "a condition where the body does not have enough fluid"
-    ],
-    "allergies": [
-      "penicillin"
-    ],
+    "diagnoses": [],
+    "symptoms": [],
+    "medical_conditions": [],
+    "allergies": [],
     "medications": [
       {
         "name": "Metformin",
-        "dosage": "500 mg twice daily",
-        "frequency": "",
+        "dosage": "250mg",
+        "frequency": "1-1-1",
         "duration": "",
         "route": "",
-        "purpose": "type 2 diabetes",
+        "purpose": "",
         "adverse_effects": []
       },
       {
-        "name": "Lisinopril",
-        "dosage": "20 mg once daily",
-        "frequency": "",
+        "name": "Fbuprofen",
+        "dosage": "10mg",
+        "frequency": "1-1-1",
         "duration": "",
         "route": "",
-        "purpose": "high blood pressure",
+        "purpose": "",
         "adverse_effects": []
       },
       {
-        "name": "a combination of chemotherapy medicines used to treat colorectal cancer",
-        "dosage": "",
-        "frequency": "",
+        "name": "Ibuprofen",
+        "dosage": "500mg",
+        "frequency": "0-0-1",
         "duration": "",
         "route": "",
-        "purpose": "cancer of the colon or rectum",
-        "adverse_effects": [
-          "mild fatigue"
-        ]
-      },
-      {
-        "name": "medicines used to treat bacterial infections",
-        "dosage": "",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "infection",
-        "adverse_effects": []
-      },
-      {
-        "name": "a strong medicine used to relieve pain",
-        "dosage": "intravenous",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "moderate pain",
-        "adverse_effects": []
-      },
-      {
-        "name": "a medicine used to relieve pain and reduce fever",
-        "dosage": "oral",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "moderate pain",
+        "purpose": "",
         "adverse_effects": []
       }
     ],
-    "procedures": [
-      "small structures that help the body fight infection",
-      "Hartmann's procedure",
-      "ileostomy created"
-    ],
+    "procedures": [],
     "investigations": {
-      "imaging": [
-        "an imaging test that creates detailed pictures inside the body"
-      ],
-      "laboratory_tests": [
-        "colonoscopy",
-        "removing a small tissue sample to check for disease",
-        "Blood tests",
-        "Liver function tests"
-      ],
-      "laboratory_results": [
-        "low number of healthy red blood cells",
-        "a blood test that can indicate inflammation",
-        "normal liver function tests",
-        "normal renal function"
-      ]
+      "imaging": [],
+      "laboratory_tests": [],
+      "laboratory_results": []
     },
-    "anatomy": [
-      "sigmoid colon",
-      "small structure that helps the body fight infection",
-      "liver",
-      "bowel"
-    ],
-    "biomarkers": [
-      "a blood test that can indicate inflammation"
-    ],
+    "anatomy": [],
+    "biomarkers": [],
     "physicians": [
-      "Dr. Raymond Arnold"
+      "KVerma MBBS"
     ]
   },
   {
     "patient": {
-      "name": "Ismael Landry",
-      "date_of_birth": "January 2, 1975",
-      "medical_record_number": "Q1296",
+      "name": "",
+      "date_of_birth": "",
+      "medical_record_number": "",
       "gender": "",
-      "contact_information": []
+      "contact_information": ""
     },
     "hospitalization": {
-      "admission_date": "February 15, 2023",
-      "discharge_date": "March 15, 2023"
+      "admission_date": "",
+      "discharge_date": ""
     },
-    "diagnoses": [
-      "Colon Cancer with Metastasis",
-      "cancer of the colon or rectum",
-      "low number of healthy red blood cells",
-      "urinary tract infection"
-    ],
-    "symptoms": [
-      "persistent abdominal pain",
-      "unexplained weight loss",
-      "fatigue",
-      "occasional nausea",
-      "changes in bowel habits",
-      "intermittent diarrhea",
-      "constipation",
-      "yellowing of the skin or eyes"
-    ],
-    "medical_conditions": [
-      "high blood pressure",
-      "a type of cancer that starts in gland cells",
-      "post-operative ileus"
-    ],
-    "allergies": [
-      "penicillin"
-    ],
+    "diagnoses": [],
+    "symptoms": [],
+    "medical_conditions": [],
+    "allergies": [],
     "medications": [
       {
-        "name": "lisinopril",
-        "dosage": "",
-        "frequency": "",
+        "name": "Atorvastatin",
+        "dosage": "10mg",
+        "frequency": "1-1-1",
         "duration": "",
         "route": "",
-        "purpose": "high blood pressure",
+        "purpose": "",
         "adverse_effects": []
       },
       {
-        "name": "a combination of chemotherapy medicines used to treat colorectal cancer",
-        "dosage": "in cycles every two weeks over a period of six months",
-        "frequency": "",
+        "name": "Cetirizine",
+        "dosage": "500mg",
+        "frequency": "0-1-0",
         "duration": "",
         "route": "",
-        "purpose": "primary tumor",
-        "adverse_effects": [
-          "nausea",
-          "fatigue",
-          "low number of white blood cells that fight infection"
-        ]
-      },
-      {
-        "name": "medicines used to prevent or control nausea and vomiting",
-        "dosage": "",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "nausea",
-        "adverse_effects": []
-      },
-      {
-        "name": "growth factors",
-        "dosage": "",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "low number of white blood cells that fight infection",
-        "adverse_effects": []
-      },
-      {
-        "name": "antibiotic therapy",
-        "dosage": "",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "urinary tract infection",
+        "purpose": "",
         "adverse_effects": []
       }
     ],
-    "procedures": [
-      "appendectomy surgery",
-      "surgery to remove part of the colon"
-    ],
+    "procedures": [],
     "investigations": {
-      "imaging": [
-        "an imaging test that creates detailed pictures inside the body",
-        "an imaging test that creates detailed pictures of organs and tissues"
-      ],
-      "laboratory_tests": [
-        "blood tests",
-        "Biopsies",
-        "fine-needle aspiration",
-        "Genetic testing"
-      ],
-      "laboratory_results": [
-        "a blood marker that can be used to monitor some cancers",
-        "slightly reduced hemoglobin",
-        "a type of cancer that starts in gland cells"
-      ]
+      "imaging": [],
+      "laboratory_tests": [],
+      "laboratory_results": []
     },
-    "anatomy": [
-      "lower abdomen",
-      "descending colon",
-      "small structures that help the body fight infection",
-      "liver",
-      "colonic lesion",
-      "liver nodules",
-      "bowel"
-    ],
-    "biomarkers": [
-      "a blood marker that can be used to monitor some cancers",
-      "hemoglobin"
-    ],
+    "anatomy": [],
+    "biomarkers": [],
     "physicians": [
-      "Dr. Leonor Ward"
+      "R Melta"
     ]
   },
   {
     "patient": {
-      "name": "Karen Yarrington",
-      "date_of_birth": "January 1, 1970",
-      "medical_record_number": "Q1039",
-      "gender": "Male",
-      "contact_information": []
+      "name": "",
+      "date_of_birth": "",
+      "medical_record_number": "",
+      "gender": "",
+      "contact_information": ""
     },
     "hospitalization": {
-      "admission_date": "April 10, 2023",
-      "discharge_date": "May 15, 2023"
+      "admission_date": "",
+      "discharge_date": ""
     },
-    "diagnoses": [
-      "Stage III Urothelial Carcinoma (Bladder Cancer)",
-      "high-grade urothelial carcinoma",
-      "urothelial carcinoma"
-    ],
-    "symptoms": [
-      "blood in the urine",
-      "pelvic pain",
-      "blood in his urine",
-      "nausea",
-      "fatigue"
-    ],
-    "medical_conditions": [
-      "high blood pressure",
-      "type 2 diabetes",
-      "gallstones",
-      "cardiovascular disease",
-      "a condition where the body does not have enough fluid"
-    ],
-    "allergies": [
-      "penicillin",
-      "sulfa drugs"
-    ],
+    "diagnoses": [],
+    "symptoms": [],
+    "medical_conditions": [],
+    "allergies": [],
     "medications": [
       {
-        "name": "lisinopril",
-        "dosage": "10 mg daily",
-        "frequency": "",
+        "name": "Atorvastatin",
+        "dosage": "500mg",
+        "frequency": "1-0-0",
         "duration": "",
         "route": "",
-        "purpose": "high blood pressure",
+        "purpose": "",
         "adverse_effects": []
       },
       {
-        "name": "metformin",
-        "dosage": "500 mg twice daily",
-        "frequency": "",
+        "name": "Atorvastatin",
+        "dosage": "250mg",
+        "frequency": "1-1-1",
         "duration": "",
         "route": "",
-        "purpose": "type 2 diabetes",
+        "purpose": "",
         "adverse_effects": []
-      },
-      {
-        "name": "a strong medicine used to relieve pain",
-        "dosage": "intravenous",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "Pain control",
-        "adverse_effects": []
-      },
-      {
-        "name": "a medicine used to relieve pain and reduce fever",
-        "dosage": "oral",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "Pain control",
-        "adverse_effects": []
-      },
-      {
-        "name": "a chemotherapy medicine used to treat cancer",
-        "dosage": "",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "medicines used to treat cancer",
-        "adverse_effects": [
-          "nausea",
-          "fatigue"
-        ]
-      },
-      {
-        "name": "a chemotherapy medicine used to treat cancer",
-        "dosage": "",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "medicines used to treat cancer",
-        "adverse_effects": [
-          "nausea",
-          "fatigue"
-        ]
-      },
-      {
-        "name": "a medicine that can be used in cancer treatment",
-        "dosage": "",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "medicines used to treat cancer",
-        "adverse_effects": [
-          "nausea",
-          "fatigue"
-        ]
       }
     ],
-    "procedures": [
-      "cholecystectomy",
-      "Radical cystectomy",
-      "a surgically created pathway that carries urine out of the body"
-    ],
+    "procedures": [],
     "investigations": {
-      "imaging": [
-        "an imaging test that creates detailed pictures inside the body",
-        "an imaging test that creates detailed pictures of organs and tissues"
-      ],
-      "laboratory_tests": [
-        "urinalysis",
-        "cystoscopy",
-        "removing a small tissue sample to check for disease",
-        "Blood Tests",
-        "Pathology Reports"
-      ],
-      "laboratory_results": [
-        "blood in the urine",
-        "high-grade urothelial carcinoma",
-        "a blood test that can indicate inflammation",
-        "normal renal function",
-        "stable blood glucose levels"
-      ]
+      "imaging": [],
+      "laboratory_tests": [],
+      "laboratory_results": []
     },
-    "anatomy": [
-      "bladder",
-      "lower abdomen",
-      "small structure that helps the body fight infection",
-      "muscularis propria",
-      "liver",
-      "lungs",
-      "prostate",
-      "seminal vesicles",
-      "a surgically created pathway that carries urine out of the body"
-    ],
-    "biomarkers": [
-      "a blood test that can indicate inflammation"
-    ],
+    "anatomy": [],
+    "biomarkers": [],
     "physicians": [
-      "Dr. James Rowe"
+      "R"
+    ]
+  },
+  {
+    "patient": {
+      "name": "",
+      "date_of_birth": "",
+      "medical_record_number": "",
+      "gender": "",
+      "contact_information": ""
+    },
+    "hospitalization": {
+      "admission_date": "",
+      "discharge_date": ""
+    },
+    "diagnoses": [],
+    "symptoms": [],
+    "medical_conditions": [],
+    "allergies": [],
+    "medications": [
+      {
+        "name": "Atorvastatin",
+        "dosage": "500mg",
+        "frequency": "1-1-1",
+        "duration": "",
+        "route": "",
+        "purpose": "",
+        "adverse_effects": []
+      },
+      {
+        "name": "Paracetamol",
+        "dosage": "10mg",
+        "frequency": "1-0-1",
+        "duration": "",
+        "route": "",
+        "purpose": "",
+        "adverse_effects": []
+      }
+    ],
+    "procedures": [],
+    "investigations": {
+      "imaging": [],
+      "laboratory_tests": [],
+      "laboratory_results": []
+    },
+    "anatomy": [],
+    "biomarkers": [],
+    "physicians": [
+      "SPatel MBBS"
     ]
   }
 ]

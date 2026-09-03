@@ -1,1244 +1,806 @@
 [
   {
-    "english": {
+    "image": "prescription_0.png",
+    "ocr_text": "Dr. S Patel MBBS MD Rx Tab Omeprazole 500mg 1-0-0 Tab Paracetamol 10mg 0-1-0 Tab Pantoprazole 200mg 0-0-1",
+    "medical_information": {
       "patient": {
-        "name": "Mary Spagnuolo",
-        "date_of_birth": "January 1, 1970",
-        "medical_record_number": "Q1159",
+        "name": "",
+        "date_of_birth": "",
+        "medical_record_number": "",
         "gender": "",
-        "contact_information": []
+        "contact_information": ""
       },
       "hospitalization": {
-        "admission_date": "June 1, 2023",
-        "discharge_date": "June 20, 2023"
+        "admission_date": "",
+        "discharge_date": ""
       },
-      "diagnoses": [
-        "cancer of the colon or rectum",
-        "a type of cancer that starts in gland cells"
-      ],
-      "symptoms": [
-        "progressive abdominal pain",
-        "unintended weight loss",
-        "changes in bowel habits",
-        "intermittent cramping discomfort",
-        "constant and severe pain",
-        "decline in her appetite",
-        "bloating",
-        "nausea",
-        "occasional episodes of rectal bleeding"
-      ],
-      "medical_conditions": [
-        "high blood pressure",
-        "acid reflux"
-      ],
+      "diagnoses": [],
+      "symptoms": [],
+      "medical_conditions": [],
       "allergies": [],
       "medications": [
         {
-          "name": "lisinopril",
-          "dosage": "daily",
-          "frequency": "",
+          "name": "Omeprazole",
+          "dosage": "500mg",
+          "frequency": "1-0-0",
           "duration": "",
           "route": "",
-          "purpose": "high blood pressure",
+          "purpose": "",
           "adverse_effects": []
         },
         {
-          "name": "omeprazole",
-          "dosage": "occasional use",
-          "frequency": "",
+          "name": "Paracetamol",
+          "dosage": "10mg",
+          "frequency": "0-1-0",
           "duration": "",
           "route": "",
-          "purpose": "acid reflux",
+          "purpose": "",
           "adverse_effects": []
         },
         {
-          "name": "a combination of chemotherapy medicines used to treat colorectal cancer",
-          "dosage": "every three weeks for six cycles",
-          "frequency": "",
+          "name": "Pantoprazole",
+          "dosage": "200mg",
+          "frequency": "0-0-1",
           "duration": "",
           "route": "",
-          "purpose": "cancer of the colon or rectum",
+          "purpose": "",
           "adverse_effects": []
         }
       ],
-      "procedures": [
-        "appendectomy",
-        "surgery to remove part of the colon"
-      ],
+      "procedures": [],
       "investigations": {
-        "imaging": [
-          "an imaging test that creates detailed pictures inside the body"
-        ],
-        "laboratory_tests": [
-          "Blood Tests",
-          "a blood test that can indicate inflammation",
-          "a blood marker that can be used to monitor some cancers"
-        ],
-        "laboratory_results": [
-          "a blood test that can indicate inflammation",
-          "a blood marker that can be used to monitor some cancers",
-          "6 cm mass in the ascending colon"
-        ]
+        "imaging": [],
+        "laboratory_tests": [],
+        "laboratory_results": []
       },
-      "anatomy": [
-        "abdomen",
-        "ascending colon",
-        "small structures that help the body fight infection",
-        "liver"
-      ],
-      "biomarkers": [
-        "a blood test that can indicate inflammation",
-        "a blood marker that can be used to monitor some cancers"
-      ],
+      "anatomy": [],
+      "biomarkers": [],
       "physicians": [
-        "Dr. Craig Doland"
+        "S Patel"
       ]
     },
-    "hindi": {
+    "simplified_information": {
       "patient": {
-        "name": "मेरी स्पोलो",
-        "date_of_birth": "जनवरी 1, 1970",
-        "medical_record_number": "क्यू1159",
+        "name": "",
+        "date_of_birth": "",
+        "medical_record_number": "",
         "gender": "",
-        "contact_information": []
+        "contact_information": ""
       },
       "hospitalization": {
-        "admission_date": "जून 1, 2023",
-        "discharge_date": "20 जून, 2023"
+        "admission_date": "",
+        "discharge_date": ""
       },
-      "diagnoses": [
-        "घर - घर का कैंसर",
-        "एक क़िस्म का कैंसर जो स्तन कोशिकाओं में शुरू होता है"
-      ],
-      "symptoms": [
-        "प्रगतिशील रूप से ताजा दर्द",
-        "प्रायोगिक भार नुकसान",
-        "धनुष की आदतों में परिवर्तन",
-        "सही मात्रा में परेशानी",
-        "निरन्तर और तीव्र दर्द",
-        "अपनी भूख में खो देते हैं",
-        "बबलिंग",
-        "ए. डी.",
-        "कभी - कभी जब खून बहने का समय होता है"
-      ],
-      "medical_conditions": [
-        "हाई ब्लड प्रेशर",
-        "एसिड फिर से आ रहा है"
-      ],
+      "diagnoses": [],
+      "symptoms": [],
+      "medical_conditions": [],
       "allergies": [],
       "medications": [
         {
-          "name": "नील नदी",
-          "dosage": "प्रतिदिन",
-          "frequency": "",
+          "name": "Omeprazole",
+          "dosage": "500mg",
+          "frequency": "1-0-0",
           "duration": "",
           "route": "",
-          "purpose": "हाई ब्लड प्रेशर",
+          "purpose": "",
           "adverse_effects": []
         },
         {
-          "name": "अ- धातु",
-          "dosage": "कभी - कभी इस्तेमाल करें",
-          "frequency": "",
+          "name": "Paracetamol",
+          "dosage": "10mg",
+          "frequency": "0-1-0",
           "duration": "",
           "route": "",
-          "purpose": "एसिड फिर से आ रहा है",
+          "purpose": "",
           "adverse_effects": []
         },
         {
-          "name": "इलाज के लिए इस्तेमाल की गयी दवाइयों का एक संयोजन",
-          "dosage": "छह चक्र के लिए हर तीन सप्ताह",
-          "frequency": "",
+          "name": "Pantoprazole",
+          "dosage": "200mg",
+          "frequency": "0-0-1",
           "duration": "",
           "route": "",
-          "purpose": "घर - घर का कैंसर",
+          "purpose": "",
           "adverse_effects": []
         }
       ],
-      "procedures": [
-        "सम्मिलित करें",
-        "कोर का हिस्सा निकालने के लिए ऑपरेशन"
-      ],
+      "procedures": [],
       "investigations": {
-        "imaging": [
-          "एक इमेजिंग जाँच जो शरीर के भीतर विस्तृत चित्र बनाता है"
-        ],
-        "laboratory_tests": [
-          "खून का परीक्षण",
-          "रक्‍त परीक्षा जो उत्पन्‍न कर सकती है",
-          "एक खून चिह्न जो कुछ कैंसरों को मॉनीटर करने के लिए प्रयोग किया जा सकता है"
-        ],
-        "laboratory_results": [
-          "रक्‍त परीक्षा जो उत्पन्‍न कर सकती है",
-          "एक खून चिह्न जो कुछ कैंसरों को मॉनीटर करने के लिए प्रयोग किया जा सकता है",
-          "6 सेंटीमीटर ऊपर के कनेर में"
-        ]
+        "imaging": [],
+        "laboratory_tests": [],
+        "laboratory_results": []
       },
-      "anatomy": [
-        "पेट",
-        "ऊपर ले जाएँ",
-        "शरीर को संक्रमण से लड़ने में मदद देनेवाली छोटी - सी संरचना",
-        "कलेजे"
-      ],
-      "biomarkers": [
-        "रक्‍त परीक्षा जो उत्पन्‍न कर सकती है",
-        "एक खून चिह्न जो कुछ कैंसरों को मॉनीटर करने के लिए प्रयोग किया जा सकता है"
-      ],
+      "anatomy": [],
+      "biomarkers": [],
       "physicians": [
-        "डॉ. दोलैंड"
+        "S Patel"
       ]
     },
-    "treatment_english": "Eat light meals, stay hydrated, and monitor the pain. Seek medical attention if the pain is severe or persistent. Drink small amounts of fluids frequently and eat light foods. Consult a doctor if vomiting or severe symptoms occur.",
-    "treatment_hindi": "अगर दर्द बहुत ज़्यादा हो या लगातार कम हो जाए, तो डॉक्टर से सलाह लीजिए ।"
-  },
-  {
-    "english": {
+    "hindi_information": {
       "patient": {
-        "name": "Vernon Rodney",
-        "date_of_birth": "January 1, 1970",
-        "medical_record_number": "Q1152",
+        "name": "",
+        "date_of_birth": "",
+        "medical_record_number": "",
         "gender": "",
-        "contact_information": []
+        "contact_information": ""
       },
       "hospitalization": {
-        "admission_date": "March 20, 2023",
-        "discharge_date": "April 10, 2023"
+        "admission_date": "",
+        "discharge_date": ""
       },
-      "diagnoses": [
-        "Stage III Colon Cancer with Metastasis to the Liver",
-        "a type of cancer that starts in gland cells",
-        "cancer of the colon or rectum"
-      ],
-      "symptoms": [
-        "abdominal pain",
-        "nausea",
-        "unexplained weight loss",
-        "intermittent fevers",
-        "changes in bowel habits",
-        "constipation",
-        "diarrhea"
-      ],
-      "medical_conditions": [
-        "high blood pressure",
-        "systemic inflammation",
-        "a condition caused by not getting enough nutrients"
-      ],
-      "allergies": [
-        "penicillin",
-        "sulfa drugs"
-      ],
+      "diagnoses": [],
+      "symptoms": [],
+      "medical_conditions": [],
+      "allergies": [],
       "medications": [
         {
-          "name": "lisinopril",
-          "dosage": "10 mg daily",
-          "frequency": "",
+          "name": "Omeprazole",
+          "dosage": "500mg",
+          "frequency": "1-0-0",
           "duration": "",
           "route": "",
-          "purpose": "high blood pressure",
+          "purpose": "",
           "adverse_effects": []
         },
         {
-          "name": "aspirin",
-          "dosage": "",
-          "frequency": "",
+          "name": "Paracetamol",
+          "dosage": "10mg",
+          "frequency": "0-1-0",
           "duration": "",
           "route": "",
-          "purpose": "cardiovascular prophylaxis",
-          "adverse_effects": [
-            "risk of bleeding"
-          ]
+          "purpose": "",
+          "adverse_effects": []
         },
         {
-          "name": "a combination of chemotherapy medicines used to treat colorectal cancer",
-          "dosage": "four cycles over the next six months",
-          "frequency": "",
+          "name": "Pantoprazole",
+          "dosage": "200mg",
+          "frequency": "0-0-1",
           "duration": "",
           "route": "",
-          "purpose": "cancer of the colon or rectum",
-          "adverse_effects": [
-            "mild nausea",
-            "fatigue"
-          ]
-        },
-        {
-          "name": "vitamin B12 supplements",
-          "dosage": "",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "medicines used to treat cancer",
+          "purpose": "",
           "adverse_effects": []
         }
       ],
-      "procedures": [
-        "surgery to remove part of the colon"
-      ],
+      "procedures": [],
       "investigations": {
-        "imaging": [
-          "an imaging test that creates detailed pictures inside the body"
-        ],
-        "laboratory_tests": [
-          "Blood Tests",
-          "removing a small tissue sample to check for disease"
-        ],
-        "laboratory_results": [
-          "a blood marker that can show inflammation",
-          "elevated white blood cell count (15,000 cells/µL)",
-          "low hemoglobin levels (9.8 g/dL)"
-        ]
+        "imaging": [],
+        "laboratory_tests": [],
+        "laboratory_results": []
       },
-      "anatomy": [
-        "colon",
-        "liver",
-        "abdomen",
-        "small structures that help the body fight infection"
-      ],
-      "biomarkers": [
-        "a blood marker that can show inflammation",
-        "white blood cell count",
-        "hemoglobin"
-      ],
+      "anatomy": [],
+      "biomarkers": [],
       "physicians": [
-        "Dr. Shelly Pierre"
+        "S Patel"
       ]
     },
-    "hindi": {
-      "patient": {
-        "name": "वेन रोनी",
-        "date_of_birth": "जनवरी 1, 1970",
-        "medical_record_number": "क्यू1152",
-        "gender": "",
-        "contact_information": []
-      },
-      "hospitalization": {
-        "admission_date": "20 मार्च, 2023",
-        "discharge_date": "10 अप्रैल, 2023"
-      },
-      "diagnoses": [
-        "चरण III कोरस कैंसर के साथ जीवित रहने वाले तक",
-        "एक क़िस्म का कैंसर जो स्तन कोशिकाओं में शुरू होता है",
-        "घर - घर का कैंसर"
-      ],
-      "symptoms": [
-        "मस्तिष्क - आघात",
-        "ए. डी.",
-        "भारी वज़न नुकसान",
-        "विशेषज्ञ बुखार",
-        "धनुष की आदतों में परिवर्तन",
-        "अववेषण",
-        "दस्त"
-      ],
-      "medical_conditions": [
-        "हाई ब्लड प्रेशर",
-        "सिस्टमिक प्रक्रिया",
-        "एक ऐसी स्थिति जिसका कारण पर्याप्त स्वास्थ्य नहीं हो सकता"
-      ],
-      "allergies": [
-        "पेनिन",
-        "यूफ्फा ड्रग्स"
-      ],
-      "medications": [
-        {
-          "name": "नील नदी",
-          "dosage": "10 मी दिन",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "हाई ब्लड प्रेशर",
-          "adverse_effects": []
-        },
-        {
-          "name": "ऐक्सोस",
-          "dosage": "",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "हिम्मत से काम लेनेवाला सहारा",
-          "adverse_effects": [
-            "खून बहने का खतरा"
-          ]
-        },
-        {
-          "name": "इलाज के लिए इस्तेमाल की गयी दवाइयों का एक संयोजन",
-          "dosage": "अगले छः महीने के ऊपर चार चक्र",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "घर - घर का कैंसर",
-          "adverse_effects": [
-            "कोमलता का गुण",
-            "थकान"
-          ]
-        },
-        {
-          "name": "विटामिन बी १२ अतिरिक्‍त",
-          "dosage": "",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "कैंसर का इलाज करने के लिए इस्तेमाल किए गए दवाइयाँ",
-          "adverse_effects": []
-        }
-      ],
-      "procedures": [
-        "कोर का हिस्सा निकालने के लिए ऑपरेशन"
-      ],
-      "investigations": {
-        "imaging": [
-          "एक इमेजिंग जाँच जो शरीर के भीतर विस्तृत चित्र बनाता है"
-        ],
-        "laboratory_tests": [
-          "खून का परीक्षण",
-          "बीमारी की जाँच करने के लिए एक छोटा सा ऊतक नमूना हटा दें"
-        ],
-        "laboratory_results": [
-          "एक खून चिह्न दिखाता है कि कमजोरी दिखा सकते हैं",
-          "उच्च रक्‍त कोशिका की गणना (15,000 रक्‍त कोशिकाएँ/cdrL)",
-          "कम हीमोग्लोबिन स्तर (9. 8 g/L)"
-        ]
-      },
-      "anatomy": [
-        "कोलन",
-        "कलेजे",
-        "पेट",
-        "शरीर को संक्रमण से लड़ने में मदद देनेवाली छोटी - सी संरचना"
-      ],
-      "biomarkers": [
-        "एक खून चिह्न दिखाता है कि कमजोरी दिखा सकते हैं",
-        "सफेद रक्‍त कक्ष गणना",
-        "हीमोग्लोबिन"
-      ],
-      "physicians": [
-        "ड्र्यूड पियर"
-      ]
-    },
-    "treatment_english": "Drink plenty of fluids, get adequate rest, and monitor your temperature. Consult a doctor if the fever is high or persistent. Eat light meals, stay hydrated, and monitor the pain. Seek medical attention if the pain is severe or persistent. Drink small amounts of fluids frequently and eat light foods. Consult a doctor if vomiting or severe symptoms occur.",
-    "treatment_hindi": "डॉक्टर से सलाह लीजिए कि अगर बुखार ज़्यादा हो, तो डॉक्टर से सलाह लीजिए ।"
+    "treatment_english": "Omeprazole is commonly used to reduce stomach acid and is used for acid-related stomach conditions. Paracetamol is commonly used to relieve pain and reduce fever. Pantoprazole is commonly used to reduce stomach acid and is used for acid-related digestive conditions.",
+    "treatment_hindi": "Omeprazole का उपयोग पेट के एसिड को कम करने के लिए किया जाता है। Paracetamol का उपयोग दर्द से राहत देने और बुखार कम करने के लिए किया जाता है। Pantoprazole का उपयोग पेट के एसिड को कम करने के लिए किया जाता है।"
   },
   {
-    "english": {
+    "image": "prescription_1.png",
+    "ocr_text": "Dr. KVerma MBBS, MD Rx TabMetformin 250mg 1-1-1 Tab fbuprofen 10mg 1-1-1 TabIbuprofen 500mg 0-0-1",
+    "medical_information": {
       "patient": {
-        "name": "Roger Castillo",
-        "date_of_birth": "January 1, 1970",
-        "medical_record_number": "Q1240",
+        "name": "",
+        "date_of_birth": "",
+        "medical_record_number": "",
         "gender": "",
-        "contact_information": []
+        "contact_information": ""
       },
       "hospitalization": {
-        "admission_date": "April 15, 2023",
-        "discharge_date": "May 20, 2023"
+        "admission_date": "",
+        "discharge_date": ""
       },
-      "diagnoses": [
-        "cancer of the colon or rectum",
-        "cancer of the colon or rectum",
-        "a type of cancer that starts in gland cells",
-        "low number of healthy red blood cells"
-      ],
-      "symptoms": [
-        "abdominal pain",
-        "unexplained weight loss",
-        "intermittent rectal bleeding",
-        "fatigue",
-        "inability to maintain adequate nutrition",
-        "moderate pain",
-        "nausea"
-      ],
-      "medical_conditions": [
-        "high blood pressure",
-        "type 2 diabetes",
-        "mild infection at the surgical site",
-        "a blockage that prevents food or waste from moving through the intestine",
-        "a condition where the body does not have enough fluid"
-      ],
-      "allergies": [
-        "penicillin"
-      ],
+      "diagnoses": [],
+      "symptoms": [],
+      "medical_conditions": [],
+      "allergies": [],
       "medications": [
         {
           "name": "Metformin",
-          "dosage": "500 mg twice daily",
-          "frequency": "",
+          "dosage": "250mg",
+          "frequency": "1-1-1",
           "duration": "",
           "route": "",
-          "purpose": "type 2 diabetes",
+          "purpose": "",
           "adverse_effects": []
         },
         {
-          "name": "Lisinopril",
-          "dosage": "20 mg once daily",
-          "frequency": "",
+          "name": "Fbuprofen",
+          "dosage": "10mg",
+          "frequency": "1-1-1",
           "duration": "",
           "route": "",
-          "purpose": "high blood pressure",
+          "purpose": "",
           "adverse_effects": []
         },
         {
-          "name": "a combination of chemotherapy medicines used to treat colorectal cancer",
-          "dosage": "",
-          "frequency": "",
+          "name": "Ibuprofen",
+          "dosage": "500mg",
+          "frequency": "0-0-1",
           "duration": "",
           "route": "",
-          "purpose": "cancer of the colon or rectum",
-          "adverse_effects": [
-            "mild fatigue"
-          ]
-        },
-        {
-          "name": "medicines used to treat bacterial infections",
-          "dosage": "",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "infection",
-          "adverse_effects": []
-        },
-        {
-          "name": "a strong medicine used to relieve pain",
-          "dosage": "intravenous",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "moderate pain",
-          "adverse_effects": []
-        },
-        {
-          "name": "a medicine used to relieve pain and reduce fever",
-          "dosage": "oral",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "moderate pain",
+          "purpose": "",
           "adverse_effects": []
         }
       ],
-      "procedures": [
-        "small structures that help the body fight infection",
-        "Hartmann's procedure",
-        "ileostomy created"
-      ],
+      "procedures": [],
       "investigations": {
-        "imaging": [
-          "an imaging test that creates detailed pictures inside the body"
-        ],
-        "laboratory_tests": [
-          "colonoscopy",
-          "removing a small tissue sample to check for disease",
-          "Blood tests",
-          "Liver function tests"
-        ],
-        "laboratory_results": [
-          "low number of healthy red blood cells",
-          "a blood test that can indicate inflammation",
-          "normal liver function tests",
-          "normal renal function"
-        ]
+        "imaging": [],
+        "laboratory_tests": [],
+        "laboratory_results": []
       },
-      "anatomy": [
-        "sigmoid colon",
-        "small structure that helps the body fight infection",
-        "liver",
-        "bowel"
-      ],
-      "biomarkers": [
-        "a blood test that can indicate inflammation"
-      ],
+      "anatomy": [],
+      "biomarkers": [],
       "physicians": [
-        "Dr. Raymond Arnold"
+        "KVerma MBBS"
       ]
     },
-    "hindi": {
+    "simplified_information": {
       "patient": {
-        "name": "रोजर कॉरलो",
-        "date_of_birth": "जनवरी 1, 1970",
-        "medical_record_number": "क्यू1240",
+        "name": "",
+        "date_of_birth": "",
+        "medical_record_number": "",
         "gender": "",
-        "contact_information": []
+        "contact_information": ""
       },
       "hospitalization": {
-        "admission_date": "15 अप्रैल, 2023",
-        "discharge_date": "20 मई, 2023"
+        "admission_date": "",
+        "discharge_date": ""
       },
-      "diagnoses": [
-        "घर - घर का कैंसर",
-        "घर - घर का कैंसर",
-        "एक क़िस्म का कैंसर जो स्तन कोशिकाओं में शुरू होता है",
-        "स्वस्थ लाल रक्‍त कोशिकाओं की कम संख्या"
-      ],
-      "symptoms": [
-        "मस्तिष्क - आघात",
-        "भारी वज़न नुकसान",
-        "रिश्‍वत लेने से खून बहने का खतरा रहता है",
-        "थकान",
-        "पर्याप्त पोषण बनाए रखने में असमर्थ",
-        "निष्क्रिय दर्द",
-        "ए. डी."
-      ],
-      "medical_conditions": [
-        "हाई ब्लड प्रेशर",
-        "टाइप 2 डायबिटीज़",
-        "ऑपरेशन स्थल पर कोमल संक्रमण",
-        "इस बीमारी से बचने के लिए भोजन या कचरे को रोका जा सकता है",
-        "एक ऐसी स्थिति जहाँ शरीर में पर्याप्त द्रव नहीं होता"
-      ],
-      "allergies": [
-        "पेनिन"
-      ],
+      "diagnoses": [],
+      "symptoms": [],
+      "medical_conditions": [],
+      "allergies": [],
       "medications": [
         {
-          "name": "आइसोइन",
-          "dosage": "500 रुपए प्रति दिन",
-          "frequency": "",
+          "name": "Metformin",
+          "dosage": "250mg",
+          "frequency": "1-1-1",
           "duration": "",
           "route": "",
-          "purpose": "टाइप 2 डायबिटीज़",
+          "purpose": "",
           "adverse_effects": []
         },
         {
-          "name": "टिनोप्रैल",
-          "dosage": "20 लाख प्रति दिन",
-          "frequency": "",
+          "name": "Fbuprofen",
+          "dosage": "10mg",
+          "frequency": "1-1-1",
           "duration": "",
           "route": "",
-          "purpose": "हाई ब्लड प्रेशर",
+          "purpose": "",
           "adverse_effects": []
         },
         {
-          "name": "इलाज के लिए इस्तेमाल की गयी दवाइयों का एक संयोजन",
-          "dosage": "",
-          "frequency": "",
+          "name": "Ibuprofen",
+          "dosage": "500mg",
+          "frequency": "0-0-1",
           "duration": "",
           "route": "",
-          "purpose": "घर - घर का कैंसर",
-          "adverse_effects": [
-            "हल्का थकान"
-          ]
-        },
-        {
-          "name": "दवाओं का इलाज करने के लिए इस्तेमाल किया जाता था",
-          "dosage": "",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "संक्रमण",
-          "adverse_effects": []
-        },
-        {
-          "name": "दर्द से राहत पाने के लिए इस्तेमाल किया गया एक मज़बूत दवा",
-          "dosage": "विक्षोभ",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "निष्क्रिय दर्द",
-          "adverse_effects": []
-        },
-        {
-          "name": "दर्द से राहत पाने और बुखार कम करने के लिए एक दवा",
-          "dosage": "मौखिक",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "निष्क्रिय दर्द",
+          "purpose": "",
           "adverse_effects": []
         }
       ],
-      "procedures": [
-        "शरीर को संक्रमण से लड़ने में मदद देनेवाली छोटी - सी संरचना",
-        "हरमान की प्रक्रिया",
-        "टाइटेसिस बनाया गया"
-      ],
+      "procedures": [],
       "investigations": {
-        "imaging": [
-          "एक इमेजिंग जाँच जो शरीर के भीतर विस्तृत चित्र बनाता है"
-        ],
-        "laboratory_tests": [
-          "कोरोस की नक़ल",
-          "बीमारी की जाँच करने के लिए एक छोटा सा ऊतक नमूना हटा दें",
-          "खून की जाँच",
-          "लाइव फंक्शन जाँच"
-        ],
-        "laboratory_results": [
-          "स्वस्थ लाल रक्‍त कोशिकाओं की कम संख्या",
-          "रक्‍त परीक्षा जो उत्पन्‍न कर सकती है",
-          "सामान्य कलेजे क्रिया जाँच",
-          "सामान्य रीनल फंक्शन"
-        ]
+        "imaging": [],
+        "laboratory_tests": [],
+        "laboratory_results": []
       },
-      "anatomy": [
-        "सिगाइड कोर",
-        "छोटे - छोटे संरचना जो शरीर को संक्रमण से लड़ने में मदद करती है",
-        "कलेजे",
-        "धनुष"
-      ],
-      "biomarkers": [
-        "रक्‍त परीक्षा जो उत्पन्‍न कर सकती है"
-      ],
+      "anatomy": [],
+      "biomarkers": [],
       "physicians": [
-        "डॉ."
+        "KVerma MBBS"
       ]
     },
-    "treatment_english": "Eat light meals, stay hydrated, and monitor the pain. Seek medical attention if the pain is severe or persistent. Drink small amounts of fluids frequently and eat light foods. Consult a doctor if vomiting or severe symptoms occur.",
-    "treatment_hindi": "अगर दर्द बहुत ज़्यादा हो या लगातार कम हो जाए, तो डॉक्टर से सलाह लीजिए ।"
+    "hindi_information": {
+      "patient": {
+        "name": "",
+        "date_of_birth": "",
+        "medical_record_number": "",
+        "gender": "",
+        "contact_information": ""
+      },
+      "hospitalization": {
+        "admission_date": "",
+        "discharge_date": ""
+      },
+      "diagnoses": [],
+      "symptoms": [],
+      "medical_conditions": [],
+      "allergies": [],
+      "medications": [
+        {
+          "name": "Metformin",
+          "dosage": "250mg",
+          "frequency": "1-1-1",
+          "duration": "",
+          "route": "",
+          "purpose": "",
+          "adverse_effects": []
+        },
+        {
+          "name": "Fbuprofen",
+          "dosage": "10mg",
+          "frequency": "1-1-1",
+          "duration": "",
+          "route": "",
+          "purpose": "",
+          "adverse_effects": []
+        },
+        {
+          "name": "Ibuprofen",
+          "dosage": "500mg",
+          "frequency": "0-0-1",
+          "duration": "",
+          "route": "",
+          "purpose": "",
+          "adverse_effects": []
+        }
+      ],
+      "procedures": [],
+      "investigations": {
+        "imaging": [],
+        "laboratory_tests": [],
+        "laboratory_results": []
+      },
+      "anatomy": [],
+      "biomarkers": [],
+      "physicians": [
+        "KVerma MBBS"
+      ]
+    },
+    "treatment_english": "Metformin is commonly used to help control blood glucose in people with type 2 diabetes. Ibuprofen is commonly used to relieve pain, inflammation, and fever.",
+    "treatment_hindi": "Metformin का उपयोग रक्त शर्करा को नियंत्रित करने के लिए किया जाता है। Ibuprofen का उपयोग दर्द, सूजन और बुखार को कम करने के लिए किया जाता है।"
   },
   {
-    "english": {
+    "image": "prescription_10.png",
+    "ocr_text": "Dr. R Melta MBBS MD x Tab Atorvastatin 10mg 1-1-1 TabCetirizine 500mg 0-1-0",
+    "medical_information": {
       "patient": {
-        "name": "Ismael Landry",
-        "date_of_birth": "January 2, 1975",
-        "medical_record_number": "Q1296",
+        "name": "",
+        "date_of_birth": "",
+        "medical_record_number": "",
         "gender": "",
-        "contact_information": []
+        "contact_information": ""
       },
       "hospitalization": {
-        "admission_date": "February 15, 2023",
-        "discharge_date": "March 15, 2023"
+        "admission_date": "",
+        "discharge_date": ""
       },
-      "diagnoses": [
-        "Colon Cancer with Metastasis",
-        "cancer of the colon or rectum",
-        "low number of healthy red blood cells",
-        "urinary tract infection"
-      ],
-      "symptoms": [
-        "persistent abdominal pain",
-        "unexplained weight loss",
-        "fatigue",
-        "occasional nausea",
-        "changes in bowel habits",
-        "intermittent diarrhea",
-        "constipation",
-        "yellowing of the skin or eyes"
-      ],
-      "medical_conditions": [
-        "high blood pressure",
-        "a type of cancer that starts in gland cells",
-        "post-operative ileus"
-      ],
-      "allergies": [
-        "penicillin"
-      ],
+      "diagnoses": [],
+      "symptoms": [],
+      "medical_conditions": [],
+      "allergies": [],
       "medications": [
         {
-          "name": "lisinopril",
-          "dosage": "",
-          "frequency": "",
+          "name": "Atorvastatin",
+          "dosage": "10mg",
+          "frequency": "1-1-1",
           "duration": "",
           "route": "",
-          "purpose": "high blood pressure",
+          "purpose": "",
           "adverse_effects": []
         },
         {
-          "name": "a combination of chemotherapy medicines used to treat colorectal cancer",
-          "dosage": "in cycles every two weeks over a period of six months",
-          "frequency": "",
+          "name": "Cetirizine",
+          "dosage": "500mg",
+          "frequency": "0-1-0",
           "duration": "",
           "route": "",
-          "purpose": "primary tumor",
-          "adverse_effects": [
-            "nausea",
-            "fatigue",
-            "low number of white blood cells that fight infection"
-          ]
-        },
-        {
-          "name": "medicines used to prevent or control nausea and vomiting",
-          "dosage": "",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "nausea",
-          "adverse_effects": []
-        },
-        {
-          "name": "growth factors",
-          "dosage": "",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "low number of white blood cells that fight infection",
-          "adverse_effects": []
-        },
-        {
-          "name": "antibiotic therapy",
-          "dosage": "",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "urinary tract infection",
+          "purpose": "",
           "adverse_effects": []
         }
       ],
-      "procedures": [
-        "appendectomy surgery",
-        "surgery to remove part of the colon"
-      ],
+      "procedures": [],
       "investigations": {
-        "imaging": [
-          "an imaging test that creates detailed pictures inside the body",
-          "an imaging test that creates detailed pictures of organs and tissues"
-        ],
-        "laboratory_tests": [
-          "blood tests",
-          "Biopsies",
-          "fine-needle aspiration",
-          "Genetic testing"
-        ],
-        "laboratory_results": [
-          "a blood marker that can be used to monitor some cancers",
-          "slightly reduced hemoglobin",
-          "a type of cancer that starts in gland cells"
-        ]
+        "imaging": [],
+        "laboratory_tests": [],
+        "laboratory_results": []
       },
-      "anatomy": [
-        "lower abdomen",
-        "descending colon",
-        "small structures that help the body fight infection",
-        "liver",
-        "colonic lesion",
-        "liver nodules",
-        "bowel"
-      ],
-      "biomarkers": [
-        "a blood marker that can be used to monitor some cancers",
-        "hemoglobin"
-      ],
+      "anatomy": [],
+      "biomarkers": [],
       "physicians": [
-        "Dr. Leonor Ward"
+        "R Melta"
       ]
     },
-    "hindi": {
+    "simplified_information": {
       "patient": {
-        "name": "इश्‍कबाज़ी",
-        "date_of_birth": "जनवरी 2, 1975",
-        "medical_record_number": "क्यू1296",
+        "name": "",
+        "date_of_birth": "",
+        "medical_record_number": "",
         "gender": "",
-        "contact_information": []
+        "contact_information": ""
       },
       "hospitalization": {
-        "admission_date": "15 फरवरी, 2023",
-        "discharge_date": "15 मार्च, 2023"
+        "admission_date": "",
+        "discharge_date": ""
       },
-      "diagnoses": [
-        "कोलोन कैंसर जिसके पास मेटास होते हैं",
-        "घर - घर का कैंसर",
-        "स्वस्थ लाल रक्‍त कोशिकाओं की कम संख्या",
-        "आई. वी."
-      ],
-      "symptoms": [
-        "लगातार दर्द",
-        "भारी वज़न नुकसान",
-        "थकान",
-        "कभी - कभी तो एक ही बार में",
-        "धनुष की आदतों में परिवर्तन",
-        "गर्भ में पल रहे दस्त",
-        "अववेषण",
-        "खाल को झुलसा देनेवाली है,"
-      ],
-      "medical_conditions": [
-        "हाई ब्लड प्रेशर",
-        "एक क़िस्म का कैंसर जो स्तन कोशिकाओं में शुरू होता है",
-        "पोस्ट- पोस्ट- इन्दक"
-      ],
-      "allergies": [
-        "पेनिन"
-      ],
+      "diagnoses": [],
+      "symptoms": [],
+      "medical_conditions": [],
+      "allergies": [],
       "medications": [
         {
-          "name": "नील नदी",
-          "dosage": "",
-          "frequency": "",
+          "name": "Atorvastatin",
+          "dosage": "10mg",
+          "frequency": "1-1-1",
           "duration": "",
           "route": "",
-          "purpose": "हाई ब्लड प्रेशर",
+          "purpose": "",
           "adverse_effects": []
         },
         {
-          "name": "इलाज के लिए इस्तेमाल की गयी दवाइयों का एक संयोजन",
-          "dosage": "छः महीने की अवधि के दौरान हर दो सप्ताह चक्र में",
-          "frequency": "",
+          "name": "Cetirizine",
+          "dosage": "500mg",
+          "frequency": "0-1-0",
           "duration": "",
           "route": "",
-          "purpose": "प्राथमिक ट्यूमर",
-          "adverse_effects": [
-            "ए. डी.",
-            "थकान",
-            "रक्‍त कोशिकाओं की कम संख्या जो संक्रमण से लड़ते हैं"
-          ]
-        },
-        {
-          "name": "जिन दवाइयों का इस्तेमाल किया जाता था, वे एक - दूसरे से अलग होते थे और उन्हें काबू में रखते थे ।",
-          "dosage": "",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "ए. डी.",
-          "adverse_effects": []
-        },
-        {
-          "name": "विकास तत्व",
-          "dosage": "",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "रक्‍त कोशिकाओं की कम संख्या जो संक्रमण से लड़ते हैं",
-          "adverse_effects": []
-        },
-        {
-          "name": "चिकित्सा चिकित्सा",
-          "dosage": "",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "आई. वी.",
+          "purpose": "",
           "adverse_effects": []
         }
       ],
-      "procedures": [
-        "एम., अमरीका",
-        "कोर का हिस्सा निकालने के लिए ऑपरेशन"
-      ],
+      "procedures": [],
       "investigations": {
-        "imaging": [
-          "एक इमेजिंग जाँच जो शरीर के भीतर विस्तृत चित्र बनाता है",
-          "एक भरोसेमंद जाँच जो अंगों और ऊतकों की विस्तृत तसवीरें बनाता है"
-        ],
-        "laboratory_tests": [
-          "खून की जाँच",
-          "द्विरेखीय",
-          "अच्छी उम्मीद",
-          "मूलभूत परीक्षण"
-        ],
-        "laboratory_results": [
-          "एक खून चिह्न जो कुछ कैंसरों को मॉनीटर करने के लिए प्रयोग किया जा सकता है",
-          "थोड़ा कम हीमोग्लोबिन",
-          "एक क़िस्म का कैंसर जो स्तन कोशिकाओं में शुरू होता है"
-        ]
+        "imaging": [],
+        "laboratory_tests": [],
+        "laboratory_results": []
       },
-      "anatomy": [
-        "पेट कम करें",
-        "कोलन नीचे लाएँ",
-        "शरीर को संक्रमण से लड़ने में मदद देनेवाली छोटी - सी संरचना",
-        "कलेजे",
-        "कोरिक लेस",
-        "कलेजे (L)",
-        "धनुष"
-      ],
-      "biomarkers": [
-        "एक खून चिह्न जो कुछ कैंसरों को मॉनीटर करने के लिए प्रयोग किया जा सकता है",
-        "हीमोग्लोबिन"
-      ],
+      "anatomy": [],
+      "biomarkers": [],
       "physicians": [
-        "डॉ."
+        "R Melta"
       ]
     },
-    "treatment_english": "Eat light meals, stay hydrated, and monitor the pain. Seek medical attention if the pain is severe or persistent. Drink small amounts of fluids frequently and eat light foods. Consult a doctor if vomiting or severe symptoms occur.",
-    "treatment_hindi": "अगर दर्द बहुत ज़्यादा हो या लगातार कम हो जाए, तो डॉक्टर से सलाह लीजिए ।"
+    "hindi_information": {
+      "patient": {
+        "name": "",
+        "date_of_birth": "",
+        "medical_record_number": "",
+        "gender": "",
+        "contact_information": ""
+      },
+      "hospitalization": {
+        "admission_date": "",
+        "discharge_date": ""
+      },
+      "diagnoses": [],
+      "symptoms": [],
+      "medical_conditions": [],
+      "allergies": [],
+      "medications": [
+        {
+          "name": "Atorvastatin",
+          "dosage": "10mg",
+          "frequency": "1-1-1",
+          "duration": "",
+          "route": "",
+          "purpose": "",
+          "adverse_effects": []
+        },
+        {
+          "name": "Cetirizine",
+          "dosage": "500mg",
+          "frequency": "0-1-0",
+          "duration": "",
+          "route": "",
+          "purpose": "",
+          "adverse_effects": []
+        }
+      ],
+      "procedures": [],
+      "investigations": {
+        "imaging": [],
+        "laboratory_tests": [],
+        "laboratory_results": []
+      },
+      "anatomy": [],
+      "biomarkers": [],
+      "physicians": [
+        "R Melta"
+      ]
+    },
+    "treatment_english": "Atorvastatin is commonly used to help lower cholesterol and reduce cardiovascular risk. Cetirizine is commonly used to relieve allergy symptoms.",
+    "treatment_hindi": "Atorvastatin का उपयोग कोलेस्ट्रॉल कम करने और हृदय संबंधी जोखिम को कम करने के लिए किया जाता है। Cetirizine का उपयोग एलर्जी के लक्षणों से राहत देने के लिए किया जाता है।"
   },
   {
-    "english": {
+    "image": "prescription_100.png",
+    "ocr_text": "Dr. R. Mehta MBBS MD Px Tab Atorvastatin 500mg 1-0-0 Tab Atorvastatin 250mg 1-1-1",
+    "medical_information": {
       "patient": {
-        "name": "Karen Yarrington",
-        "date_of_birth": "January 1, 1970",
-        "medical_record_number": "Q1039",
-        "gender": "Male",
-        "contact_information": []
+        "name": "",
+        "date_of_birth": "",
+        "medical_record_number": "",
+        "gender": "",
+        "contact_information": ""
       },
       "hospitalization": {
-        "admission_date": "April 10, 2023",
-        "discharge_date": "May 15, 2023"
+        "admission_date": "",
+        "discharge_date": ""
       },
-      "diagnoses": [
-        "Stage III Urothelial Carcinoma (Bladder Cancer)",
-        "high-grade urothelial carcinoma",
-        "urothelial carcinoma"
-      ],
-      "symptoms": [
-        "blood in the urine",
-        "pelvic pain",
-        "blood in his urine",
-        "nausea",
-        "fatigue"
-      ],
-      "medical_conditions": [
-        "high blood pressure",
-        "type 2 diabetes",
-        "gallstones",
-        "cardiovascular disease",
-        "a condition where the body does not have enough fluid"
-      ],
-      "allergies": [
-        "penicillin",
-        "sulfa drugs"
-      ],
+      "diagnoses": [],
+      "symptoms": [],
+      "medical_conditions": [],
+      "allergies": [],
       "medications": [
         {
-          "name": "lisinopril",
-          "dosage": "10 mg daily",
-          "frequency": "",
+          "name": "Atorvastatin",
+          "dosage": "500mg",
+          "frequency": "1-0-0",
           "duration": "",
           "route": "",
-          "purpose": "high blood pressure",
+          "purpose": "",
           "adverse_effects": []
         },
         {
-          "name": "metformin",
-          "dosage": "500 mg twice daily",
-          "frequency": "",
+          "name": "Atorvastatin",
+          "dosage": "250mg",
+          "frequency": "1-1-1",
           "duration": "",
           "route": "",
-          "purpose": "type 2 diabetes",
+          "purpose": "",
           "adverse_effects": []
-        },
-        {
-          "name": "a strong medicine used to relieve pain",
-          "dosage": "intravenous",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "Pain control",
-          "adverse_effects": []
-        },
-        {
-          "name": "a medicine used to relieve pain and reduce fever",
-          "dosage": "oral",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "Pain control",
-          "adverse_effects": []
-        },
-        {
-          "name": "a chemotherapy medicine used to treat cancer",
-          "dosage": "",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "medicines used to treat cancer",
-          "adverse_effects": [
-            "nausea",
-            "fatigue"
-          ]
-        },
-        {
-          "name": "a chemotherapy medicine used to treat cancer",
-          "dosage": "",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "medicines used to treat cancer",
-          "adverse_effects": [
-            "nausea",
-            "fatigue"
-          ]
-        },
-        {
-          "name": "a medicine that can be used in cancer treatment",
-          "dosage": "",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "medicines used to treat cancer",
-          "adverse_effects": [
-            "nausea",
-            "fatigue"
-          ]
         }
       ],
-      "procedures": [
-        "cholecystectomy",
-        "Radical cystectomy",
-        "a surgically created pathway that carries urine out of the body"
-      ],
+      "procedures": [],
       "investigations": {
-        "imaging": [
-          "an imaging test that creates detailed pictures inside the body",
-          "an imaging test that creates detailed pictures of organs and tissues"
-        ],
-        "laboratory_tests": [
-          "urinalysis",
-          "cystoscopy",
-          "removing a small tissue sample to check for disease",
-          "Blood Tests",
-          "Pathology Reports"
-        ],
-        "laboratory_results": [
-          "blood in the urine",
-          "high-grade urothelial carcinoma",
-          "a blood test that can indicate inflammation",
-          "normal renal function",
-          "stable blood glucose levels"
-        ]
+        "imaging": [],
+        "laboratory_tests": [],
+        "laboratory_results": []
       },
-      "anatomy": [
-        "bladder",
-        "lower abdomen",
-        "small structure that helps the body fight infection",
-        "muscularis propria",
-        "liver",
-        "lungs",
-        "prostate",
-        "seminal vesicles",
-        "a surgically created pathway that carries urine out of the body"
-      ],
-      "biomarkers": [
-        "a blood test that can indicate inflammation"
-      ],
+      "anatomy": [],
+      "biomarkers": [],
       "physicians": [
-        "Dr. James Rowe"
+        "R"
       ]
     },
-    "hindi": {
+    "simplified_information": {
       "patient": {
-        "name": "करेन यारिंगन",
-        "date_of_birth": "जनवरी 1, 1970",
-        "medical_record_number": "क्यू109",
-        "gender": "पुरूष",
-        "contact_information": []
+        "name": "",
+        "date_of_birth": "",
+        "medical_record_number": "",
+        "gender": "",
+        "contact_information": ""
       },
       "hospitalization": {
-        "admission_date": "10 अप्रैल, 2023",
-        "discharge_date": "15 मई, 2023"
+        "admission_date": "",
+        "discharge_date": ""
       },
-      "diagnoses": [
-        "स्टेज III यूथिक कारमा (ब्लूडर कैंसर)",
-        "उच्च- वर्षीय यूरोक्लोल कारमा",
-        "यूरोलल कारमा"
-      ],
-      "symptoms": [
-        "मूत्र में लहू",
-        "एलआईएससी दर्द",
-        "अपने मूत्र में रक्‍त",
-        "ए. डी.",
-        "थकान"
-      ],
-      "medical_conditions": [
-        "हाई ब्लड प्रेशर",
-        "टाइप 2 डायबिटीज़",
-        "विशाल पत्थर",
-        "निराशा की भावनाओं पर काबू पाना",
-        "एक ऐसी स्थिति जहाँ शरीर में पर्याप्त द्रव नहीं होता"
-      ],
-      "allergies": [
-        "पेनिन",
-        "यूफ्फा ड्रग्स"
-      ],
+      "diagnoses": [],
+      "symptoms": [],
+      "medical_conditions": [],
+      "allergies": [],
       "medications": [
         {
-          "name": "नील नदी",
-          "dosage": "10 मी दिन",
-          "frequency": "",
+          "name": "Atorvastatin",
+          "dosage": "500mg",
+          "frequency": "1-0-0",
           "duration": "",
           "route": "",
-          "purpose": "हाई ब्लड प्रेशर",
+          "purpose": "",
           "adverse_effects": []
         },
         {
-          "name": "एक्ज़िट",
-          "dosage": "500 रुपए प्रति दिन",
-          "frequency": "",
+          "name": "Atorvastatin",
+          "dosage": "250mg",
+          "frequency": "1-1-1",
           "duration": "",
           "route": "",
-          "purpose": "टाइप 2 डायबिटीज़",
+          "purpose": "",
           "adverse_effects": []
-        },
-        {
-          "name": "दर्द से राहत पाने के लिए इस्तेमाल किया गया एक मज़बूत दवा",
-          "dosage": "विक्षोभ",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "दर्द नियंत्रण",
-          "adverse_effects": []
-        },
-        {
-          "name": "दर्द से राहत पाने और बुखार कम करने के लिए एक दवा",
-          "dosage": "मौखिक",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "दर्द नियंत्रण",
-          "adverse_effects": []
-        },
-        {
-          "name": "कैंसर का इलाज करने के लिए इस्तेमाल किया जाता था",
-          "dosage": "",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "कैंसर का इलाज करने के लिए इस्तेमाल किए गए दवाइयाँ",
-          "adverse_effects": [
-            "ए. डी.",
-            "थकान"
-          ]
-        },
-        {
-          "name": "कैंसर का इलाज करने के लिए इस्तेमाल किया जाता था",
-          "dosage": "",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "कैंसर का इलाज करने के लिए इस्तेमाल किए गए दवाइयाँ",
-          "adverse_effects": [
-            "ए. डी.",
-            "थकान"
-          ]
-        },
-        {
-          "name": "कैंसर के इलाज में एक दवा का इस्तेमाल किया जा सकता है",
-          "dosage": "",
-          "frequency": "",
-          "duration": "",
-          "route": "",
-          "purpose": "कैंसर का इलाज करने के लिए इस्तेमाल किए गए दवाइयाँ",
-          "adverse_effects": [
-            "ए. डी.",
-            "थकान"
-          ]
         }
       ],
-      "procedures": [
-        "सी. एच.",
-        "रेडिकल क्रीज",
-        "ऑपरेशन के लिए तैयार किया गया एक रास्ता जो शरीर से मल निकाल लेता है"
-      ],
+      "procedures": [],
       "investigations": {
-        "imaging": [
-          "एक इमेजिंग जाँच जो शरीर के भीतर विस्तृत चित्र बनाता है",
-          "एक भरोसेमंद जाँच जो अंगों और ऊतकों की विस्तृत तसवीरें बनाता है"
-        ],
-        "laboratory_tests": [
-          "सेीनाasia. kgm",
-          "रंग की नक़ल",
-          "बीमारी की जाँच करने के लिए एक छोटा सा ऊतक नमूना हटा दें",
-          "खून का परीक्षण",
-          "पथमांस अस्पैंड करता है"
-        ],
-        "laboratory_results": [
-          "मूत्र में लहू",
-          "उच्च- वर्षीय यूरोक्लोल कारमा",
-          "रक्‍त परीक्षा जो उत्पन्‍न कर सकती है",
-          "सामान्य रीनल फंक्शन",
-          "स्थिर खून में बदलाव स्तर"
-        ]
+        "imaging": [],
+        "laboratory_tests": [],
+        "laboratory_results": []
       },
-      "anatomy": [
-        "बलाडर",
-        "पेट कम करें",
-        "छोटे - छोटे संरचना जो शरीर को संक्रमण से लड़ने में मदद करती है",
-        "निर्माण - कार्य",
-        "कलेजे",
-        "फेफड़ों",
-        "प्रोटेस्टंटल",
-        "यू. एस.",
-        "ऑपरेशन के लिए तैयार किया गया एक रास्ता जो शरीर से मल निकाल लेता है"
-      ],
-      "biomarkers": [
-        "रक्‍त परीक्षा जो उत्पन्‍न कर सकती है"
-      ],
+      "anatomy": [],
+      "biomarkers": [],
       "physicians": [
-        "जेम्स पंक्ति डॉ."
+        "R"
       ]
     },
-    "treatment_english": "Drink small amounts of fluids frequently and eat light foods. Consult a doctor if vomiting or severe symptoms occur.",
-    "treatment_hindi": "एक डॉक्टर से सलाह लीजिए कि अगर वह उलटी - सीधी हो या गंभीर लक्षणों से दूर हो जाएँ, तो डॉक्टर से सलाह लीजिए ।"
+    "hindi_information": {
+      "patient": {
+        "name": "",
+        "date_of_birth": "",
+        "medical_record_number": "",
+        "gender": "",
+        "contact_information": ""
+      },
+      "hospitalization": {
+        "admission_date": "",
+        "discharge_date": ""
+      },
+      "diagnoses": [],
+      "symptoms": [],
+      "medical_conditions": [],
+      "allergies": [],
+      "medications": [
+        {
+          "name": "Atorvastatin",
+          "dosage": "500mg",
+          "frequency": "1-0-0",
+          "duration": "",
+          "route": "",
+          "purpose": "",
+          "adverse_effects": []
+        },
+        {
+          "name": "Atorvastatin",
+          "dosage": "250mg",
+          "frequency": "1-1-1",
+          "duration": "",
+          "route": "",
+          "purpose": "",
+          "adverse_effects": []
+        }
+      ],
+      "procedures": [],
+      "investigations": {
+        "imaging": [],
+        "laboratory_tests": [],
+        "laboratory_results": []
+      },
+      "anatomy": [],
+      "biomarkers": [],
+      "physicians": [
+        "R"
+      ]
+    },
+    "treatment_english": "Atorvastatin is commonly used to help lower cholesterol and reduce cardiovascular risk. Atorvastatin is commonly used to help lower cholesterol and reduce cardiovascular risk.",
+    "treatment_hindi": "Atorvastatin का उपयोग कोलेस्ट्रॉल कम करने और हृदय संबंधी जोखिम को कम करने के लिए किया जाता है। Atorvastatin का उपयोग कोलेस्ट्रॉल कम करने और हृदय संबंधी जोखिम को कम करने के लिए किया जाता है।"
+  },
+  {
+    "image": "prescription_1000.png",
+    "ocr_text": "Dr. SPatel MBBS, MD Rx Tab Atorvastatin 500mg 1-1-1 Tab (buprofen 40mg 0-0-1 Tab Paracetamol 10mg 1-0-1",
+    "medical_information": {
+      "patient": {
+        "name": "",
+        "date_of_birth": "",
+        "medical_record_number": "",
+        "gender": "",
+        "contact_information": ""
+      },
+      "hospitalization": {
+        "admission_date": "",
+        "discharge_date": ""
+      },
+      "diagnoses": [],
+      "symptoms": [],
+      "medical_conditions": [],
+      "allergies": [],
+      "medications": [
+        {
+          "name": "Atorvastatin",
+          "dosage": "500mg",
+          "frequency": "1-1-1",
+          "duration": "",
+          "route": "",
+          "purpose": "",
+          "adverse_effects": []
+        },
+        {
+          "name": "Paracetamol",
+          "dosage": "10mg",
+          "frequency": "1-0-1",
+          "duration": "",
+          "route": "",
+          "purpose": "",
+          "adverse_effects": []
+        }
+      ],
+      "procedures": [],
+      "investigations": {
+        "imaging": [],
+        "laboratory_tests": [],
+        "laboratory_results": []
+      },
+      "anatomy": [],
+      "biomarkers": [],
+      "physicians": [
+        "SPatel MBBS"
+      ]
+    },
+    "simplified_information": {
+      "patient": {
+        "name": "",
+        "date_of_birth": "",
+        "medical_record_number": "",
+        "gender": "",
+        "contact_information": ""
+      },
+      "hospitalization": {
+        "admission_date": "",
+        "discharge_date": ""
+      },
+      "diagnoses": [],
+      "symptoms": [],
+      "medical_conditions": [],
+      "allergies": [],
+      "medications": [
+        {
+          "name": "Atorvastatin",
+          "dosage": "500mg",
+          "frequency": "1-1-1",
+          "duration": "",
+          "route": "",
+          "purpose": "",
+          "adverse_effects": []
+        },
+        {
+          "name": "Paracetamol",
+          "dosage": "10mg",
+          "frequency": "1-0-1",
+          "duration": "",
+          "route": "",
+          "purpose": "",
+          "adverse_effects": []
+        }
+      ],
+      "procedures": [],
+      "investigations": {
+        "imaging": [],
+        "laboratory_tests": [],
+        "laboratory_results": []
+      },
+      "anatomy": [],
+      "biomarkers": [],
+      "physicians": [
+        "SPatel MBBS"
+      ]
+    },
+    "hindi_information": {
+      "patient": {
+        "name": "",
+        "date_of_birth": "",
+        "medical_record_number": "",
+        "gender": "",
+        "contact_information": ""
+      },
+      "hospitalization": {
+        "admission_date": "",
+        "discharge_date": ""
+      },
+      "diagnoses": [],
+      "symptoms": [],
+      "medical_conditions": [],
+      "allergies": [],
+      "medications": [
+        {
+          "name": "Atorvastatin",
+          "dosage": "500mg",
+          "frequency": "1-1-1",
+          "duration": "",
+          "route": "",
+          "purpose": "",
+          "adverse_effects": []
+        },
+        {
+          "name": "Paracetamol",
+          "dosage": "10mg",
+          "frequency": "1-0-1",
+          "duration": "",
+          "route": "",
+          "purpose": "",
+          "adverse_effects": []
+        }
+      ],
+      "procedures": [],
+      "investigations": {
+        "imaging": [],
+        "laboratory_tests": [],
+        "laboratory_results": []
+      },
+      "anatomy": [],
+      "biomarkers": [],
+      "physicians": [
+        "SPatel MBBS"
+      ]
+    },
+    "treatment_english": "Atorvastatin is commonly used to help lower cholesterol and reduce cardiovascular risk. Paracetamol is commonly used to relieve pain and reduce fever.",
+    "treatment_hindi": "Atorvastatin का उपयोग कोलेस्ट्रॉल कम करने और हृदय संबंधी जोखिम को कम करने के लिए किया जाता है। Paracetamol का उपयोग दर्द से राहत देने और बुखार कम करने के लिए किया जाता है।"
   }
 ]

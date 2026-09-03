@@ -1,613 +1,260 @@
 [
   {
     "patient": {
-      "name": "Mary Spagnuolo",
-      "date_of_birth": "January 1, 1970",
-      "medical_record_number": "Q1159",
+      "name": "",
+      "date_of_birth": "",
+      "medical_record_number": "",
       "gender": "",
-      "contact_information": []
+      "contact_information": ""
     },
     "hospitalization": {
-      "admission_date": "June 1, 2023",
-      "discharge_date": "June 20, 2023"
+      "admission_date": "",
+      "discharge_date": ""
     },
-    "diagnoses": [
-      "Metastatic Colorectal Cancer",
-      "adenocarcinoma of the colon"
-    ],
-    "symptoms": [
-      "progressive abdominal pain",
-      "unintended weight loss",
-      "changes in bowel habits",
-      "intermittent cramping discomfort",
-      "constant and severe pain",
-      "decline in her appetite",
-      "bloating",
-      "nausea",
-      "occasional episodes of rectal bleeding"
-    ],
-    "medical_conditions": [
-      "hypertension",
-      "gastroesophageal reflux disease (GERD)"
-    ],
+    "diagnoses": [],
+    "symptoms": [],
+    "medical_conditions": [],
     "allergies": [],
     "medications": [
       {
-        "name": "lisinopril",
-        "dosage": "daily",
-        "frequency": "",
+        "name": "Omeprazole",
+        "dosage": "500mg",
+        "frequency": "1-0-0",
         "duration": "",
         "route": "",
-        "purpose": "hypertension",
+        "purpose": "",
         "adverse_effects": []
       },
       {
-        "name": "omeprazole",
-        "dosage": "occasional use",
-        "frequency": "",
+        "name": "Paracetamol",
+        "dosage": "10mg",
+        "frequency": "0-1-0",
         "duration": "",
         "route": "",
-        "purpose": "gastroesophageal reflux disease (GERD)",
+        "purpose": "",
         "adverse_effects": []
       },
       {
-        "name": "FOLFOX",
-        "dosage": "every three weeks for six cycles",
-        "frequency": "",
+        "name": "Pantoprazole",
+        "dosage": "200mg",
+        "frequency": "0-0-1",
         "duration": "",
         "route": "",
-        "purpose": "colorectal cancer",
+        "purpose": "",
         "adverse_effects": []
       }
     ],
-    "procedures": [
-      "appendectomy",
-      "right hemicolectomy"
-    ],
+    "procedures": [],
     "investigations": {
-      "imaging": [
-        "CT scan"
-      ],
-      "laboratory_tests": [
-        "Blood Tests",
-        "C-reactive protein (CRP)",
-        "carcinoembryonic antigen (CEA)"
-      ],
-      "laboratory_results": [
-        "Elevated C-reactive protein (CRP)",
-        "elevated carcinoembryonic antigen (CEA)",
-        "6 cm mass in the ascending colon"
-      ]
+      "imaging": [],
+      "laboratory_tests": [],
+      "laboratory_results": []
     },
-    "anatomy": [
-      "abdomen",
-      "ascending colon",
-      "regional lymph nodes",
-      "liver"
-    ],
-    "biomarkers": [
-      "C-reactive protein (CRP)",
-      "carcinoembryonic antigen (CEA)"
-    ],
+    "anatomy": [],
+    "biomarkers": [],
     "physicians": [
-      "Dr. Craig Doland"
+      "S Patel"
     ]
   },
   {
     "patient": {
-      "name": "Vernon Rodney",
-      "date_of_birth": "January 1, 1970",
-      "medical_record_number": "Q1152",
+      "name": "",
+      "date_of_birth": "",
+      "medical_record_number": "",
       "gender": "",
-      "contact_information": []
+      "contact_information": ""
     },
     "hospitalization": {
-      "admission_date": "March 20, 2023",
-      "discharge_date": "April 10, 2023"
+      "admission_date": "",
+      "discharge_date": ""
     },
-    "diagnoses": [
-      "Stage III Colon Cancer with Metastasis to the Liver",
-      "adenocarcinoma of the colon with hepatic involvement",
-      "colorectal cancer"
-    ],
-    "symptoms": [
-      "abdominal pain",
-      "nausea",
-      "unexplained weight loss",
-      "intermittent fevers",
-      "changes in bowel habits",
-      "constipation",
-      "diarrhea"
-    ],
-    "medical_conditions": [
-      "hypertension",
-      "systemic inflammation",
-      "malnutrition"
-    ],
-    "allergies": [
-      "penicillin",
-      "sulfa drugs"
-    ],
-    "medications": [
-      {
-        "name": "lisinopril",
-        "dosage": "10 mg daily",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "hypertension",
-        "adverse_effects": []
-      },
-      {
-        "name": "aspirin",
-        "dosage": "",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "cardiovascular prophylaxis",
-        "adverse_effects": [
-          "risk of bleeding"
-        ]
-      },
-      {
-        "name": "FOLFOX",
-        "dosage": "four cycles over the next six months",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "colorectal cancer",
-        "adverse_effects": [
-          "mild nausea",
-          "fatigue"
-        ]
-      },
-      {
-        "name": "vitamin B12 supplements",
-        "dosage": "",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "risk from chemotherapy",
-        "adverse_effects": []
-      }
-    ],
-    "procedures": [
-      "Right hemicolectomy"
-    ],
-    "investigations": {
-      "imaging": [
-        "CT scan"
-      ],
-      "laboratory_tests": [
-        "Blood Tests",
-        "Biopsy"
-      ],
-      "laboratory_results": [
-        "elevated C-reactive protein (120 mg/L)",
-        "elevated white blood cell count (15,000 cells/µL)",
-        "low hemoglobin levels (9.8 g/dL)"
-      ]
-    },
-    "anatomy": [
-      "colon",
-      "liver",
-      "abdomen",
-      "lymph nodes"
-    ],
-    "biomarkers": [
-      "C-reactive protein",
-      "white blood cell count",
-      "hemoglobin"
-    ],
-    "physicians": [
-      "Dr. Shelly Pierre"
-    ]
-  },
-  {
-    "patient": {
-      "name": "Roger Castillo",
-      "date_of_birth": "January 1, 1970",
-      "medical_record_number": "Q1240",
-      "gender": "",
-      "contact_information": []
-    },
-    "hospitalization": {
-      "admission_date": "April 15, 2023",
-      "discharge_date": "May 20, 2023"
-    },
-    "diagnoses": [
-      "Stage III Colorectal Cancer",
-      "colorectal cancer",
-      "adenocarcinoma",
-      "anemia"
-    ],
-    "symptoms": [
-      "abdominal pain",
-      "unexplained weight loss",
-      "intermittent rectal bleeding",
-      "fatigue",
-      "inability to maintain adequate nutrition",
-      "moderate pain",
-      "nausea"
-    ],
-    "medical_conditions": [
-      "hypertension",
-      "diabetes mellitus type 2",
-      "mild infection at the surgical site",
-      "bowel obstruction",
-      "dehydration"
-    ],
-    "allergies": [
-      "penicillin"
-    ],
+    "diagnoses": [],
+    "symptoms": [],
+    "medical_conditions": [],
+    "allergies": [],
     "medications": [
       {
         "name": "Metformin",
-        "dosage": "500 mg twice daily",
-        "frequency": "",
+        "dosage": "250mg",
+        "frequency": "1-1-1",
         "duration": "",
         "route": "",
-        "purpose": "diabetes mellitus type 2",
+        "purpose": "",
         "adverse_effects": []
       },
       {
-        "name": "Lisinopril",
-        "dosage": "20 mg once daily",
-        "frequency": "",
+        "name": "Fbuprofen",
+        "dosage": "10mg",
+        "frequency": "1-1-1",
         "duration": "",
         "route": "",
-        "purpose": "hypertension",
+        "purpose": "",
         "adverse_effects": []
       },
       {
-        "name": "FOLFOX regimen",
-        "dosage": "",
-        "frequency": "",
+        "name": "Ibuprofen",
+        "dosage": "500mg",
+        "frequency": "0-0-1",
         "duration": "",
         "route": "",
-        "purpose": "colorectal cancer",
-        "adverse_effects": [
-          "mild fatigue"
-        ]
-      },
-      {
-        "name": "Antibiotics",
-        "dosage": "",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "infection",
-        "adverse_effects": []
-      },
-      {
-        "name": "morphine",
-        "dosage": "intravenous",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "moderate pain",
-        "adverse_effects": []
-      },
-      {
-        "name": "acetaminophen",
-        "dosage": "oral",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "moderate pain",
+        "purpose": "",
         "adverse_effects": []
       }
     ],
-    "procedures": [
-      "Resection of the sigmoid colon and affected lymph nodes",
-      "Hartmann's procedure",
-      "ileostomy created"
-    ],
+    "procedures": [],
     "investigations": {
-      "imaging": [
-        "CT scan"
-      ],
-      "laboratory_tests": [
-        "colonoscopy",
-        "biopsy",
-        "Blood tests",
-        "Liver function tests"
-      ],
-      "laboratory_results": [
-        "anemia (Hb 8.5 g/dL)",
-        "elevated C-reactive protein (CRP)",
-        "normal liver function tests",
-        "normal renal function"
-      ]
+      "imaging": [],
+      "laboratory_tests": [],
+      "laboratory_results": []
     },
-    "anatomy": [
-      "sigmoid colon",
-      "lymph node",
-      "liver",
-      "bowel"
-    ],
-    "biomarkers": [
-      "C-reactive protein (CRP)"
-    ],
+    "anatomy": [],
+    "biomarkers": [],
     "physicians": [
-      "Dr. Raymond Arnold"
+      "KVerma MBBS"
     ]
   },
   {
     "patient": {
-      "name": "Ismael Landry",
-      "date_of_birth": "January 2, 1975",
-      "medical_record_number": "Q1296",
+      "name": "",
+      "date_of_birth": "",
+      "medical_record_number": "",
       "gender": "",
-      "contact_information": []
+      "contact_information": ""
     },
     "hospitalization": {
-      "admission_date": "February 15, 2023",
-      "discharge_date": "March 15, 2023"
+      "admission_date": "",
+      "discharge_date": ""
     },
-    "diagnoses": [
-      "Colon Cancer with Metastasis",
-      "colorectal cancer",
-      "anemia",
-      "urinary tract infection"
-    ],
-    "symptoms": [
-      "persistent abdominal pain",
-      "unexplained weight loss",
-      "fatigue",
-      "occasional nausea",
-      "changes in bowel habits",
-      "intermittent diarrhea",
-      "constipation",
-      "jaundice"
-    ],
-    "medical_conditions": [
-      "hypertension",
-      "poorly differentiated adenocarcinoma",
-      "post-operative ileus"
-    ],
-    "allergies": [
-      "penicillin"
-    ],
+    "diagnoses": [],
+    "symptoms": [],
+    "medical_conditions": [],
+    "allergies": [],
     "medications": [
       {
-        "name": "lisinopril",
-        "dosage": "",
-        "frequency": "",
+        "name": "Atorvastatin",
+        "dosage": "10mg",
+        "frequency": "1-1-1",
         "duration": "",
         "route": "",
-        "purpose": "hypertension",
+        "purpose": "",
         "adverse_effects": []
       },
       {
-        "name": "FOLFOX",
-        "dosage": "in cycles every two weeks over a period of six months",
-        "frequency": "",
+        "name": "Cetirizine",
+        "dosage": "500mg",
+        "frequency": "0-1-0",
         "duration": "",
         "route": "",
-        "purpose": "primary tumor",
-        "adverse_effects": [
-          "nausea",
-          "fatigue",
-          "mild neutropenia"
-        ]
-      },
-      {
-        "name": "antiemetics",
-        "dosage": "",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "nausea",
-        "adverse_effects": []
-      },
-      {
-        "name": "growth factors",
-        "dosage": "",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "mild neutropenia",
-        "adverse_effects": []
-      },
-      {
-        "name": "antibiotic therapy",
-        "dosage": "",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "urinary tract infection",
+        "purpose": "",
         "adverse_effects": []
       }
     ],
-    "procedures": [
-      "appendectomy surgery",
-      "right hemicolectomy with resection of the primary colonic lesion and regional lymph nodes"
-    ],
+    "procedures": [],
     "investigations": {
-      "imaging": [
-        "CT scans",
-        "MRI"
-      ],
-      "laboratory_tests": [
-        "blood tests",
-        "Biopsies",
-        "fine-needle aspiration",
-        "Genetic testing"
-      ],
-      "laboratory_results": [
-        "elevated CEA (carcinoembryonic antigen) levels",
-        "slightly reduced hemoglobin",
-        "poorly differentiated adenocarcinoma"
-      ]
+      "imaging": [],
+      "laboratory_tests": [],
+      "laboratory_results": []
     },
-    "anatomy": [
-      "lower abdomen",
-      "descending colon",
-      "regional lymph nodes",
-      "liver",
-      "colonic lesion",
-      "liver nodules",
-      "bowel"
-    ],
-    "biomarkers": [
-      "CEA (carcinoembryonic antigen)",
-      "hemoglobin"
-    ],
+    "anatomy": [],
+    "biomarkers": [],
     "physicians": [
-      "Dr. Leonor Ward"
+      "R Melta"
     ]
   },
   {
     "patient": {
-      "name": "Karen Yarrington",
-      "date_of_birth": "January 1, 1970",
-      "medical_record_number": "Q1039",
-      "gender": "Male",
-      "contact_information": []
+      "name": "",
+      "date_of_birth": "",
+      "medical_record_number": "",
+      "gender": "",
+      "contact_information": ""
     },
     "hospitalization": {
-      "admission_date": "April 10, 2023",
-      "discharge_date": "May 15, 2023"
+      "admission_date": "",
+      "discharge_date": ""
     },
-    "diagnoses": [
-      "Stage III Urothelial Carcinoma (Bladder Cancer)",
-      "high-grade urothelial carcinoma",
-      "urothelial carcinoma"
-    ],
-    "symptoms": [
-      "hematuria",
-      "pelvic pain",
-      "blood in his urine",
-      "nausea",
-      "fatigue"
-    ],
-    "medical_conditions": [
-      "hypertension",
-      "type II diabetes mellitus",
-      "gallstones",
-      "cardiovascular disease",
-      "dehydration"
-    ],
-    "allergies": [
-      "penicillin",
-      "sulfa drugs"
-    ],
+    "diagnoses": [],
+    "symptoms": [],
+    "medical_conditions": [],
+    "allergies": [],
     "medications": [
       {
-        "name": "lisinopril",
-        "dosage": "10 mg daily",
-        "frequency": "",
+        "name": "Atorvastatin",
+        "dosage": "500mg",
+        "frequency": "1-0-0",
         "duration": "",
         "route": "",
-        "purpose": "hypertension",
+        "purpose": "",
         "adverse_effects": []
       },
       {
-        "name": "metformin",
-        "dosage": "500 mg twice daily",
-        "frequency": "",
+        "name": "Atorvastatin",
+        "dosage": "250mg",
+        "frequency": "1-1-1",
         "duration": "",
         "route": "",
-        "purpose": "type II diabetes mellitus",
+        "purpose": "",
         "adverse_effects": []
-      },
-      {
-        "name": "morphine",
-        "dosage": "intravenous",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "Pain control",
-        "adverse_effects": []
-      },
-      {
-        "name": "acetaminophen",
-        "dosage": "oral",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "Pain control",
-        "adverse_effects": []
-      },
-      {
-        "name": "cisplatin",
-        "dosage": "",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "Neoadjuvant chemotherapy",
-        "adverse_effects": [
-          "nausea",
-          "fatigue"
-        ]
-      },
-      {
-        "name": "gemcitabine",
-        "dosage": "",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "Neoadjuvant chemotherapy",
-        "adverse_effects": [
-          "nausea",
-          "fatigue"
-        ]
-      },
-      {
-        "name": "methotrexate",
-        "dosage": "",
-        "frequency": "",
-        "duration": "",
-        "route": "",
-        "purpose": "Neoadjuvant chemotherapy",
-        "adverse_effects": [
-          "nausea",
-          "fatigue"
-        ]
       }
     ],
-    "procedures": [
-      "cholecystectomy",
-      "Radical cystectomy",
-      "ileal conduit construction"
-    ],
+    "procedures": [],
     "investigations": {
-      "imaging": [
-        "CT scans",
-        "MRI"
-      ],
-      "laboratory_tests": [
-        "urinalysis",
-        "cystoscopy",
-        "Biopsy",
-        "Blood Tests",
-        "Pathology Reports"
-      ],
-      "laboratory_results": [
-        "gross hematuria",
-        "high-grade urothelial carcinoma",
-        "Elevated levels of C-reactive protein (CRP)",
-        "normal renal function",
-        "stable blood glucose levels"
-      ]
+      "imaging": [],
+      "laboratory_tests": [],
+      "laboratory_results": []
     },
-    "anatomy": [
-      "bladder",
-      "lower abdomen",
-      "lymph node",
-      "muscularis propria",
-      "liver",
-      "lungs",
-      "prostate",
-      "seminal vesicles",
-      "ileal conduit"
-    ],
-    "biomarkers": [
-      "C-reactive protein (CRP)"
-    ],
+    "anatomy": [],
+    "biomarkers": [],
     "physicians": [
-      "Dr. James Rowe"
+      "R"
+    ]
+  },
+  {
+    "patient": {
+      "name": "",
+      "date_of_birth": "",
+      "medical_record_number": "",
+      "gender": "",
+      "contact_information": ""
+    },
+    "hospitalization": {
+      "admission_date": "",
+      "discharge_date": ""
+    },
+    "diagnoses": [],
+    "symptoms": [],
+    "medical_conditions": [],
+    "allergies": [],
+    "medications": [
+      {
+        "name": "Atorvastatin",
+        "dosage": "500mg",
+        "frequency": "1-1-1",
+        "duration": "",
+        "route": "",
+        "purpose": "",
+        "adverse_effects": []
+      },
+      {
+        "name": "Paracetamol",
+        "dosage": "10mg",
+        "frequency": "1-0-1",
+        "duration": "",
+        "route": "",
+        "purpose": "",
+        "adverse_effects": []
+      }
+    ],
+    "procedures": [],
+    "investigations": {
+      "imaging": [],
+      "laboratory_tests": [],
+      "laboratory_results": []
+    },
+    "anatomy": [],
+    "biomarkers": [],
+    "physicians": [
+      "SPatel MBBS"
     ]
   }
 ]
