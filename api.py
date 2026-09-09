@@ -1,128 +1,19 @@
 from fastapi import FastAPI, HTTPException, UploadFile, File, Depends, status
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from sqlalchemy import desc, text, Column, Integer, String
+from sqlalchemy import desc, Column, Integer, String
 from pydantic import BaseModel
 from datetime import datetime, timedelta
 import os
 import shutil
 import hashlib
 import secrets
+
 from jose import JWTError, jwt
 
 from database import engine, Base, get_db
 from models import Document, MedicalExtraction
-
-
-# ========================================
-# AUTHENTICATION & ROLE AUTHORIZATION
-# ========================================
-
-SECRET_KEY = "CHANGE_THIS_TO_A_LONG_RANDOM_SECRET_KEY"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
-
-class User(Base):
-    __tablename__ = "users"
-
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, nullable=False, index=True)
-    password_hash = Column(String, nullable=False)
-    role = Column(String, nullable=False, default="patient")
-
-
-class UserCreate(BaseModel):
-    username: str
-    password: str
-    role: str = "patient"
-
-
-def hash_password(password: str):
-    salt = secrets.token_hex(16)
-    password_hash = hashlib.pbkdf2_hmac(
-        "sha256",
-        password.encode(),
-        salt.encode(),
-        100000
-    ).hex()
-    return f"{salt}${password_hash}"
-
-
-def verify_password(password: str, stored_hash: str):
-    try:
-        salt, stored = stored_hash.split("$", 1)
-        calculated = hashlib.pbkdf2_hmac(
-            "sha256",
-            password.encode(),
-            salt.encode(),
-            100000
-        ).hex()
-        return secrets.compare_digest(calculated, stored)
-    except Exception:
-        return False
-
-
-def create_access_token(data: dict):
-    payload = data.copy()
-    payload["exp"] = datetime.utcnow() + timedelta(
-        minutes=ACCESS_TOKEN_EXPIRE_MINUTES
-    )
-    return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
-
-
-def get_current_user(
-    token: str = Depends(oauth2_scheme),
-    db: Session = Depends(get_db)
-):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Invalid or expired authentication token",
-        headers={"WWW-Authenticate": "Bearer"}
-    )
-
-    try:
-        payload = jwt.decode(
-            token,
-            SECRET_KEY,
-            algorithms=[ALGORITHM]
-        )
-        username = payload.get("sub")
-        role = payload.get("role")
-
-        if not username or not role:
-            raise credentials_exception
-
-    except JWTError:
-        raise credentials_exception
-
-    user = db.query(User).filter(
-        User.username == username
-    ).first()
-
-    if not user:
-        raise credentials_exception
-
-    return user
-
-
-def require_roles(*allowed_roles):
-    def role_checker(
-        current_user: User = Depends(get_current_user)
-    ):
-        if current_user.role not in allowed_roles:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="You do not have permission to access this resource."
-            )
-        return current_user
-
-    return role_checker
-
-Base.metadata.create_all(
-    bind=engine
-)
 
 from ocr import extract_text
 from medical_extractor import extract_medical_information
@@ -132,1462 +23,497 @@ from translator import translate_to_hindi
 from treatment import generate_treatment
 
 
+# ============================================================
+# APP
+# ============================================================
+
 app = FastAPI(
-    title="AI Healthcare Assistance API",
-    description="AI-powered healthcare assistance for rural communities",
+    title="AI Healthcare Assistance Platform",
+    description="AI-powered healthcare assistance platform for rural communities",
     version="1.0.0"
 )
 
 
+# ============================================================
+# CORS
+# ============================================================
 
-# ========================================
-# AUTH APIs
-# ========================================
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+# ============================================================
+# DATABASE
+# ============================================================
+
+Base.metadata.create_all(bind=engine)
+
+
+# ============================================================
+# JWT CONFIGURATION
+# ============================================================
+
+SECRET_KEY = "CHANGE_THIS_TO_A_LONG_RANDOM_SECRET_KEY_123456789"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 60
+
+oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl="/auth/login"
+)
+
+
+# ============================================================
+# UPLOAD DIRECTORY
+# ============================================================
+
+UPLOAD_DIR = "uploads"
+
+os.makedirs(
+    UPLOAD_DIR,
+    exist_ok=True
+)
+
+
+# ============================================================
+# USER MODEL
+# ============================================================
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True
+    )
+
+    username = Column(
+        String,
+        unique=True,
+        nullable=False,
+        index=True
+    )
+
+    password_hash = Column(
+        String,
+        nullable=False
+    )
+
+    role = Column(
+        String,
+        nullable=False,
+        default="patient"
+    )
+
+
+# ============================================================
+# PATIENT MODEL
+# ============================================================
+
+class Patient(Base):
+    __tablename__ = "patients"
+
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True
+    )
+
+    name = Column(
+        String,
+        nullable=False
+    )
+
+    date_of_birth = Column(
+        String,
+        nullable=True
+    )
+
+    gender = Column(
+        String,
+        nullable=True
+    )
+
+    contact_information = Column(
+        String,
+        nullable=True
+    )
+
+
+Base.metadata.create_all(bind=engine)
+
+
+# ============================================================
+# PYDANTIC MODELS
+# ============================================================
+
+class UserCreate(BaseModel):
+    username: str
+    password: str
+    role: str = "patient"
+
+
+class PatientCreate(BaseModel):
+    name: str
+    date_of_birth: str = ""
+    gender: str = ""
+    contact_information: str = ""
+
+
+# ============================================================
+# PASSWORD FUNCTIONS
+# ============================================================
+
+def hash_password(password: str) -> str:
+
+    salt = secrets.token_hex(16)
+
+    password_hash = hashlib.pbkdf2_hmac(
+        "sha256",
+        password.encode("utf-8"),
+        salt.encode("utf-8"),
+        100000
+    )
+
+    return salt + ":" + password_hash.hex()
+
+
+def verify_password(
+    password: str,
+    stored_password: str
+) -> bool:
+
+    try:
+
+        salt, stored_hash = stored_password.split(":")
+
+        password_hash = hashlib.pbkdf2_hmac(
+            "sha256",
+            password.encode("utf-8"),
+            salt.encode("utf-8"),
+            100000
+        )
+
+        return secrets.compare_digest(
+            password_hash.hex(),
+            stored_hash
+        )
+
+    except Exception:
+
+        return False
+
+
+# ============================================================
+# JWT FUNCTIONS
+# ============================================================
+
+def create_access_token(
+    data: dict,
+    expires_delta: timedelta | None = None
+):
+
+    to_encode = data.copy()
+
+    if expires_delta:
+
+        expire = datetime.utcnow() + expires_delta
+
+    else:
+
+        expire = datetime.utcnow() + timedelta(
+            minutes=15
+        )
+
+    to_encode.update(
+        {
+            "exp": expire
+        }
+    )
+
+    return jwt.encode(
+        to_encode,
+        SECRET_KEY,
+        algorithm=ALGORITHM
+    )
+
+
+# ============================================================
+# CURRENT USER
+# ============================================================
+
+def get_current_user(
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_db)
+):
+
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={
+            "WWW-Authenticate": "Bearer"
+        }
+    )
+
+    try:
+
+        payload = jwt.decode(
+            token,
+            SECRET_KEY,
+            algorithms=[ALGORITHM]
+        )
+
+        username = payload.get(
+            "sub"
+        )
+
+        if username is None:
+
+            raise credentials_exception
+
+    except JWTError:
+
+        raise credentials_exception
+
+    user = (
+        db.query(User)
+        .filter(
+            User.username == username
+        )
+        .first()
+    )
+
+    if user is None:
+
+        raise credentials_exception
+
+    return user
+
+
+# ============================================================
+# ROLE AUTHORIZATION
+# ============================================================
+
+def require_roles(
+    *allowed_roles
+):
+
+    def role_checker(
+        current_user: User = Depends(
+            get_current_user
+        )
+    ):
+
+        if current_user.role not in allowed_roles:
+
+            raise HTTPException(
+                status_code=403,
+                detail="You do not have permission to access this resource."
+            )
+
+        return current_user
+
+    return role_checker
+
+
+# ============================================================
+# ROOT
+# ============================================================
+
+@app.get("/")
+def root():
+
+    return {
+        "message": "AI Healthcare Assistance Platform API",
+        "status": "running"
+    }
+
+
+# ============================================================
+# HEALTH
+# ============================================================
+
+@app.get("/health")
+def health():
+
+    return {
+        "status": "healthy",
+        "service": "AI Healthcare Assistance Platform"
+    }
+
+
+# ============================================================
+# REGISTER
+# ============================================================
 
 @app.post("/auth/register")
-def register_user(
+def register(
     user_data: UserCreate,
     db: Session = Depends(get_db)
 ):
-    allowed_roles = ["admin", "doctor", "patient"]
 
-    if user_data.role not in allowed_roles:
+    username = user_data.username.strip()
+
+    if not username:
+
         raise HTTPException(
             status_code=400,
-            detail="Role must be admin, doctor, or patient."
+            detail="Username cannot be empty"
         )
 
-    if db.query(User).filter(
-        User.username == user_data.username
-    ).first():
+    if len(user_data.password) < 4:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Password must contain at least 4 characters"
+        )
+
+    role = user_data.role.lower().strip()
+
+    if role not in [
+        "admin",
+        "doctor",
+        "patient"
+    ]:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Role must be admin, doctor, or patient"
+        )
+
+    existing_user = (
+        db.query(User)
+        .filter(
+            User.username == username
+        )
+        .first()
+    )
+
+    if existing_user:
+
         raise HTTPException(
             status_code=400,
             detail="Username already exists"
         )
 
-    # In production, admin accounts should be created only
-    # by an existing administrator.
-    user = User(
-        username=user_data.username,
-        password_hash=hash_password(user_data.password),
-        role=user_data.role
+    new_user = User(
+        username=username,
+        password_hash=hash_password(
+            user_data.password
+        ),
+        role=role
     )
 
-    db.add(user)
+    db.add(new_user)
     db.commit()
-    db.refresh(user)
+    db.refresh(new_user)
 
     return {
-        "status": "success",
         "message": "User registered successfully",
-        "user_id": user.id,
-        "username": user.username,
-        "role": user.role
+        "user": {
+            "id": new_user.id,
+            "username": new_user.username,
+            "role": new_user.role
+        }
     }
 
 
+# ============================================================
+# LOGIN
+# ============================================================
+
 @app.post("/auth/login")
-def login_user(
+def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)
 ):
-    user = db.query(User).filter(
-        User.username == form_data.username
-    ).first()
 
-    if not user or not verify_password(
+    user = (
+        db.query(User)
+        .filter(
+            User.username == form_data.username
+        )
+        .first()
+    )
+
+    if user is None:
+
+        raise HTTPException(
+            status_code=401,
+            detail="Incorrect username or password"
+        )
+
+    if not verify_password(
         form_data.password,
         user.password_hash
     ):
+
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"}
+            status_code=401,
+            detail="Incorrect username or password"
         )
 
-    token = create_access_token({
-        "sub": user.username,
-        "role": user.role
-    })
+    access_token_expires = timedelta(
+        minutes=ACCESS_TOKEN_EXPIRE_MINUTES
+    )
+
+    access_token = create_access_token(
+        data={
+            "sub": user.username,
+            "role": user.role
+        },
+        expires_delta=access_token_expires
+    )
 
     return {
-        "access_token": token,
+        "access_token": access_token,
         "token_type": "bearer",
-        "role": user.role
+        "user": {
+            "id": user.id,
+            "username": user.username,
+            "role": user.role
+        }
     }
 
 
+# ============================================================
+# CURRENT USER
+# ============================================================
+
 @app.get("/auth/me")
-def get_my_profile(
-    current_user: User = Depends(get_current_user)
+def get_me(
+    current_user: User = Depends(
+        get_current_user
+    )
 ):
+
     return {
-        "status": "success",
-        "user_id": current_user.id,
+        "id": current_user.id,
         "username": current_user.username,
         "role": current_user.role
     }
 
 
-# ========================================
-# HOME
-# ========================================
-
-@app.get("/")
-def home():
-
-    return {
-        "message": "AI Healthcare Assistance API is running",
-        "status": "success"
-    }
-
-
-# ========================================
-# PROCESS PRESCRIPTION IMAGE
-# ========================================
-
-@app.post("/process")
-async def process_medical_image(
-    file: UploadFile = File(...)
-):
-
-    allowed_types = [
-        "image/png",
-        "image/jpeg",
-        "image/jpg"
-    ]
-
-    if file.content_type not in allowed_types:
-
-        raise HTTPException(
-            status_code=400,
-            detail="Please upload a PNG or JPG image."
-        )
-
-    os.makedirs(
-        "uploads",
-        exist_ok=True
-    )
-
-    file_path = os.path.join(
-        "uploads",
-        file.filename
-    )
-
-    try:
-
-        with open(
-            file_path,
-            "wb"
-        ) as buffer:
-
-            shutil.copyfileobj(
-                file.file,
-                buffer
-            )
-
-    except Exception as e:
-
-        raise HTTPException(
-            status_code=500,
-            detail=f"Could not save image: {str(e)}"
-        )
-
-    # ========================================
-    # 1. OCR
-    # ========================================
-
-    try:
-
-        ocr_text = extract_text(
-            file_path
-        )
-
-    except Exception as e:
-
-        raise HTTPException(
-            status_code=500,
-            detail=f"OCR failed: {str(e)}"
-        )
-
-    if not ocr_text:
-
-        raise HTTPException(
-            status_code=400,
-            detail="No text detected in the uploaded image."
-        )
-
-    # ========================================
-    # 2. MEDICAL EXTRACTION
-    # ========================================
-
-    try:
-
-        medical_information = (
-            extract_medical_information(
-                ocr_text
-            )
-        )
-
-    except Exception as e:
-
-        raise HTTPException(
-            status_code=500,
-            detail=f"Medical extraction failed: {str(e)}"
-        )
-
-    extracted_record = {
-
-        "image": file.filename,
-
-        "ocr_text": ocr_text,
-
-        "prediction": medical_information
-    }
-
-    # ========================================
-    # 3. STANDARDIZATION
-    # ========================================
-
-    try:
-
-        standardized_record = (
-            standardize_record(
-                extracted_record
-            )
-        )
-
-    except Exception as e:
-
-        raise HTTPException(
-            status_code=500,
-            detail=f"Standardization failed: {str(e)}"
-        )
-
-    # ========================================
-    # 4. SIMPLIFICATION
-    # ========================================
-
-    try:
-
-        simplified_record = (
-            simplify_record(
-                standardized_record
-            )
-        )
-
-    except Exception as e:
-
-        raise HTTPException(
-            status_code=500,
-            detail=f"Simplification failed: {str(e)}"
-        )
-
-    # ========================================
-    # 5. HINDI TRANSLATION
-    # ========================================
-
-    try:
-
-        hindi_record = {}
-
-        for key, value in simplified_record.items():
-
-            if key == "medications":
-
-                hindi_record[key] = []
-
-                for medication in value:
-
-                    hindi_medication = medication.copy()
-
-                    if medication.get("purpose"):
-
-                        hindi_medication["purpose"] = (
-                            translate_to_hindi(
-                                medication["purpose"]
-                            )
-                        )
-
-                    if medication.get("adverse_effects"):
-
-                        hindi_medication[
-                            "adverse_effects"
-                        ] = [
-
-                            translate_to_hindi(
-                                str(effect)
-                            )
-
-                            for effect in medication[
-                                "adverse_effects"
-                            ]
-                        ]
-
-                    hindi_record[key].append(
-                        hindi_medication
-                    )
-
-            elif key in [
-                "patient",
-                "hospitalization",
-                "physicians"
-            ]:
-
-                hindi_record[key] = value
-
-            elif isinstance(value, list):
-
-                hindi_record[key] = [
-
-                    translate_to_hindi(
-                        str(item)
-                    )
-
-                    for item in value
-                ]
-
-            elif isinstance(value, dict):
-
-                hindi_record[key] = value
-
-            else:
-
-                hindi_record[key] = value
-
-    except Exception as e:
-
-        raise HTTPException(
-            status_code=500,
-            detail=f"Hindi translation failed: {str(e)}"
-        )
-
-    # ========================================
-    # 6. TREATMENT
-    # ========================================
-
-    try:
-
-        treatment_english = generate_treatment(
-            simplified_record
-        )
-
-        treatment_hindi = translate_to_hindi(
-            treatment_english
-        )
-
-    except Exception as e:
-
-        raise HTTPException(
-            status_code=500,
-            detail=f"Treatment generation failed: {str(e)}"
-        )
-
-    # ========================================
-    # 7. FINAL RESPONSE
-    # ========================================
-
-    return {
-
-        "status": "success",
-
-        "image": file.filename,
-
-        "ocr_text": ocr_text,
-
-        "medical_information":
-            standardized_record,
-
-        "simplified_information":
-            simplified_record,
-
-        "hindi_information":
-            hindi_record,
-
-        "treatment_english":
-            treatment_english,
-
-        "treatment_hindi":
-            treatment_hindi
-    }
-
-
-# ========================================
-# DOCUMENT APIs
-# ========================================
-
-
-# ========================================
-# POST /documents
-# UPLOAD DOCUMENT
-# ========================================
-
-@app.post("/documents")
-async def create_document(
-    file: UploadFile = File(...),
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles("admin", "doctor"))
-):
-
-    allowed_types = [
-        "image/png",
-        "image/jpeg",
-        "image/jpg"
-    ]
-
-    if file.content_type not in allowed_types:
-
-        raise HTTPException(
-            status_code=400,
-            detail="Please upload a PNG or JPG image."
-        )
-
-    os.makedirs(
-        "uploads",
-        exist_ok=True
-    )
-
-    file_path = os.path.join(
-        "uploads",
-        file.filename
-    )
-
-    try:
-
-        with open(
-            file_path,
-            "wb"
-        ) as buffer:
-
-            shutil.copyfileobj(
-                file.file,
-                buffer
-            )
-
-    except Exception as e:
-
-        raise HTTPException(
-            status_code=500,
-            detail=f"Could not save file: {str(e)}"
-        )
-
-    document = Document(
-
-        filename=file.filename,
-
-        file_path=file_path,
-
-        document_type="prescription",
-
-        status="uploaded",
-
-        created_at=datetime.utcnow()
-    )
-
-    db.add(
-        document
-    )
-
-    db.commit()
-
-    db.refresh(
-        document
-    )
-
-    return {
-
-        "status": "success",
-
-        "message":
-            "Document uploaded successfully",
-
-        "document_id":
-            document.id,
-
-        "filename":
-            document.filename,
-
-        "document_type":
-            document.document_type,
-
-        "status":
-            document.status
-    }
-
-
-# ========================================
-# GET /documents
-# GET ALL DOCUMENTS
-# ========================================
-
-@app.get("/documents")
-def get_documents(
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles("admin", "doctor"))
-):
-
-    documents = db.query(
-        Document
-    ).all()
-
-    return documents
-
-
-
-
-# ========================================
-# GET /documents/search
-# SEARCH DOCUMENTS
-# ========================================
-
-@app.get("/documents/search")
-def search_documents(
-    filename: str = None,
-    status: str = None,
-    document_type: str = None,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles("admin", "doctor"))
-):
-    query = db.query(Document)
-
-    if filename:
-        query = query.filter(
-            Document.filename.ilike(f"%{filename}%")
-        )
-
-    if status:
-        query = query.filter(
-            Document.status == status
-        )
-
-    if document_type:
-        query = query.filter(
-            Document.document_type == document_type
-        )
-
-    documents = query.all()
-
-    return [
-        {
-            "id": document.id,
-            "filename": document.filename,
-            "document_type": document.document_type,
-            "status": document.status,
-            "created_at": document.created_at
-        }
-        for document in documents
-    ]
-
-# ========================================
-# GET /documents/{id}
-# GET SINGLE DOCUMENT
-# ========================================
-
-@app.get("/documents/{document_id}")
-def get_document(
-    document_id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles("admin", "doctor", "patient"))
-):
-
-    document = db.query(
-        Document
-    ).filter(
-        Document.id == document_id
-    ).first()
-
-    if not document:
-
-        raise HTTPException(
-            status_code=404,
-            detail="Document not found"
-        )
-
-    return document
-
-
-# ========================================
-# DELETE /documents/{id}
-# DELETE DOCUMENT
-# ========================================
-
-@app.delete("/documents/{document_id}")
-def delete_document(
-    document_id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles("admin"))
-):
-
-    document = db.query(
-        Document
-    ).filter(
-        Document.id == document_id
-    ).first()
-
-    if not document:
-
-        raise HTTPException(
-            status_code=404,
-            detail="Document not found"
-        )
-
-    # ----------------------------------------
-    # Delete physical file
-    # ----------------------------------------
-
-    if document.file_path:
-
-        if os.path.exists(
-            document.file_path
-        ):
-
-            try:
-
-                os.remove(
-                    document.file_path
-                )
-
-            except Exception:
-
-                pass
-
-    # ----------------------------------------
-    # Delete database record
-    # ----------------------------------------
-
-    db.delete(
-        document
-    )
-
-    db.commit()
-
-    return {
-
-        "status": "success",
-
-        "message":
-            "Document deleted successfully",
-
-        "document_id":
-            document_id
-    }
-
-
-# ========================================
-# POST /documents/{id}/process
-# PROCESS DOCUMENT
-# ========================================
-
-@app.post("/documents/{document_id}/process")
-def process_document(
-    document_id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles("admin", "doctor"))
-):
-
-    # ========================================
-    # FIND DOCUMENT
-    # ========================================
-
-    document = db.query(
-        Document
-    ).filter(
-        Document.id == document_id
-    ).first()
-
-    if not document:
-
-        raise HTTPException(
-            status_code=404,
-            detail="Document not found"
-        )
-
-    # ========================================
-    # CHECK FILE
-    # ========================================
-
-    if not os.path.exists(
-        document.file_path
-    ):
-
-        raise HTTPException(
-            status_code=404,
-            detail="Uploaded file not found"
-        )
-
-    # ========================================
-    # UPDATE STATUS
-    # ========================================
-
-    document.status = "processing"
-
-    db.commit()
-
-    # ========================================
-    # 1. OCR
-    # ========================================
-
-    try:
-
-        ocr_text = extract_text(
-            document.file_path
-        )
-
-    except Exception as e:
-
-        document.status = "failed"
-
-        db.commit()
-
-        raise HTTPException(
-            status_code=500,
-            detail=f"OCR failed: {str(e)}"
-        )
-
-    if not ocr_text:
-
-        document.status = "failed"
-
-        db.commit()
-
-        raise HTTPException(
-            status_code=400,
-            detail="No text detected in document"
-        )
-
-    # ========================================
-    # 2. MEDICAL EXTRACTION
-    # ========================================
-
-    try:
-
-        medical_information = (
-            extract_medical_information(
-                ocr_text
-            )
-        )
-
-    except Exception as e:
-
-        document.status = "failed"
-
-        db.commit()
-
-        raise HTTPException(
-            status_code=500,
-            detail=f"Medical extraction failed: {str(e)}"
-        )
-
-    extracted_record = {
-
-        "image": document.filename,
-
-        "ocr_text": ocr_text,
-
-        "prediction": medical_information
-    }
-
-    # ========================================
-    # 3. STANDARDIZATION
-    # ========================================
-
-    try:
-
-        standardized_record = (
-            standardize_record(
-                extracted_record
-            )
-        )
-
-    except Exception as e:
-
-        document.status = "failed"
-
-        db.commit()
-
-        raise HTTPException(
-            status_code=500,
-            detail=f"Standardization failed: {str(e)}"
-        )
-
-    # ========================================
-    # 4. SIMPLIFICATION
-    # ========================================
-
-    try:
-
-        simplified_record = (
-            simplify_record(
-                standardized_record
-            )
-        )
-
-    except Exception as e:
-
-        document.status = "failed"
-
-        db.commit()
-
-        raise HTTPException(
-            status_code=500,
-            detail=f"Simplification failed: {str(e)}"
-        )
-
-    # ========================================
-    # 5. HINDI TRANSLATION
-    # ========================================
-
-    try:
-
-        hindi_record = {}
-
-        for key, value in simplified_record.items():
-
-            if key == "medications":
-
-                hindi_record[key] = []
-
-                for medication in value:
-
-                    hindi_medication = medication.copy()
-
-                    if medication.get("purpose"):
-
-                        hindi_medication["purpose"] = (
-                            translate_to_hindi(
-                                medication["purpose"]
-                            )
-                        )
-
-                    if medication.get("adverse_effects"):
-
-                        hindi_medication[
-                            "adverse_effects"
-                        ] = [
-
-                            translate_to_hindi(
-                                str(effect)
-                            )
-
-                            for effect in medication[
-                                "adverse_effects"
-                            ]
-                        ]
-
-                    hindi_record[key].append(
-                        hindi_medication
-                    )
-
-            elif key in [
-                "patient",
-                "hospitalization",
-                "physicians"
-            ]:
-
-                hindi_record[key] = value
-
-            elif isinstance(value, list):
-
-                hindi_record[key] = [
-
-                    translate_to_hindi(
-                        str(item)
-                    )
-
-                    for item in value
-                ]
-
-            elif isinstance(value, dict):
-
-                hindi_record[key] = value
-
-            else:
-
-                hindi_record[key] = value
-
-    except Exception as e:
-
-        document.status = "failed"
-
-        db.commit()
-
-        raise HTTPException(
-            status_code=500,
-            detail=f"Hindi translation failed: {str(e)}"
-        )
-
-    # ========================================
-    # 6. TREATMENT GENERATION
-    # ========================================
-
-    try:
-
-        treatment_english = generate_treatment(
-            simplified_record
-        )
-
-        treatment_hindi = translate_to_hindi(
-            treatment_english
-        )
-
-    except Exception as e:
-
-        document.status = "failed"
-
-        db.commit()
-
-        raise HTTPException(
-            status_code=500,
-            detail=f"Treatment generation failed: {str(e)}"
-        )
-
-    # ========================================
-    # 7. PREPARE DATABASE DATA
-    # ========================================
-
-    processed_data = {
-
-        "medical_information":
-            standardized_record,
-
-        "treatment_english":
-            treatment_english
-    }
-
-    translated_data = {
-
-        "hindi_information":
-            hindi_record,
-
-        "treatment_hindi":
-            treatment_hindi
-    }
-
-    # ========================================
-    # 8. SAVE MEDICAL EXTRACTION
-    # ========================================
-
-    extraction = MedicalExtraction(
-
-        document_id=document.id,
-
-        patient_id=None,
-
-        document_type=document.document_type,
-
-        raw_text=ocr_text,
-
-        processed_data=processed_data,
-
-        simplified_text=simplified_record,
-
-        translated_text=translated_data,
-
-        language="hi",
-
-        processed_at=datetime.utcnow()
-    )
-
-    db.add(
-        extraction
-    )
-
-    # ========================================
-    # 9. UPDATE DOCUMENT
-    # ========================================
-
-    document.status = "processed"
-
-    db.commit()
-
-    db.refresh(
-        extraction
-    )
-
-    # ========================================
-    # 10. RETURN RESULT
-    # ========================================
-
-    return {
-
-        "status": "success",
-
-        "message":
-            "Document processed successfully",
-
-        "document_id":
-            document.id,
-
-        "extraction_id":
-            extraction.id,
-
-        "ocr_text":
-            ocr_text,
-
-        "medical_information":
-            standardized_record,
-
-        "simplified_information":
-            simplified_record,
-
-        "hindi_information":
-            hindi_record,
-
-        "treatment_english":
-            treatment_english,
-
-        "treatment_hindi":
-            treatment_hindi
-    }
-# ========================================
-# GET /medical-extractions
-# GET SAVED MEDICAL EXTRACTION RECORDS
-# ========================================
-
-@app.get("/medical-extractions")
-def get_medical_extractions(
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles("admin", "doctor"))
-):
-
-    extractions = db.query(
-        MedicalExtraction
-    ).all()
-
-    return [
-        {
-            "id": extraction.id,
-            "document_id": extraction.document_id,
-            "patient_id": extraction.patient_id,
-            "document_type": extraction.document_type,
-            "raw_text": extraction.raw_text,
-            "processed_data": extraction.processed_data,
-            "simplified_text": extraction.simplified_text,
-            "translated_text": extraction.translated_text,
-            "language": extraction.language,
-            "processed_at": extraction.processed_at
-        }
-
-        for extraction in extractions
-    ]
-
-
-# ========================================
-# GET /documents/{id}/status
-# GET DOCUMENT PROCESSING STATUS
-# ========================================
-
-@app.get("/documents/{document_id}/status")
-def get_document_status(
-    document_id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles("admin", "doctor", "patient"))
-):
-    document = db.query(
-        Document
-    ).filter(
-        Document.id == document_id
-    ).first()
-
-    if not document:
-        raise HTTPException(
-            status_code=404,
-            detail="Document not found"
-        )
-
-    return {
-        "status": "success",
-        "document_id": document.id,
-        "filename": document.filename,
-        "document_status": document.status
-    }
-
-
-# ========================================
-# GET /documents/{id}/result
-# GET COMPLETE PROCESSED RESULT
-# ========================================
-
-@app.get("/documents/{document_id}/result")
-def get_document_result(
-    document_id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles("admin", "doctor", "patient"))
-):
-    document = db.query(
-        Document
-    ).filter(
-        Document.id == document_id
-    ).first()
-
-    if not document:
-        raise HTTPException(
-            status_code=404,
-            detail="Document not found"
-        )
-
-    extraction = db.query(
-        MedicalExtraction
-    ).filter(
-        MedicalExtraction.document_id == document_id
-    ).order_by(
-        desc(MedicalExtraction.processed_at)
-    ).first()
-
-    if not extraction:
-        raise HTTPException(
-            status_code=404,
-            detail="No processed result found for this document"
-        )
-
-    processed_data = extraction.processed_data or {}
-    translated_data = extraction.translated_text or {}
-
-    return {
-        "status": "success",
-        "document_id": document.id,
-        "extraction_id": extraction.id,
-        "filename": document.filename,
-        "document_status": document.status,
-        "ocr_text": extraction.raw_text,
-        "medical_information": processed_data.get(
-            "medical_information", {}
-        ),
-        "simplified_information": extraction.simplified_text,
-        "hindi_information": translated_data.get(
-            "hindi_information", {}
-        ),
-        "treatment_english": processed_data.get(
-            "treatment_english", ""
-        ),
-        "treatment_hindi": translated_data.get(
-            "treatment_hindi", ""
-        ),
-        "language": extraction.language,
-        "processed_at": extraction.processed_at
-    }
-
-
-# ========================================
-# GET /documents/{id}/ocr
-# GET OCR TEXT
-# ========================================
-
-@app.get("/documents/{document_id}/ocr")
-def get_document_ocr(
-    document_id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles("admin", "doctor", "patient"))
-):
-    document = db.query(
-        Document
-    ).filter(
-        Document.id == document_id
-    ).first()
-
-    if not document:
-        raise HTTPException(
-            status_code=404,
-            detail="Document not found"
-        )
-
-    extraction = db.query(
-        MedicalExtraction
-    ).filter(
-        MedicalExtraction.document_id == document_id
-    ).order_by(
-        desc(MedicalExtraction.processed_at)
-    ).first()
-
-    if not extraction:
-        raise HTTPException(
-            status_code=404,
-            detail="OCR result not found"
-        )
-
-    return {
-        "status": "success",
-        "document_id": document_id,
-        "filename": document.filename,
-        "ocr_text": extraction.raw_text
-    }
-
-
-# ========================================
-# GET /documents/{id}/medications
-# GET EXTRACTED MEDICATIONS
-# ========================================
-
-@app.get("/documents/{document_id}/medications")
-def get_document_medications(
-    document_id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles("admin", "doctor", "patient"))
-):
-    document = db.query(
-        Document
-    ).filter(
-        Document.id == document_id
-    ).first()
-
-    if not document:
-        raise HTTPException(
-            status_code=404,
-            detail="Document not found"
-        )
-
-    extraction = db.query(
-        MedicalExtraction
-    ).filter(
-        MedicalExtraction.document_id == document_id
-    ).order_by(
-        desc(MedicalExtraction.processed_at)
-    ).first()
-
-    if not extraction:
-        raise HTTPException(
-            status_code=404,
-            detail="Medical extraction not found"
-        )
-
-    processed_data = extraction.processed_data or {}
-    medical_information = processed_data.get(
-        "medical_information", {}
-    )
-
-    medications = medical_information.get(
-        "medications", []
-    )
-
-    return {
-        "status": "success",
-        "document_id": document_id,
-        "filename": document.filename,
-        "medications": medications
-    }
-
-
-# ========================================
-# GET /documents/{id}/treatment
-# GET TREATMENT INFORMATION
-# ========================================
-
-@app.get("/documents/{document_id}/treatment")
-def get_document_treatment(
-    document_id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles("admin", "doctor", "patient"))
-):
-    document = db.query(
-        Document
-    ).filter(
-        Document.id == document_id
-    ).first()
-
-    if not document:
-        raise HTTPException(
-            status_code=404,
-            detail="Document not found"
-        )
-
-    extraction = db.query(
-        MedicalExtraction
-    ).filter(
-        MedicalExtraction.document_id == document_id
-    ).order_by(
-        desc(MedicalExtraction.processed_at)
-    ).first()
-
-    if not extraction:
-        raise HTTPException(
-            status_code=404,
-            detail="Treatment result not found"
-        )
-
-    processed_data = extraction.processed_data or {}
-    translated_data = extraction.translated_text or {}
-
-    return {
-        "status": "success",
-        "document_id": document_id,
-        "treatment_english": processed_data.get(
-            "treatment_english", ""
-        ),
-        "treatment_hindi": translated_data.get(
-            "treatment_hindi", ""
-        )
-    }
-
-
-# ========================================
-# GET /documents/{id}/translation
-# GET HINDI TRANSLATION
-# ========================================
-
-@app.get("/documents/{document_id}/translation")
-def get_document_translation(
-    document_id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles("admin", "doctor", "patient"))
-):
-    document = db.query(
-        Document
-    ).filter(
-        Document.id == document_id
-    ).first()
-
-    if not document:
-        raise HTTPException(
-            status_code=404,
-            detail="Document not found"
-        )
-
-    extraction = db.query(
-        MedicalExtraction
-    ).filter(
-        MedicalExtraction.document_id == document_id
-    ).order_by(
-        desc(MedicalExtraction.processed_at)
-    ).first()
-
-    if not extraction:
-        raise HTTPException(
-            status_code=404,
-            detail="Translation result not found"
-        )
-
-    translated_data = extraction.translated_text or {}
-
-    return {
-        "status": "success",
-        "document_id": document_id,
-        "language": extraction.language,
-        "hindi_information": translated_data.get(
-            "hindi_information", {}
-        ),
-        "treatment_hindi": translated_data.get(
-            "treatment_hindi", ""
-        )
-    }
-
-
-# ========================================
-# GET /medical-extractions/{id}
-# GET SINGLE MEDICAL EXTRACTION
-# ========================================
-
-@app.get("/medical-extractions/{extraction_id}")
-def get_medical_extraction(
-    extraction_id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles("admin", "doctor", "patient"))
-):
-    extraction = db.query(
-        MedicalExtraction
-    ).filter(
-        MedicalExtraction.id == extraction_id
-    ).first()
-
-    if not extraction:
-        raise HTTPException(
-            status_code=404,
-            detail="Medical extraction not found"
-        )
-
-    return {
-        "id": extraction.id,
-        "document_id": extraction.document_id,
-        "patient_id": extraction.patient_id,
-        "document_type": extraction.document_type,
-        "raw_text": extraction.raw_text,
-        "processed_data": extraction.processed_data,
-        "simplified_text": extraction.simplified_text,
-        "translated_text": extraction.translated_text,
-        "language": extraction.language,
-        "processed_at": extraction.processed_at
-    }
-
-
-# ========================================
-# DELETE /medical-extractions/{id}
-# DELETE MEDICAL EXTRACTION
-# ========================================
-
-@app.delete("/medical-extractions/{extraction_id}")
-def delete_medical_extraction(
-    extraction_id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles("admin"))
-):
-    extraction = db.query(
-        MedicalExtraction
-    ).filter(
-        MedicalExtraction.id == extraction_id
-    ).first()
-
-    if not extraction:
-        raise HTTPException(
-            status_code=404,
-            detail="Medical extraction not found"
-        )
-
-    db.delete(extraction)
-    db.commit()
-
-    return {
-        "status": "success",
-        "message": "Medical extraction deleted successfully",
-        "extraction_id": extraction_id
-    }
-
-
-# ========================================
-# POST /documents/{id}/reprocess
-# REPROCESS DOCUMENT
-# ========================================
-
-@app.post("/documents/{document_id}/reprocess")
-def reprocess_document(
-    document_id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles("admin", "doctor"))
-):
-    document = db.query(
-        Document
-    ).filter(
-        Document.id == document_id
-    ).first()
-
-    if not document:
-        raise HTTPException(
-            status_code=404,
-            detail="Document not found"
-        )
-
-    if not document.file_path or not os.path.exists(
-        document.file_path
-    ):
-        raise HTTPException(
-            status_code=404,
-            detail="Uploaded file not found"
-        )
-
-    return process_document(
-        document_id=document_id,
-        db=db
-    )
-
-
-
-# ========================================
-# ADMIN USER MANAGEMENT
-# ========================================
+# ============================================================
+# GET USERS - ADMIN
+# ============================================================
 
 @app.get("/auth/users")
 def get_users(
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles("admin"))
+    current_user: User = Depends(
+        require_roles("admin")
+    )
 ):
+
     users = db.query(User).all()
 
     return [
@@ -1600,116 +526,1167 @@ def get_users(
     ]
 
 
+# ============================================================
+# DELETE USER - ADMIN
+# ============================================================
+
 @app.delete("/auth/users/{user_id}")
 def delete_user(
     user_id: int,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles("admin"))
+    current_user: User = Depends(
+        require_roles("admin")
+    )
 ):
-    user = db.query(User).filter(
-        User.id == user_id
-    ).first()
 
-    if not user:
+    user = (
+        db.query(User)
+        .filter(
+            User.id == user_id
+        )
+        .first()
+    )
+
+    if user is None:
+
         raise HTTPException(
             status_code=404,
             detail="User not found"
-        )
-
-    if user.id == current_user.id:
-        raise HTTPException(
-            status_code=400,
-            detail="Admin cannot delete their own account"
         )
 
     db.delete(user)
     db.commit()
 
     return {
-        "status": "success",
-        "message": "User deleted successfully",
-        "user_id": user_id
+        "message": "User deleted successfully"
     }
 
 
-# ========================================
-# GET /health
-# CHECK API AND DATABASE HEALTH
-# ========================================
+# ============================================================
+# CREATE PATIENT
+# ============================================================
 
-@app.get("/health")
-def health_check(
-    db: Session = Depends(get_db)
+@app.post("/patients")
+def create_patient(
+    patient_data: PatientCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_roles(
+            "admin",
+            "doctor"
+        )
+    )
 ):
+
+    patient = Patient(
+        name=patient_data.name,
+        date_of_birth=patient_data.date_of_birth,
+        gender=patient_data.gender,
+        contact_information=patient_data.contact_information
+    )
+
+    db.add(patient)
+    db.commit()
+    db.refresh(patient)
+
+    return {
+        "message": "Patient created successfully",
+        "patient": {
+            "id": patient.id,
+            "name": patient.name,
+            "date_of_birth": patient.date_of_birth,
+            "gender": patient.gender,
+            "contact_information": patient.contact_information
+        }
+    }
+
+
+# ============================================================
+# GET PATIENTS
+# ============================================================
+
+@app.get("/patients")
+def get_patients(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_roles(
+            "admin",
+            "doctor"
+        )
+    )
+):
+
+    patients = db.query(Patient).all()
+
+    return [
+        {
+            "id": patient.id,
+            "name": patient.name,
+            "date_of_birth": patient.date_of_birth,
+            "gender": patient.gender,
+            "contact_information": patient.contact_information
+        }
+        for patient in patients
+    ]
+
+
+# ============================================================
+# GET PATIENT
+# ============================================================
+
+@app.get("/patients/{patient_id}")
+def get_patient(
+    patient_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        get_current_user
+    )
+):
+
+    patient = (
+        db.query(Patient)
+        .filter(
+            Patient.id == patient_id
+        )
+        .first()
+    )
+
+    if patient is None:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Patient not found"
+        )
+
+    return {
+        "id": patient.id,
+        "name": patient.name,
+        "date_of_birth": patient.date_of_birth,
+        "gender": patient.gender,
+        "contact_information": patient.contact_information
+    }
+
+
+# ============================================================
+# UPLOAD DOCUMENT
+# ============================================================
+
+@app.post("/documents")
+async def create_document(
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_roles(
+            "admin",
+            "doctor",
+            "patient"
+        )
+    )
+):
+
+    if not file.filename:
+
+        raise HTTPException(
+            status_code=400,
+            detail="No file selected"
+        )
+
+    allowed_extensions = [
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".pdf"
+    ]
+
+    extension = os.path.splitext(
+        file.filename
+    )[1].lower()
+
+    if extension not in allowed_extensions:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Only JPG, JPEG, PNG and PDF files are allowed"
+        )
+
+    safe_filename = os.path.basename(
+        file.filename
+    )
+
+    file_path = os.path.join(
+        UPLOAD_DIR,
+        safe_filename
+    )
+
+    with open(
+        file_path,
+        "wb"
+    ) as buffer:
+
+        shutil.copyfileobj(
+            file.file,
+            buffer
+        )
+
+    document = Document(
+        filename=safe_filename,
+        file_path=file_path,
+        document_type="prescription",
+        status="uploaded",
+        created_at=datetime.utcnow()
+    )
+
+    db.add(document)
+    db.commit()
+    db.refresh(document)
+
+    return {
+        "message": "Document uploaded successfully",
+        "document": {
+            "id": document.id,
+            "filename": document.filename,
+            "status": document.status
+        }
+    }
+
+
+# ============================================================
+# GET DOCUMENTS
+# ============================================================
+
+@app.get("/documents")
+def get_documents(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_roles(
+            "admin",
+            "doctor",
+            "patient"
+        )
+    )
+):
+
+    documents = (
+        db.query(Document)
+        .order_by(
+            desc(Document.id)
+        )
+        .all()
+    )
+
+    return [
+        {
+            "id": document.id,
+            "filename": document.filename,
+            "file_path": document.file_path,
+            "document_type": document.document_type,
+            "status": document.status,
+            "created_at": document.created_at
+        }
+        for document in documents
+    ]
+
+
+# ============================================================
+# GET SINGLE DOCUMENT
+# ============================================================
+
+@app.get("/documents/{document_id}")
+def get_document(
+    document_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        get_current_user
+    )
+):
+
+    document = (
+        db.query(Document)
+        .filter(
+            Document.id == document_id
+        )
+        .first()
+    )
+
+    if document is None:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Document not found"
+        )
+
+    return {
+        "id": document.id,
+        "filename": document.filename,
+        "file_path": document.file_path,
+        "document_type": document.document_type,
+        "status": document.status,
+        "created_at": document.created_at
+    }
+
+
+# ============================================================
+# DELETE DOCUMENT
+# ============================================================
+
+@app.delete("/documents/{document_id}")
+def delete_document(
+    document_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_roles("admin")
+    )
+):
+
+    document = (
+        db.query(Document)
+        .filter(
+            Document.id == document_id
+        )
+        .first()
+    )
+
+    if document is None:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Document not found"
+        )
+
+    extractions = (
+        db.query(MedicalExtraction)
+        .filter(
+            MedicalExtraction.document_id
+            == document_id
+        )
+        .all()
+    )
+
+    for extraction in extractions:
+
+        db.delete(extraction)
+
+    if os.path.exists(
+        document.file_path
+    ):
+
+        os.remove(
+            document.file_path
+        )
+
+    db.delete(document)
+    db.commit()
+
+    return {
+        "message": "Document deleted successfully"
+    }
+
+
+# ============================================================
+# PROCESS DOCUMENT
+# ============================================================
+
+@app.post("/documents/{document_id}/process")
+def process_document(
+    document_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_roles(
+            "admin",
+            "doctor",
+            "patient"
+        )
+    )
+):
+
+    document = (
+        db.query(Document)
+        .filter(
+            Document.id == document_id
+        )
+        .first()
+    )
+
+    if document is None:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Document not found"
+        )
+
+    if not os.path.exists(
+        document.file_path
+    ):
+
+        raise HTTPException(
+            status_code=404,
+            detail="Uploaded file not found"
+        )
+
     try:
-        db.execute(text("SELECT 1"))
+
+        document.status = "processing"
+
+        db.commit()
+
+        # ------------------------------------
+        # OCR
+        # ------------------------------------
+
+        ocr_text = extract_text(
+            document.file_path
+        )
+
+        # ------------------------------------
+        # MEDICAL EXTRACTION
+        # ------------------------------------
+
+        medical_information = (
+            extract_medical_information(
+                ocr_text
+            )
+        )
+
+        # ------------------------------------
+        # STANDARDIZATION
+        # ------------------------------------
+
+        standardized_record = (
+            standardize_record(
+                medical_information
+            )
+        )
+
+        # ------------------------------------
+        # SIMPLIFICATION
+        # ------------------------------------
+
+        simplified_record = (
+            simplify_record(
+                standardized_record
+            )
+        )
+
+        # ------------------------------------
+        # HINDI TRANSLATION
+        # ------------------------------------
+
+        hindi_record = (
+            translate_to_hindi(
+                simplified_record
+            )
+        )
+
+        # ------------------------------------
+        # TREATMENT ENGLISH
+        # ------------------------------------
+
+        treatment_english = (
+            generate_treatment(
+                standardized_record
+            )
+        )
+
+        # ------------------------------------
+        # TREATMENT HINDI
+        # ------------------------------------
+
+        treatment_hindi = (
+            translate_to_hindi(
+                treatment_english
+            )
+        )
+
+        # ------------------------------------
+        # SAVE EXTRACTION
+        # ------------------------------------
+
+        processed_data = {
+            "medical_information":
+                standardized_record,
+
+            "treatment_english":
+                treatment_english
+        }
+
+        translated_data = {
+            "hindi_information":
+                hindi_record,
+
+            "treatment_hindi":
+                treatment_hindi
+        }
+
+        extraction = MedicalExtraction(
+            document_id=document.id,
+            patient_id=None,
+            document_type=document.document_type,
+            raw_text=ocr_text,
+            processed_data=processed_data,
+            simplified_text=simplified_record,
+            translated_text=translated_data,
+            language="hi",
+            processed_at=datetime.utcnow()
+        )
+
+        db.add(extraction)
+
+        document.status = "processed"
+
+        db.commit()
+
+        db.refresh(extraction)
 
         return {
-            "status": "healthy",
-            "api": "running",
-            "database": "connected"
+            "status": "success",
+            "document_id": document.id,
+            "filename": document.filename,
+            "ocr_text": ocr_text,
+            "medical_information":
+                standardized_record,
+            "simplified_information":
+                simplified_record,
+            "hindi_information":
+                hindi_record,
+            "treatment_english":
+                treatment_english,
+            "treatment_hindi":
+                treatment_hindi,
+            "extraction_id":
+                extraction.id
         }
 
     except Exception as e:
-        return {
-            "status": "unhealthy",
-            "api": "running",
-            "database": "disconnected",
-            "error": str(e)
-        }
+
+        document.status = "failed"
+
+        db.commit()
+
+        raise HTTPException(
+            status_code=500,
+            detail=f"Processing failed: {str(e)}"
+        )
 
 
-# ========================================
-# GET /statistics
-# GET SYSTEM STATISTICS
-# ========================================
+# ============================================================
+# DOCUMENT STATUS
+# ============================================================
 
-@app.get("/statistics")
-def get_statistics(
+@app.get("/documents/{document_id}/status")
+def document_status(
+    document_id: int,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles("admin"))
+    current_user: User = Depends(
+        get_current_user
+    )
 ):
-    total_documents = db.query(
-        Document
-    ).count()
 
-    uploaded_documents = db.query(
-        Document
-    ).filter(
-        Document.status == "uploaded"
-    ).count()
+    document = (
+        db.query(Document)
+        .filter(
+            Document.id == document_id
+        )
+        .first()
+    )
 
-    processing_documents = db.query(
-        Document
-    ).filter(
-        Document.status == "processing"
-    ).count()
+    if document is None:
 
-    processed_documents = db.query(
-        Document
-    ).filter(
-        Document.status == "processed"
-    ).count()
-
-    failed_documents = db.query(
-        Document
-    ).filter(
-        Document.status == "failed"
-    ).count()
-
-    total_extractions = db.query(
-        MedicalExtraction
-    ).count()
+        raise HTTPException(
+            status_code=404,
+            detail="Document not found"
+        )
 
     return {
-        "status": "success",
-        "documents": {
-            "total": total_documents,
-            "uploaded": uploaded_documents,
-            "processing": processing_documents,
-            "processed": processed_documents,
-            "failed": failed_documents
-        },
-        "medical_extractions": total_extractions
+        "document_id": document.id,
+        "status": document.status
     }
 
+
+# ============================================================
+# DOCUMENT RESULT
+# ============================================================
+
+@app.get("/documents/{document_id}/result")
+def document_result(
+    document_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        get_current_user
+    )
+):
+
+    extraction = (
+        db.query(MedicalExtraction)
+        .filter(
+            MedicalExtraction.document_id
+            == document_id
+        )
+        .order_by(
+            desc(MedicalExtraction.id)
+        )
+        .first()
+    )
+
+    if extraction is None:
+
+        raise HTTPException(
+            status_code=404,
+            detail="No processed result found"
+        )
+
+    return {
+        "document_id":
+            extraction.document_id,
+
+        "extraction_id":
+            extraction.id,
+
+        "raw_text":
+            extraction.raw_text,
+
+        "processed_data":
+            extraction.processed_data,
+
+        "simplified_text":
+            extraction.simplified_text,
+
+        "translated_text":
+            extraction.translated_text,
+
+        "language":
+            extraction.language,
+
+        "processed_at":
+            extraction.processed_at
+    }
+
+
+# ============================================================
+# OCR
+# ============================================================
+
+@app.get("/documents/{document_id}/ocr")
+def document_ocr(
+    document_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        get_current_user
+    )
+):
+
+    extraction = (
+        db.query(MedicalExtraction)
+        .filter(
+            MedicalExtraction.document_id
+            == document_id
+        )
+        .order_by(
+            desc(MedicalExtraction.id)
+        )
+        .first()
+    )
+
+    if extraction is None:
+
+        raise HTTPException(
+            status_code=404,
+            detail="OCR result not found"
+        )
+
+    return {
+        "document_id":
+            document_id,
+
+        "ocr_text":
+            extraction.raw_text
+    }
+
+
+# ============================================================
+# MEDICATIONS
+# ============================================================
+
+@app.get("/documents/{document_id}/medications")
+def document_medications(
+    document_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        get_current_user
+    )
+):
+
+    extraction = (
+        db.query(MedicalExtraction)
+        .filter(
+            MedicalExtraction.document_id
+            == document_id
+        )
+        .order_by(
+            desc(MedicalExtraction.id)
+        )
+        .first()
+    )
+
+    if extraction is None:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Medical extraction not found"
+        )
+
+    processed_data = (
+        extraction.processed_data
+        or {}
+    )
+
+    medical_information = (
+        processed_data.get(
+            "medical_information",
+            {}
+        )
+    )
+
+    medications = (
+        medical_information.get(
+            "medications",
+            []
+        )
+    )
+
+    return {
+        "document_id":
+            document_id,
+
+        "medications":
+            medications
+    }
+
+
+# ============================================================
+# TREATMENT
+# ============================================================
+
+@app.get("/documents/{document_id}/treatment")
+def document_treatment(
+    document_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        get_current_user
+    )
+):
+
+    extraction = (
+        db.query(MedicalExtraction)
+        .filter(
+            MedicalExtraction.document_id
+            == document_id
+        )
+        .order_by(
+            desc(MedicalExtraction.id)
+        )
+        .first()
+    )
+
+    if extraction is None:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Treatment information not found"
+        )
+
+    processed_data = (
+        extraction.processed_data
+        or {}
+    )
+
+    translated_data = (
+        extraction.translated_text
+        or {}
+    )
+
+    return {
+        "document_id":
+            document_id,
+
+        "treatment_english":
+            processed_data.get(
+                "treatment_english",
+                ""
+            ),
+
+        "treatment_hindi":
+            translated_data.get(
+                "treatment_hindi",
+                ""
+            )
+    }
+
+
+# ============================================================
+# TRANSLATION
+# ============================================================
+
+@app.get("/documents/{document_id}/translation")
+def document_translation(
+    document_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        get_current_user
+    )
+):
+
+    extraction = (
+        db.query(MedicalExtraction)
+        .filter(
+            MedicalExtraction.document_id
+            == document_id
+        )
+        .order_by(
+            desc(MedicalExtraction.id)
+        )
+        .first()
+    )
+
+    if extraction is None:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Translation not found"
+        )
+
+    translated_data = (
+        extraction.translated_text
+        or {}
+    )
+
+    return {
+        "document_id":
+            document_id,
+
+        "language":
+            extraction.language,
+
+        "hindi_information":
+            translated_data.get(
+                "hindi_information",
+                {}
+            ),
+
+        "treatment_hindi":
+            translated_data.get(
+                "treatment_hindi",
+                ""
+            )
+    }
+
+
+# ============================================================
+# MEDICAL EXTRACTIONS
+# ============================================================
+
+@app.get("/medical-extractions")
+def get_medical_extractions(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_roles(
+            "admin",
+            "doctor",
+            "patient"
+        )
+    )
+):
+
+    extractions = (
+        db.query(MedicalExtraction)
+        .order_by(
+            desc(MedicalExtraction.id)
+        )
+        .all()
+    )
+
+    return [
+        {
+            "id": extraction.id,
+            "document_id":
+                extraction.document_id,
+            "patient_id":
+                extraction.patient_id,
+            "document_type":
+                extraction.document_type,
+            "raw_text":
+                extraction.raw_text,
+            "processed_data":
+                extraction.processed_data,
+            "simplified_text":
+                extraction.simplified_text,
+            "translated_text":
+                extraction.translated_text,
+            "language":
+                extraction.language,
+            "processed_at":
+                extraction.processed_at
+        }
+        for extraction in extractions
+    ]
+
+
+# ============================================================
+# SINGLE MEDICAL EXTRACTION
+# ============================================================
+
+@app.get("/medical-extractions/{extraction_id}")
+def get_medical_extraction(
+    extraction_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        get_current_user
+    )
+):
+
+    extraction = (
+        db.query(MedicalExtraction)
+        .filter(
+            MedicalExtraction.id
+            == extraction_id
+        )
+        .first()
+    )
+
+    if extraction is None:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Medical extraction not found"
+        )
+
+    return {
+        "id": extraction.id,
+        "document_id":
+            extraction.document_id,
+        "patient_id":
+            extraction.patient_id,
+        "document_type":
+            extraction.document_type,
+        "raw_text":
+            extraction.raw_text,
+        "processed_data":
+            extraction.processed_data,
+        "simplified_text":
+            extraction.simplified_text,
+        "translated_text":
+            extraction.translated_text,
+        "language":
+            extraction.language,
+        "processed_at":
+            extraction.processed_at
+    }
+
+
+# ============================================================
+# DELETE MEDICAL EXTRACTION
+# ============================================================
+
+@app.delete("/medical-extractions/{extraction_id}")
+def delete_medical_extraction(
+    extraction_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_roles("admin")
+    )
+):
+
+    extraction = (
+        db.query(MedicalExtraction)
+        .filter(
+            MedicalExtraction.id
+            == extraction_id
+        )
+        .first()
+    )
+
+    if extraction is None:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Medical extraction not found"
+        )
+
+    db.delete(extraction)
+    db.commit()
+
+    return {
+        "message":
+            "Medical extraction deleted successfully"
+    }
+
+
+# ============================================================
+# REPROCESS DOCUMENT
+# ============================================================
+
+@app.post("/documents/{document_id}/reprocess")
+def reprocess_document(
+    document_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_roles(
+            "admin",
+            "doctor",
+            "patient"
+        )
+    )
+):
+
+    document = (
+        db.query(Document)
+        .filter(
+            Document.id == document_id
+        )
+        .first()
+    )
+
+    if document is None:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Document not found"
+        )
+
+    old_extractions = (
+        db.query(MedicalExtraction)
+        .filter(
+            MedicalExtraction.document_id
+            == document_id
+        )
+        .all()
+    )
+
+    for extraction in old_extractions:
+
+        db.delete(extraction)
+
+    db.commit()
+
+    return process_document(
+        document_id=document_id,
+        db=db,
+        current_user=current_user
+    )
+
+
+# ============================================================
+# SEARCH DOCUMENTS
+# ============================================================
+
+@app.get("/documents/search")
+def search_documents(
+    query: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_roles(
+            "admin",
+            "doctor",
+            "patient"
+        )
+    )
+):
+
+    documents = (
+        db.query(Document)
+        .filter(
+            Document.filename.contains(query)
+        )
+        .order_by(
+            desc(Document.id)
+        )
+        .all()
+    )
+
+    return [
+        {
+            "id": document.id,
+            "filename": document.filename,
+            "document_type":
+                document.document_type,
+            "status": document.status,
+            "created_at":
+                document.created_at
+        }
+        for document in documents
+    ]
+
+
+# ============================================================
+# STATISTICS
+# ============================================================
+
+@app.get("/statistics")
+def statistics(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_roles("admin")
+    )
+):
+
+    total_documents = (
+        db.query(Document).count()
+    )
+
+    processed_documents = (
+        db.query(Document)
+        .filter(
+            Document.status == "processed"
+        )
+        .count()
+    )
+
+    pending_documents = (
+        db.query(Document)
+        .filter(
+            Document.status == "uploaded"
+        )
+        .count()
+    )
+
+    failed_documents = (
+        db.query(Document)
+        .filter(
+            Document.status == "failed"
+        )
+        .count()
+    )
+
+    total_users = (
+        db.query(User).count()
+    )
+
+    total_patients = (
+        db.query(Patient).count()
+    )
+
+    total_extractions = (
+        db.query(MedicalExtraction).count()
+    )
+
+    return {
+        "total_documents":
+            total_documents,
+
+        "processed_documents":
+            processed_documents,
+
+        "pending_documents":
+            pending_documents,
+
+        "failed_documents":
+            failed_documents,
+
+        "total_users":
+            total_users,
+
+        "total_patients":
+            total_patients,
+
+        "total_medical_extractions":
+            total_extractions
+    }

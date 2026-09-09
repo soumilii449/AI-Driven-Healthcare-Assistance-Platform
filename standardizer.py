@@ -3,65 +3,77 @@ import json
 
 def standardize_record(record):
 
-    prediction = record["prediction"]
+    # Support both formats:
+    # 1. Direct medical information
+    # 2. {"prediction": {...}}
+
+    if "prediction" in record:
+        prediction = record["prediction"]
+    else:
+        prediction = record
 
     standardized = {
 
         "patient": {
-            "name": prediction["patient"]["name"],
-            "date_of_birth": prediction["patient"]["date_of_birth"],
+            "name": prediction.get("patient", {}).get("name", ""),
+            "date_of_birth": prediction.get("patient", {}).get("date_of_birth", ""),
             "medical_record_number":
-                prediction["patient"]["medical_record_number"],
-            "gender": prediction["patient"]["gender"],
+                prediction.get("patient", {}).get("medical_record_number", ""),
+            "gender": prediction.get("patient", {}).get("gender", ""),
             "contact_information":
-                prediction["patient"]["contact_information"]
+                prediction.get("patient", {}).get("contact_information", "")
         },
 
         "hospitalization": {
             "admission_date":
-                prediction["hospitalization"]["admission_date"],
+                prediction.get("hospitalization", {}).get("admission_date", ""),
             "discharge_date":
-                prediction["hospitalization"]["discharge_date"]
+                prediction.get("hospitalization", {}).get("discharge_date", "")
         },
 
-        "diagnoses": prediction["diagnoses"],
+        "diagnoses":
+            prediction.get("diagnoses", []),
 
-        "symptoms": prediction["symptoms"],
+        "symptoms":
+            prediction.get("symptoms", []),
 
         "medical_conditions":
-            prediction["medical_conditions"],
+            prediction.get("medical_conditions", []),
 
         "allergies":
-            prediction["allergies"],
+            prediction.get("allergies", []),
 
         "medications": [],
 
         "procedures":
-            prediction["procedures"],
+            prediction.get("procedures", []),
 
         "investigations": {
             "imaging":
-                prediction["investigations"]["imaging"],
+                prediction.get("investigations", {}).get("imaging", []),
 
             "laboratory_tests":
-                prediction["investigations"]["laboratory_tests"],
+                prediction.get("investigations", {}).get("laboratory_tests", []),
 
             "laboratory_results":
-                prediction["investigations"]["laboratory_results"]
+                prediction.get("investigations", {}).get("laboratory_results", [])
         },
 
         "anatomy":
-            prediction["anatomy"],
+            prediction.get("anatomy", []),
 
         "biomarkers":
-            prediction["biomarkers"],
+            prediction.get("biomarkers", []),
 
         "physicians":
-            prediction["physicians"]
+            prediction.get("physicians", [])
     }
 
     # Standardize medications
-    for medication in prediction["medications"]:
+    for medication in prediction.get("medications", []):
+
+        if not isinstance(medication, dict):
+            continue
 
         standardized_medication = {
             "name": medication.get("name", ""),
@@ -99,7 +111,7 @@ if __name__ == "__main__":
             standardized = standardize_record(record)
 
             standardized_records.append({
-                "image": record["image"],
+                "image": record.get("image", ""),
                 "standardized": standardized
             })
 

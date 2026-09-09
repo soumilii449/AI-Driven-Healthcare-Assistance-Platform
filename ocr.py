@@ -5,9 +5,7 @@
 
 import os
 
-# IMPORTANT:
-# Disable oneDNN / MKL-DNN and PIR before
-# importing PaddleOCR/Paddle.
+# Disable oneDNN / MKL-DNN and PIR
 os.environ["FLAGS_use_mkldnn"] = "0"
 os.environ["FLAGS_enable_pir_api"] = "0"
 
@@ -21,19 +19,13 @@ from paddleocr import PaddleOCR
 # 1. PATHS
 # ========================================
 
-IMAGE_FOLDER = (
-    "dataset/synthetic_prescription_dataset/images"
-)
+IMAGE_FOLDER = "dataset/synthetic_prescription_dataset/images"
 
-LABEL_FILE = (
-    "dataset/synthetic_prescription_dataset/labels.csv"
-)
+LABEL_FILE = "dataset/synthetic_prescription_dataset/labels.csv"
 
 OUTPUT_FOLDER = "output"
 
-OUTPUT_FILE = (
-    "output/ocr_results.json"
-)
+OUTPUT_FILE = "output/ocr_results.json"
 
 
 # ========================================
@@ -57,8 +49,6 @@ try:
     ocr = PaddleOCR(
         lang="en",
         enable_mkldnn=False,
-        # Disable unnecessary document
-        # processing components.
         use_doc_orientation_classify=False,
         use_doc_unwarping=False,
         use_textline_orientation=False
@@ -71,7 +61,7 @@ except Exception as e:
     print("\nERROR while loading OCR model:")
     print(e)
 
-    raise SystemExit
+    raise
 
 
 # ========================================
@@ -110,9 +100,7 @@ def extract_medical_terms(text):
     # Frequency
     # ------------------------------------
 
-    frequency_pattern = (
-        r"\b[01]-[01]-[01]\b"
-    )
+    frequency_pattern = r"\b[01]-[01]-[01]\b"
 
     frequencies = re.findall(
         frequency_pattern,
@@ -127,27 +115,29 @@ def extract_medical_terms(text):
 
 
 # ========================================
-# 5. OCR IMAGE
+# 5. CONVERT PADDLEOCR RESULT TO TEXT
 # ========================================
 
-def extract_text(image_path):
+def _extract_text_from_result(result):
 
-    print("\nReading image:")
-    print(image_path)
+    all_text = []
+
+    if result is None:
+        return ""
+
+    # ------------------------------------
+    # PaddleOCR returns iterable results
+    # ------------------------------------
 
     try:
 
-        result = ocr.predict(
-            image_path
-        )
-
-        all_text = []
-
-        # --------------------------------
-        # Read PaddleOCR result
-        # --------------------------------
-
         for page in result:
+
+            page_data = None
+
+            # --------------------------------
+            # Method 1: page.json
+            # --------------------------------
 
             try:
 
@@ -155,9 +145,12 @@ def extract_text(image_path):
 
             except Exception:
 
-                continue
+                page_data = None
 
-            # Convert JSON string to dictionary
+            # --------------------------------
+            # JSON string -> dictionary
+            # --------------------------------
+
             if isinstance(
                 page_data,
                 str
@@ -171,7 +164,25 @@ def extract_text(image_path):
 
                 except Exception:
 
-                    continue
+                    page_data = None
+
+            # --------------------------------
+            # If page.json is unavailable
+            # --------------------------------
+
+            if page_data is None:
+
+                try:
+
+                    page_data = dict(page)
+
+                except Exception:
+
+                    page_data = None
+
+            # --------------------------------
+            # Skip invalid result
+            # --------------------------------
 
             if not isinstance(
                 page_data,
@@ -181,7 +192,19 @@ def extract_text(image_path):
                 continue
 
             # --------------------------------
-            # PaddleOCR 3.x result structure
+            # PaddleOCR 3.x may return:
+            #
+            # {
+            #   "res": {
+            #       "rec_texts": [...]
+            #   }
+            # }
+            #
+            # OR directly:
+            #
+            # {
+            #   "rec_texts": [...]
+            # }
             # --------------------------------
 
             data = page_data.get(
@@ -196,28 +219,136 @@ def extract_text(image_path):
 
                 continue
 
+            # --------------------------------
+            # Get recognized text
+            # --------------------------------
+
             texts = data.get(
                 "rec_texts",
                 []
             )
 
-            if texts:
+            # --------------------------------
+            # Sometimes rec_texts may be
+            # stored differently
+            # --------------------------------
 
-                all_text.extend(
-                    str(text)
-                    for text in texts
-                    if text
+            if not texts:
+
+                texts = data.get(
+                    "texts",
+                    []
                 )
 
-        # --------------------------------
-        # Combine OCR text
-        # --------------------------------
+            if not isinstance(
+                texts,
+                list
+            ):
 
-        final_text = " ".join(
-            all_text
+                continue
+
+            # --------------------------------
+            # Add text
+            # --------------------------------
+
+            for item in texts:
+
+                if item is None:
+                    continue
+
+                item = str(item).strip()
+
+                if item:
+
+                    all_text.append(
+                        item
+                    )
+
+    except Exception as e:
+
+        print(
+            "\nResult parsing error:"
         )
 
-        return final_text.strip()
+        print(e)
+
+    # ------------------------------------
+    # Combine text
+    # ------------------------------------
+
+    final_text = " ".join(
+        all_text
+    )
+
+    return final_text.strip()
+
+
+# ========================================
+# 6. OCR IMAGE
+# ========================================
+
+def extract_text(image_path):
+
+    print("\nReading image:")
+    print(image_path)
+
+    if not os.path.exists(
+        image_path
+    ):
+
+        print(
+            "ERROR: Image does not exist."
+        )
+
+        return ""
+
+    try:
+
+        # --------------------------------
+        # Run PaddleOCR
+        # --------------------------------
+
+        result = ocr.predict(
+            image_path
+        )
+
+        print(
+            "OCR prediction completed."
+        )
+
+        # --------------------------------
+        # Extract text safely
+        # --------------------------------
+
+        final_text = _extract_text_from_result(
+            result
+        )
+
+        # --------------------------------
+        # Display result
+        # --------------------------------
+
+        print(
+            "\n---------- OCR TEXT ----------"
+        )
+
+        if final_text:
+
+            print(
+                final_text
+            )
+
+        else:
+
+            print(
+                "No text detected."
+            )
+
+        print(
+            "------------------------------"
+        )
+
+        return final_text
 
     except Exception as e:
 
@@ -225,16 +356,24 @@ def extract_text(image_path):
             "\nOCR ERROR:"
         )
 
-        print(e)
+        print(
+            type(e).__name__
+        )
+
+        print(
+            str(e)
+        )
 
         return ""
 
 
 # ========================================
-# 6. LOAD DATASET LABELS
+# 7. LOAD DATASET LABELS
 # ========================================
 
-print("\nLoading dataset labels...")
+print(
+    "\nLoading dataset labels..."
+)
 
 try:
 
@@ -259,7 +398,7 @@ except Exception as e:
 
 
 # ========================================
-# 7. CHECK IMAGE FOLDER
+# 8. CHECK IMAGE FOLDER
 # ========================================
 
 if not os.path.exists(
@@ -282,7 +421,7 @@ if not os.path.exists(
 
 
 # ========================================
-# 8. GET IMAGES
+# 9. GET DATASET IMAGES
 # ========================================
 
 image_files = [
@@ -317,7 +456,7 @@ print(
 
 
 # ========================================
-# 9. PROCESS IMAGES
+# 10. PROCESS DATASET IMAGES
 # ========================================
 
 results = []
@@ -361,20 +500,6 @@ for index, image_file in enumerate(
         image_path
     )
 
-    print(
-        "\n---------- OCR OUTPUT ----------"
-    )
-
-    if text:
-
-        print(text)
-
-    else:
-
-        print(
-            "No text detected."
-        )
-
     # ------------------------------------
     # Extract dosage/frequency
     # ------------------------------------
@@ -384,7 +509,7 @@ for index, image_file in enumerate(
     )
 
     # ------------------------------------
-    # Get labels for this image
+    # Get labels
     # ------------------------------------
 
     image_labels = []
@@ -393,27 +518,38 @@ for index, image_file in enumerate(
 
         try:
 
-            image_rows = labels_df[
-                labels_df["image"]
-                == image_file
-            ]
+            if "image" in labels_df.columns:
 
-            for _, row in image_rows.iterrows():
+                image_rows = labels_df[
+                    labels_df["image"]
+                    == image_file
+                ]
 
-                image_labels.append({
+                for _, row in image_rows.iterrows():
 
-                    "medicine": str(
-                        row["medicine"]
-                    ),
+                    image_labels.append({
 
-                    "dosage": str(
-                        row["dosage"]
-                    ),
+                        "medicine": str(
+                            row.get(
+                                "medicine",
+                                ""
+                            )
+                        ),
 
-                    "frequency": str(
-                        row["frequency"]
-                    )
-                })
+                        "dosage": str(
+                            row.get(
+                                "dosage",
+                                ""
+                            )
+                        ),
+
+                        "frequency": str(
+                            row.get(
+                                "frequency",
+                                ""
+                            )
+                        )
+                    })
 
         except Exception as e:
 
@@ -487,7 +623,7 @@ for index, image_file in enumerate(
 
 
 # ========================================
-# 10. SAVE OCR RESULTS
+# 11. SAVE OCR RESULTS
 # ========================================
 
 with open(
@@ -505,7 +641,7 @@ with open(
 
 
 # ========================================
-# 11. COMPLETION MESSAGE
+# 12. COMPLETION MESSAGE
 # ========================================
 
 print("\n")
