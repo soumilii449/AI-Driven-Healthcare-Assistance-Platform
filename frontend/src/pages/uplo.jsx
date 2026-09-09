@@ -23,6 +23,8 @@ function Uplo() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  // 0 = idle, 1 = uploading, 2 = analysing, 3 = done
+  const [uploadStep, setUploadStep] = useState(0);
 
   // =====================================
   // SELECT FILE
@@ -63,10 +65,10 @@ function Uplo() {
 
   const removeFile = () => {
     if (loading) return;
-
     setSelectedFile(null);
     setError("");
     setSuccess("");
+    setUploadStep(0);
   };
 
   // =====================================
@@ -154,10 +156,11 @@ function Uplo() {
     setLoading(true);
     setError("");
     setSuccess("");
+    setUploadStep(0);
 
     try {
       // STEP 1: UPLOAD
-
+      setUploadStep(1);
       setSuccess(
         "Uploading prescription..."
       );
@@ -199,7 +202,7 @@ function Uplo() {
       );
 
       // STEP 4: PROCESS
-
+      setUploadStep(2);
       setSuccess(
         "Prescription uploaded. AI is analyzing it..."
       );
@@ -232,7 +235,7 @@ function Uplo() {
       );
 
       // STEP 7: SUCCESS
-
+      setUploadStep(3);
       setSuccess(
         "Prescription analyzed successfully!"
       );
@@ -264,6 +267,7 @@ function Uplo() {
       );
 
       setSuccess("");
+      setUploadStep(0);
 
     } finally {
       setLoading(false);
@@ -320,6 +324,42 @@ function Uplo() {
           <div className="modern-alert modern-success">
             <CheckCircle size={20} />
             <span>{success}</span>
+          </div>
+        )}
+
+        {/* STEP PROGRESS INDICATOR (Feedback: Principle 7) */}
+
+        {loading && (
+          <div className="upload-progress-steps" role="status" aria-label="Upload progress">
+
+            {/* Step 1: Upload */}
+            <div className={`upload-step ${uploadStep >= 1 ? (uploadStep > 1 ? "done" : "active") : ""}`}>
+              <div className="upload-step-circle">
+                {uploadStep > 1 ? <CheckCircle size={16} /> : "1"}
+              </div>
+              <span className="upload-step-label">Uploading</span>
+            </div>
+
+            <div className={`upload-step-connector ${uploadStep > 1 ? "done" : uploadStep === 1 ? "active" : ""}`} />
+
+            {/* Step 2: Analyse */}
+            <div className={`upload-step ${uploadStep >= 2 ? (uploadStep > 2 ? "done" : "active") : ""}`}>
+              <div className="upload-step-circle">
+                {uploadStep > 2 ? <CheckCircle size={16} /> : "2"}
+              </div>
+              <span className="upload-step-label">Analysing</span>
+            </div>
+
+            <div className={`upload-step-connector ${uploadStep > 2 ? "done" : uploadStep === 2 ? "active" : ""}`} />
+
+            {/* Step 3: Done */}
+            <div className={`upload-step ${uploadStep >= 3 ? "done" : ""}`}>
+              <div className="upload-step-circle">
+                {uploadStep >= 3 ? <CheckCircle size={16} /> : "3"}
+              </div>
+              <span className="upload-step-label">Complete</span>
+            </div>
+
           </div>
         )}
 

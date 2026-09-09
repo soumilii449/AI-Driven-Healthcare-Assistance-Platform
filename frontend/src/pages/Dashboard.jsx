@@ -461,17 +461,23 @@ export default function Dashboard() {
 
         </div>
 
-        {/* LOADING */}
+        {/* LOADING — Skeleton cards (Loading States: Principle 11) */}
 
         {loadingDocuments && (
 
-          <div className="history-loading">
+          <div className="prescription-history">
 
-            <LoaderIcon />
-
-            <p>
-              Loading your prescription history...
-            </p>
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="skeleton-card">
+                <div className="skeleton skeleton-icon" />
+                <div className="skeleton-lines">
+                  <div className="skeleton skeleton-line skeleton-line-title" />
+                  <div className="skeleton skeleton-line skeleton-line-sub" />
+                  <div className="skeleton skeleton-line skeleton-line-meta" />
+                </div>
+                <div className="skeleton skeleton-btn" />
+              </div>
+            ))}
 
           </div>
 
@@ -482,16 +488,17 @@ export default function Dashboard() {
         {!loadingDocuments &&
           documentsError && (
 
-            <div className="history-error">
+            <div className="history-error" role="alert">
 
               <AlertCircleIcon />
 
-              <p>
+              <p style={{ flex: 1 }}>
                 {documentsError}
               </p>
 
               <button
                 onClick={loadDocuments}
+                aria-label="Retry loading prescriptions"
               >
                 Try Again
               </button>
@@ -500,30 +507,32 @@ export default function Dashboard() {
 
           )}
 
-        {/* NO DOCUMENTS */}
+        {/* NO DOCUMENTS — Improved empty state (Principle 12) */}
 
         {!loadingDocuments &&
           !documentsError &&
           documents.length === 0 && (
 
-            <div className="history-empty">
+            <div className="history-empty" role="region" aria-label="No prescriptions">
 
               <div className="empty-icon">
                 <ClipboardList size={30} />
               </div>
 
-              <h3>
-                No prescription analyses yet
+              <h3 className="history-empty-title">
+                No prescriptions analysed yet
               </h3>
 
-              <p>
-                Upload your first prescription
-                to start using the AI assistant.
+              <p className="history-empty-sub">
+                Upload your first prescription and our AI will turn
+                complex medical jargon into simple, clear insights — in
+                seconds.
               </p>
 
               <Link
                 to="/upload"
-                className="hero-primary-button"
+                className="empty-state-cta"
+                aria-label="Upload your first prescription"
               >
                 <Upload size={18} />
                 Upload Prescription
