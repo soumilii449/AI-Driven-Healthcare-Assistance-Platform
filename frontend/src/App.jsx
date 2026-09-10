@@ -15,6 +15,7 @@ import Results from "./pages/Results";
 import Translation from "./pages/Translation";
 
 import ProtectedRoute from "./components/ProtectedRoute";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
@@ -32,7 +33,6 @@ function App() {
               element={<Login />}
             />
 
-
             {/* =========================
                 PROTECTED ROUTES
             ========================= */}
@@ -41,26 +41,45 @@ function App() {
 
               <Route
                 path="/dashboard"
-                element={<Dashboard />}
+                element={
+                  <>
+                    <Navbar />
+                    <Dashboard />
+                  </>
+                }
               />
 
               <Route
                 path="/upload"
-                element={<Upload />}
+                element={
+                  <>
+                    <Navbar />
+                    <Upload />
+                  </>
+                }
               />
 
               <Route
                 path="/results"
-                element={<Results />}
+                element={
+                  <>
+                    <Navbar />
+                    <Results />
+                  </>
+                }
               />
 
               <Route
                 path="/translation"
-                element={<Translation />}
+                element={
+                  <>
+                    <Navbar />
+                    <Translation />
+                  </>
+                }
               />
 
             </Route>
-
 
             {/* =========================
                 DEFAULT ROUTE
@@ -75,7 +94,6 @@ function App() {
                 />
               }
             />
-
 
             {/* =========================
                 INVALID ROUTES
