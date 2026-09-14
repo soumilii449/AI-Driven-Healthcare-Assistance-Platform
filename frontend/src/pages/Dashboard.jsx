@@ -12,6 +12,8 @@ import {
   ShieldCheck,
   Sparkles,
   RefreshCw,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 import { getDocuments } from "../services/api";
@@ -25,13 +27,15 @@ const quickAccessCards = [
   },
   {
     title: "Medical Information",
-    description: "View structured information extracted from your prescription.",
+    description:
+      "View structured information extracted from your prescription.",
     icon: FileText,
     to: "/results",
   },
   {
     title: "Simple Explanation",
-    description: "Understand difficult medical terms in easier language.",
+    description:
+      "Understand difficult medical terms in easier language.",
     icon: BookOpen,
     to: "/results",
   },
@@ -49,6 +53,9 @@ export default function Dashboard() {
   const [documents, setDocuments] = useState([]);
   const [loadingDocuments, setLoadingDocuments] = useState(true);
   const [documentsError, setDocumentsError] = useState("");
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 5;
 
   // =====================================
   // LOAD ALL PREVIOUS PRESCRIPTIONS
@@ -79,28 +86,25 @@ export default function Dashboard() {
       documentList.sort((a, b) => {
         const dateA = new Date(
           a.created_at ||
-          a.uploaded_at ||
-          a.processed_at ||
-          0
+            a.uploaded_at ||
+            a.processed_at ||
+            0
         );
 
         const dateB = new Date(
           b.created_at ||
-          b.uploaded_at ||
-          b.processed_at ||
-          0
+            b.uploaded_at ||
+            b.processed_at ||
+            0
         );
 
         return dateB - dateA;
       });
 
       setDocuments(documentList);
-
+      setCurrentPage(1);
     } catch (error) {
-      console.error(
-        "Error loading documents:",
-        error
-      );
+      console.error("Error loading documents:", error);
 
       setDocumentsError(
         "Unable to load previous prescription analyses."
@@ -148,8 +152,8 @@ export default function Dashboard() {
   const getStatus = (document) => {
     const status = String(
       document?.status ||
-      document?.processing_status ||
-      "processed"
+        document?.processing_status ||
+        "processed"
     ).toLowerCase();
 
     if (
@@ -222,6 +226,29 @@ export default function Dashboard() {
     );
   };
 
+  // =====================================
+  // PAGINATION
+  // =====================================
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(documents.length / ITEMS_PER_PAGE)
+  );
+
+  const paginatedDocuments = documents.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  const goToPage = (page) => {
+    const clamped = Math.min(
+      Math.max(page, 1),
+      totalPages
+    );
+
+    setCurrentPage(clamped);
+  };
+
   return (
     <div className="dashboard-modern">
 
@@ -275,6 +302,7 @@ export default function Dashboard() {
 
           <div className="floating-card floating-card-one">
             <CheckCircle size={18} />
+
             <div>
               <strong>AI Analysis</strong>
               <span>Ready</span>
@@ -287,6 +315,7 @@ export default function Dashboard() {
 
           <div className="floating-card floating-card-two">
             <Languages size={18} />
+
             <div>
               <strong>Hindi Support</strong>
               <span>Available</span>
@@ -304,10 +333,12 @@ export default function Dashboard() {
       <section className="dashboard-section">
 
         <div className="section-heading">
+
           <div>
             <span>QUICK ACCESS</span>
             <h2>Everything You Need</h2>
           </div>
+
         </div>
 
         <div className="quick-access-grid">
@@ -360,6 +391,7 @@ export default function Dashboard() {
           <div>
             <span>HOW IT WORKS</span>
             <h2>AI Prescription Pipeline</h2>
+
             <p>
               Your prescription passes through multiple
               intelligent processing stages.
@@ -461,22 +493,35 @@ export default function Dashboard() {
 
         </div>
 
-        {/* LOADING — Skeleton cards (Loading States: Principle 11) */}
+        {/* LOADING — Skeleton cards */}
 
         {loadingDocuments && (
 
           <div className="prescription-history">
 
             {[1, 2, 3].map((i) => (
-              <div key={i} className="skeleton-card">
+
+              <div
+                key={i}
+                className="skeleton-card"
+              >
+
                 <div className="skeleton skeleton-icon" />
+
                 <div className="skeleton-lines">
+
                   <div className="skeleton skeleton-line skeleton-line-title" />
+
                   <div className="skeleton skeleton-line skeleton-line-sub" />
+
                   <div className="skeleton skeleton-line skeleton-line-meta" />
+
                 </div>
+
                 <div className="skeleton skeleton-btn" />
+
               </div>
+
             ))}
 
           </div>
@@ -488,7 +533,10 @@ export default function Dashboard() {
         {!loadingDocuments &&
           documentsError && (
 
-            <div className="history-error" role="alert">
+            <div
+              className="history-error"
+              role="alert"
+            >
 
               <AlertCircleIcon />
 
@@ -507,13 +555,17 @@ export default function Dashboard() {
 
           )}
 
-        {/* NO DOCUMENTS — Improved empty state (Principle 12) */}
+        {/* NO DOCUMENTS */}
 
         {!loadingDocuments &&
           !documentsError &&
           documents.length === 0 && (
 
-            <div className="history-empty" role="region" aria-label="No prescriptions">
+            <div
+              className="history-empty"
+              role="region"
+              aria-label="No prescriptions"
+            >
 
               <div className="empty-icon">
                 <ClipboardList size={30} />
@@ -525,8 +577,8 @@ export default function Dashboard() {
 
               <p className="history-empty-sub">
                 Upload your first prescription and our AI will turn
-                complex medical jargon into simple, clear insights — in
-                seconds.
+                complex medical jargon into simple, clear insights —
+                in seconds.
               </p>
 
               <Link
@@ -548,118 +600,172 @@ export default function Dashboard() {
           !documentsError &&
           documents.length > 0 && (
 
-            <div className="prescription-history">
+            <>
 
-              {documents.map(
-                (document, index) => {
+              <div className="prescription-history">
 
-                  const documentId =
-                    getDocumentId(document);
+                {paginatedDocuments.map(
+                  (document, index) => {
 
-                  const fileName =
-                    getFileName(document);
+                    const documentId =
+                      getDocumentId(document);
 
-                  const status =
-                    getStatus(document);
+                    const fileName =
+                      getFileName(document);
 
-                  const isProcessed =
-                    status === "Processed";
+                    const status =
+                      getStatus(document);
 
-                  return (
+                    const isProcessed =
+                      status === "Processed";
 
-                    <div
-                      key={
-                        documentId ||
-                        index
-                      }
-                      className="history-card"
-                    >
+                    return (
 
-                      <div className="history-file-icon">
-                        <ClipboardList
-                          size={24}
-                        />
-                      </div>
-
-                      <div className="history-info">
-
-                        <div className="history-title-row">
-
-                          <h3>
-                            Prescription Analysis
-                          </h3>
-
-                          <span
-                            className={
-                              isProcessed
-                                ? "status-badge processed"
-                                : "status-badge"
-                            }
-                          >
-
-                            {isProcessed ? (
-                              <CheckCircle size={13} />
-                            ) : (
-                              <Clock size={13} />
-                            )}
-
-                            {status}
-
-                          </span>
-
-                        </div>
-
-                        <p className="history-file-name">
-                          {fileName}
-                        </p>
-
-                        <div className="history-meta">
-
-                          <span>
-                            <FileText
-                              size={14}
-                            />
-
-                            Document #
-                            {documentId || "—"}
-                          </span>
-
-                          <span>
-                            <Clock
-                              size={14}
-                            />
-
-                            {formatDate(
-                              document
-                            )}
-                          </span>
-
-                        </div>
-
-                      </div>
-
-                      <button
-                        className="view-results-button"
-                        onClick={() =>
-                          handleViewResults(
-                            document
-                          )
+                      <div
+                        key={
+                          documentId ||
+                          index
                         }
-                        disabled={!documentId}
+                        className="history-card"
                       >
-                        View Results
-                        <ArrowRight
-                          size={17}
-                        />
-                      </button>
 
-                    </div>
+                        <div className="history-file-icon">
 
-                  );
-                }
+                          <ClipboardList
+                            size={24}
+                          />
+
+                        </div>
+
+                        <div className="history-info">
+
+                          <div className="history-title-row">
+
+                            <h3>
+                              Prescription Analysis
+                            </h3>
+
+                            <span
+                              className={
+                                isProcessed
+                                  ? "status-badge processed"
+                                  : "status-badge"
+                              }
+                            >
+
+                              {isProcessed ? (
+                                <CheckCircle size={13} />
+                              ) : (
+                                <Clock size={13} />
+                              )}
+
+                              {status}
+
+                            </span>
+
+                          </div>
+
+                          <p className="history-file-name">
+                            {fileName}
+                          </p>
+
+                          <div className="history-meta">
+
+                            <span>
+                              <FileText
+                                size={14}
+                              />
+
+                              Document #
+                              {documentId || "—"}
+                            </span>
+
+                            <span>
+                              <Clock
+                                size={14}
+                              />
+
+                              {formatDate(
+                                document
+                              )}
+                            </span>
+
+                          </div>
+
+                        </div>
+
+                        <button
+                          className="view-results-button"
+                          onClick={() =>
+                            handleViewResults(
+                              document
+                            )
+                          }
+                          disabled={!documentId}
+                        >
+                          View Results
+
+                          <ArrowRight
+                            size={17}
+                          />
+                        </button>
+
+                      </div>
+
+                    );
+
+                  }
+                )}
+
+              </div>
+
+              {/* PAGINATION */}
+
+              {totalPages > 1 && (
+
+                <div className="pagination">
+
+                  <button
+                    className="pagination-button"
+                    onClick={() =>
+                      goToPage(
+                        currentPage - 1
+                      )
+                    }
+                    disabled={
+                      currentPage === 1
+                    }
+                    aria-label="Previous page"
+                  >
+                    <ChevronLeft size={18} />
+                    Prev
+                  </button>
+
+                  <span className="pagination-info">
+                    Page {currentPage} of {totalPages}
+                  </span>
+
+                  <button
+                    className="pagination-button"
+                    onClick={() =>
+                      goToPage(
+                        currentPage + 1
+                      )
+                    }
+                    disabled={
+                      currentPage === totalPages
+                    }
+                    aria-label="Next page"
+                  >
+                    Next
+                    <ChevronRight size={18} />
+                  </button>
+
+                </div>
+
               )}
 
-            </div>
+            </>
 
           )}
 
@@ -676,6 +782,7 @@ export default function Dashboard() {
         </div>
 
         <div>
+
           <span>PRIVACY FIRST</span>
 
           <h2>
@@ -687,6 +794,7 @@ export default function Dashboard() {
             in your dashboard history. Only essential
             analysis information is shown.
           </p>
+
         </div>
 
         <div className="privacy-status">

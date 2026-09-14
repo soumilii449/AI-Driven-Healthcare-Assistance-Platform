@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Upload as UploadIcon,
@@ -9,6 +9,8 @@ import {
   AlertCircle,
   ShieldCheck,
   Sparkles,
+  Camera,
+  RotateCcw,
 } from "lucide-react";
 
 import {
@@ -23,16 +25,31 @@ function Uplo() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  // 0 = idle, 1 = uploading, 2 = analysing, 3 = done
   const [uploadStep, setUploadStep] = useState(0);
 
+  const [isDragging, setIsDragging] = useState(false);
+  const [cameraOpen, setCameraOpen] = useState(false);
+
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const streamRef = useRef(null);
+
   // =====================================
-  // SELECT FILE
+  // CLEAN UP CAMERA ON UNMOUNT
   // =====================================
 
-  const handleFileChange = (event) => {
-    const file = event.target.files?.[0];
+  useEffect(() => {
+    return () => {
+      stopCameraStream();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
+  // =====================================
+  // SHARED FILE VALIDATION
+  // =====================================
+
+  const processSelectedFile = (file) => {
     setError("");
     setSuccess("");
 
@@ -48,15 +65,135 @@ function Uplo() {
 
     if (!allowedTypes.includes(file.type)) {
       setSelectedFile(null);
-
-      setError(
-        "Please select a PNG, JPG or JPEG image."
-      );
-
+      setError("Please select a PNG, JPG or JPEG image.");
       return;
     }
 
     setSelectedFile(file);
+  };
+
+  // =====================================
+  // SELECT FILE (FILE PICKER)
+  // =====================================
+
+  const handleFileChange = (event) => {
+    const file = event.target.files?.[0];
+    processSelectedFile(file);
+    // reset the input so selecting the same file again re-triggers onChange
+    event.target.value = "";
+  };
+
+  // =====================================
+  // DRAG AND DROP
+  // =====================================
+
+  const handleDragOver = (event) => {
+    event.preventDefault();
+    if (loading) return;
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (event) => {
+    event.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (event) => {
+    event.preventDefault();
+    setIsDragging(false);
+
+    if (loading) return;
+
+    const file = event.dataTransfer.files?.[0];
+    processSelectedFile(file);
+  };
+
+  // =====================================
+  // CAMERA CAPTURE
+  // =====================================
+
+  const stopCameraStream = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => track.stop());
+      streamRef.current = null;
+    }
+  };
+
+  const openCamera = async () => {
+    setError("");
+    setSuccess("");
+
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setError("Camera access is not supported on this device/browser.");
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: "environment" } },
+        audio: false,
+      });
+
+      streamRef.current = stream;
+      setCameraOpen(true);
+
+      // videoRef isn't mounted yet on the same render, so
+      // attach the stream right after the camera view renders.
+      setTimeout(() => {
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      }, 0);
+
+    } catch (err) {
+      console.error("Camera error:", err);
+
+      if (err.name === "NotAllowedError") {
+        setError("Camera permission was denied. Please allow camera access and try again.");
+      } else if (err.name === "NotFoundError") {
+        setError("No camera was found on this device.");
+      } else {
+        setError("Unable to access the camera.");
+      }
+    }
+  };
+
+  const closeCamera = () => {
+    stopCameraStream();
+    setCameraOpen(false);
+  };
+
+  const capturePhoto = () => {
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+
+    if (!video || !canvas) return;
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const context = canvas.getContext("2d");
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    canvas.toBlob(
+      (blob) => {
+        if (!blob) {
+          setError("Could not capture photo. Please try again.");
+          return;
+        }
+
+        const file = new File(
+          [blob],
+          `camera-capture-${Date.now()}.jpg`,
+          { type: "image/jpeg" }
+        );
+
+        processSelectedFile(file);
+        closeCamera();
+      },
+      "image/jpeg",
+      0.92
+    );
   };
 
   // =====================================
@@ -146,10 +283,7 @@ function Uplo() {
 
   const handleUpload = async () => {
     if (!selectedFile) {
-      setError(
-        "Please select a prescription image first."
-      );
-
+      setError("Please select a prescription image first.");
       return;
     }
 
@@ -159,94 +293,45 @@ function Uplo() {
     setUploadStep(0);
 
     try {
-      // STEP 1: UPLOAD
       setUploadStep(1);
-      setSuccess(
-        "Uploading prescription..."
-      );
+      setSuccess("Uploading prescription...");
 
-      const uploadResponse =
-        await uploadDocument(selectedFile);
+      const uploadResponse = await uploadDocument(selectedFile);
 
-      console.log(
-        "Upload response:",
-        uploadResponse
-      );
+      console.log("Upload response:", uploadResponse);
 
-      // STEP 2: GET DOCUMENT ID
+      const documentId = extractDocumentId(uploadResponse);
 
-      const documentId =
-        extractDocumentId(uploadResponse);
-
-      console.log(
-        "Detected document ID:",
-        documentId
-      );
+      console.log("Detected document ID:", documentId);
 
       if (!documentId) {
-        console.error(
-          "Complete upload response:",
-          uploadResponse
-        );
-
-        throw new Error(
-          "Document ID was not returned by the server."
-        );
+        console.error("Complete upload response:", uploadResponse);
+        throw new Error("Document ID was not returned by the server.");
       }
 
-      // STEP 3: SAVE DOCUMENT ID
+      localStorage.setItem("last_document_id", String(documentId));
 
-      localStorage.setItem(
-        "last_document_id",
-        String(documentId)
-      );
-
-      // STEP 4: PROCESS
       setUploadStep(2);
-      setSuccess(
-        "Prescription uploaded. AI is analyzing it..."
-      );
+      setSuccess("Prescription uploaded. AI is analyzing it...");
 
-      const processResponse =
-        await processDocument(documentId);
+      const processResponse = await processDocument(documentId);
 
-      console.log(
-        "Process response:",
-        processResponse
-      );
-
-      // STEP 5: SAVE COMPLETE RESULT
+      console.log("Process response:", processResponse);
 
       localStorage.setItem(
         "last_prescription_result",
         JSON.stringify(processResponse)
       );
 
-      // STEP 6: SAVE SELECTED DOCUMENT
+      localStorage.setItem("selected_document_id", String(documentId));
+      localStorage.setItem("analysis_result", JSON.stringify(processResponse));
 
-      localStorage.setItem(
-        "selected_document_id",
-        String(documentId)
-      );
-
-      localStorage.setItem(
-        "analysis_result",
-        JSON.stringify(processResponse)
-      );
-
-      // STEP 7: SUCCESS
       setUploadStep(3);
-      setSuccess(
-        "Prescription analyzed successfully!"
-      );
-
-      // STEP 8: GO TO RESULTS
+      setSuccess("Prescription analyzed successfully!");
 
       setTimeout(() => {
         navigate(
-          `/results?id=${encodeURIComponent(
-            documentId
-          )}`,
+          `/results?id=${encodeURIComponent(documentId)}`,
           {
             state: {
               result: processResponse,
@@ -257,18 +342,10 @@ function Uplo() {
       }, 500);
 
     } catch (err) {
-      console.error(
-        "Upload error:",
-        err
-      );
-
-      setError(
-        getErrorMessage(err)
-      );
-
+      console.error("Upload error:", err);
+      setError(getErrorMessage(err));
       setSuccess("");
       setUploadStep(0);
-
     } finally {
       setLoading(false);
     }
@@ -277,37 +354,24 @@ function Uplo() {
   return (
     <div className="upload-page-modern">
 
-      {/* Background decoration */}
       <div className="upload-glow upload-glow-one"></div>
       <div className="upload-glow upload-glow-two"></div>
 
       <div className="upload-container-modern">
 
-        {/* =================================
-            HEADER
-        ================================= */}
-
         <div className="upload-modern-header">
-
           <div className="upload-badge">
             <Sparkles size={15} />
             AI-Powered Medical Analysis
           </div>
 
-          <h1>
-            Upload Your Prescription
-          </h1>
+          <h1>Upload Your Prescription</h1>
 
           <p>
             Let AI transform complex medical information
             into simple, understandable insights.
           </p>
-
         </div>
-
-        {/* =================================
-            ERROR
-        ================================= */}
 
         {error && (
           <div className="modern-alert modern-error">
@@ -316,10 +380,6 @@ function Uplo() {
           </div>
         )}
 
-        {/* =================================
-            SUCCESS
-        ================================= */}
-
         {success && (
           <div className="modern-alert modern-success">
             <CheckCircle size={20} />
@@ -327,12 +387,8 @@ function Uplo() {
           </div>
         )}
 
-        {/* STEP PROGRESS INDICATOR (Feedback: Principle 7) */}
-
         {loading && (
           <div className="upload-progress-steps" role="status" aria-label="Upload progress">
-
-            {/* Step 1: Upload */}
             <div className={`upload-step ${uploadStep >= 1 ? (uploadStep > 1 ? "done" : "active") : ""}`}>
               <div className="upload-step-circle">
                 {uploadStep > 1 ? <CheckCircle size={16} /> : "1"}
@@ -342,7 +398,6 @@ function Uplo() {
 
             <div className={`upload-step-connector ${uploadStep > 1 ? "done" : uploadStep === 1 ? "active" : ""}`} />
 
-            {/* Step 2: Analyse */}
             <div className={`upload-step ${uploadStep >= 2 ? (uploadStep > 2 ? "done" : "active") : ""}`}>
               <div className="upload-step-circle">
                 {uploadStep > 2 ? <CheckCircle size={16} /> : "2"}
@@ -352,93 +407,131 @@ function Uplo() {
 
             <div className={`upload-step-connector ${uploadStep > 2 ? "done" : uploadStep === 2 ? "active" : ""}`} />
 
-            {/* Step 3: Done */}
             <div className={`upload-step ${uploadStep >= 3 ? "done" : ""}`}>
               <div className="upload-step-circle">
                 {uploadStep >= 3 ? <CheckCircle size={16} /> : "3"}
               </div>
               <span className="upload-step-label">Complete</span>
             </div>
-
           </div>
         )}
 
-        {/* =================================
-            MAIN CARD
-        ================================= */}
-
         <div className="glass-upload-card">
 
-          {!selectedFile ? (
+          {cameraOpen ? (
 
             /* ==============================
-               INITIAL UPLOAD
+               CAMERA VIEW
             ============================== */
 
-            <label
-              htmlFor="prescription-upload"
-              className="modern-drop-zone"
-            >
+            <div className="camera-capture-area">
 
-              <div className="upload-icon-circle">
-                <UploadIcon size={32} />
-              </div>
-
-              <div>
-                <h2>
-                  Upload Prescription
-                </h2>
-
-                <p>
-                  Click here to choose your prescription
-                </p>
-
-                <span>
-                  PNG, JPG or JPEG • Max supported image
-                </span>
-              </div>
-
-              <div className="upload-action">
-                Choose Prescription
-              </div>
-
-              <input
-                id="prescription-upload"
-                type="file"
-                accept="image/png,image/jpeg,image/jpg"
-                onChange={handleFileChange}
-                style={{
-                  display: "none",
-                }}
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                muted
+                className="camera-video-preview"
               />
 
-            </label>
+              <canvas ref={canvasRef} style={{ display: "none" }} />
+
+              <div className="camera-actions">
+                <button
+                  type="button"
+                  className="modern-analyze-button"
+                  onClick={capturePhoto}
+                >
+                  <Camera size={20} />
+                  Capture Photo
+                </button>
+
+                <button
+                  type="button"
+                  className="modern-back-button"
+                  onClick={closeCamera}
+                >
+                  <X size={18} />
+                  Cancel
+                </button>
+              </div>
+
+            </div>
+
+          ) : !selectedFile ? (
+
+            /* ==============================
+               INITIAL UPLOAD (DRAG & DROP + CLICK)
+            ============================== */
+
+            <>
+              <label
+                htmlFor="prescription-upload"
+                className={`modern-drop-zone ${isDragging ? "drop-zone-active" : ""}`}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+              >
+
+                <div className="upload-icon-circle">
+                  <UploadIcon size={32} />
+                </div>
+
+                <div>
+                  <h2>
+                    {isDragging ? "Drop your prescription here" : "Upload Prescription"}
+                  </h2>
+
+                  <p>
+                    Click to choose, or drag and drop your prescription here
+                  </p>
+
+                  <span>
+                    PNG, JPG or JPEG • Max supported image
+                  </span>
+                </div>
+
+                <div className="upload-action">
+                  Choose Prescription
+                </div>
+
+                <input
+                  id="prescription-upload"
+                  type="file"
+                  accept="image/png,image/jpeg,image/jpg"
+                  onChange={handleFileChange}
+                  style={{ display: "none" }}
+                />
+
+              </label>
+
+              <button
+                type="button"
+                className="use-camera-button"
+                onClick={openCamera}
+              >
+                <Camera size={18} />
+                Use Camera Instead
+              </button>
+            </>
 
           ) : (
 
             /* ==============================
                FILE SELECTED
-               NO IMAGE PREVIEW
             ============================== */
 
             <div className="selected-file-area">
 
               <div className="privacy-banner">
                 <ShieldCheck size={20} />
-
                 <div>
-                  <strong>
-                    Your prescription is private
-                  </strong>
-
+                  <strong>Your prescription is private</strong>
                   <span>
-                    The prescription image is not displayed
-                    on this screen.
+                    The prescription image is not displayed on this screen.
                   </span>
                 </div>
               </div>
-
-              {/* FILE CARD */}
 
               <div className="selected-file-card">
 
@@ -447,17 +540,8 @@ function Uplo() {
                 </div>
 
                 <div className="file-details">
-
-                  <strong>
-                    {selectedFile.name}
-                  </strong>
-
-                  <span>
-                    {(
-                      selectedFile.size / 1024
-                    ).toFixed(1)} KB
-                  </span>
-
+                  <strong>{selectedFile.name}</strong>
+                  <span>{(selectedFile.size / 1024).toFixed(1)} KB</span>
                 </div>
 
                 <button
@@ -472,65 +556,49 @@ function Uplo() {
 
               </div>
 
-              {/* ANALYSIS INFO */}
+              <button
+                type="button"
+                className="retake-button"
+                onClick={() => {
+                  removeFile();
+                }}
+                disabled={loading}
+              >
+                <RotateCcw size={16} />
+                Choose a Different Image
+              </button>
 
               <div className="analysis-info">
 
                 <div className="analysis-step">
-                  <div className="step-number">
-                    1
-                  </div>
-
+                  <div className="step-number">1</div>
                   <div>
-                    <strong>
-                      Secure Upload
-                    </strong>
-
-                    <span>
-                      Your prescription is securely uploaded.
-                    </span>
+                    <strong>Secure Upload</strong>
+                    <span>Your prescription is securely uploaded.</span>
                   </div>
                 </div>
 
                 <div className="analysis-line"></div>
 
                 <div className="analysis-step">
-                  <div className="step-number">
-                    2
-                  </div>
-
+                  <div className="step-number">2</div>
                   <div>
-                    <strong>
-                      AI Analysis
-                    </strong>
-
-                    <span>
-                      Medical information is extracted and processed.
-                    </span>
+                    <strong>AI Analysis</strong>
+                    <span>Medical information is extracted and processed.</span>
                   </div>
                 </div>
 
                 <div className="analysis-line"></div>
 
                 <div className="analysis-step">
-                  <div className="step-number">
-                    3
-                  </div>
-
+                  <div className="step-number">3</div>
                   <div>
-                    <strong>
-                      Easy Results
-                    </strong>
-
-                    <span>
-                      Get simplified and translated information.
-                    </span>
+                    <strong>Easy Results</strong>
+                    <span>Get simplified and translated information.</span>
                   </div>
                 </div>
 
               </div>
-
-              {/* ANALYZE BUTTON */}
 
               <button
                 type="button"
@@ -538,37 +606,22 @@ function Uplo() {
                 disabled={loading}
                 className="modern-analyze-button"
               >
-
                 {loading ? (
-
                   <>
-                    <Loader2
-                      size={21}
-                      className="spin"
-                    />
-
+                    <Loader2 size={21} className="spin" />
                     AI is analyzing your prescription...
                   </>
-
                 ) : (
-
                   <>
                     <Sparkles size={21} />
-
                     Analyze Prescription
                   </>
-
                 )}
-
               </button>
-
-              {/* BACK BUTTON */}
 
               <button
                 type="button"
-                onClick={() =>
-                  navigate("/dashboard")
-                }
+                onClick={() => navigate("/dashboard")}
                 disabled={loading}
                 className="modern-back-button"
               >
@@ -580,12 +633,7 @@ function Uplo() {
 
         </div>
 
-        {/* =================================
-            FEATURES
-        ================================= */}
-
         <div className="upload-features">
-
           <div className="upload-feature">
             <ShieldCheck size={20} />
             <span>Privacy Focused</span>
@@ -600,7 +648,6 @@ function Uplo() {
             <FileImage size={20} />
             <span>Multiple Image Formats</span>
           </div>
-
         </div>
 
         <p className="upload-disclaimer">
