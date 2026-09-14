@@ -10,45 +10,61 @@ import {
   CheckCircle,
   Clock,
   ShieldCheck,
-  Sparkles,
+  HeartHandshake,
   RefreshCw,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
 
 import { getDocuments } from "../services/api";
+import { useAuth } from "../context/AuthContext";
 
 const quickAccessCards = [
   {
     title: "Upload Prescription",
-    description: "Upload a prescription image for AI analysis.",
+    description: "Take a photo or upload a file — we'll take it from there.",
     icon: Upload,
     to: "/upload",
   },
   {
     title: "Medical Information",
     description:
-      "View structured information extracted from your prescription.",
+      "See exactly what your prescription says, laid out clearly.",
     icon: FileText,
     to: "/results",
   },
   {
     title: "Simple Explanation",
     description:
-      "Understand difficult medical terms in easier language.",
+      "Confusing medical terms, explained the way a friend would.",
     icon: BookOpen,
     to: "/results",
   },
   {
     title: "Hindi Translation",
-    description: "View simplified information in Hindi.",
+    description: "Read your results in Hindi, whenever that's easier.",
     icon: Languages,
     to: "/translation",
   },
 ];
 
+// =====================================
+// TIME-OF-DAY GREETING
+// =====================================
+
+const getGreeting = () => {
+  const hour = new Date().getHours();
+
+  if (hour < 12) return "Good morning";
+  if (hour < 17) return "Good afternoon";
+  return "Good evening";
+};
+
 export default function Dashboard() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const firstName = user?.username?.split(/[.\s_]/)[0] || "there";
 
   const [documents, setDocuments] = useState([]);
   const [loadingDocuments, setLoadingDocuments] = useState(true);
@@ -261,19 +277,19 @@ export default function Dashboard() {
         <div className="hero-content">
 
           <div className="hero-badge">
-            <Sparkles size={15} />
-            AI-Powered Healthcare Assistant
+            <span className="hero-badge-dot" />
+            {getGreeting()}, {firstName}
           </div>
 
           <h1>
-            Understand Your
-            <span> Prescription Easily</span>
+            Let's make sense of
+            <span> your prescription.</span>
           </h1>
 
           <p>
-            Upload your prescription and let AI convert
-            complex medical information into simple,
-            understandable insights.
+            Upload a photo and we'll turn the confusing parts into
+            plain language you can actually understand — in English
+            or Hindi, whichever feels easier.
           </p>
 
           <div className="hero-actions">
@@ -304,21 +320,21 @@ export default function Dashboard() {
             <CheckCircle size={18} />
 
             <div>
-              <strong>AI Analysis</strong>
-              <span>Ready</span>
+              <strong>Ready when you are</strong>
+              <span>No waiting around</span>
             </div>
           </div>
 
           <div className="hero-medical-icon">
-            <Sparkles size={55} />
+            <HeartHandshake size={55} />
           </div>
 
           <div className="floating-card floating-card-two">
             <Languages size={18} />
 
             <div>
-              <strong>Hindi Support</strong>
-              <span>Available</span>
+              <strong>Hindi, too</strong>
+              <span>Read it your way</span>
             </div>
           </div>
 
@@ -336,7 +352,7 @@ export default function Dashboard() {
 
           <div>
             <span>QUICK ACCESS</span>
-            <h2>Everything You Need</h2>
+            <h2>What would you like to do?</h2>
           </div>
 
         </div>
@@ -390,17 +406,17 @@ export default function Dashboard() {
 
           <div>
             <span>HOW IT WORKS</span>
-            <h2>AI Prescription Pipeline</h2>
+            <h2>From prescription to plain English</h2>
 
             <p>
-              Your prescription passes through multiple
-              intelligent processing stages.
+              Here's what happens after you upload — nothing skipped,
+              nothing rushed.
             </p>
           </div>
 
           <div className="pipeline-ai-badge">
-            <Sparkles size={15} />
-            AI Powered
+            <Clock size={15} />
+            Usually under a minute
           </div>
 
         </div>
@@ -419,17 +435,17 @@ export default function Dashboard() {
           <div className="pipeline-step">
             <div className="pipeline-number">02</div>
             <FileText size={24} />
-            <strong>OCR</strong>
-            <span>Text Extraction</span>
+            <strong>Reading</strong>
+            <span>Text extraction</span>
           </div>
 
           <div className="pipeline-connector"></div>
 
           <div className="pipeline-step">
             <div className="pipeline-number">03</div>
-            <Sparkles size={24} />
-            <strong>AI Extraction</strong>
-            <span>Medical Data</span>
+            <HeartHandshake size={24} />
+            <strong>Understanding</strong>
+            <span>What it means</span>
           </div>
 
           <div className="pipeline-connector"></div>
@@ -437,8 +453,8 @@ export default function Dashboard() {
           <div className="pipeline-step">
             <div className="pipeline-number">04</div>
             <BookOpen size={24} />
-            <strong>Analysis</strong>
-            <span>Simplification</span>
+            <strong>Simplifying</strong>
+            <span>Plain language</span>
           </div>
 
           <div className="pipeline-connector"></div>
@@ -446,7 +462,7 @@ export default function Dashboard() {
           <div className="pipeline-step">
             <div className="pipeline-number">05</div>
             <Languages size={24} />
-            <strong>Translation</strong>
+            <strong>Translating</strong>
             <span>Hindi</span>
           </div>
 
@@ -466,11 +482,11 @@ export default function Dashboard() {
             <span>YOUR ACTIVITY</span>
 
             <h2>
-              Prescription History
+              Your Prescriptions
             </h2>
 
             <p>
-              Access all your previously analyzed prescriptions.
+              Everything you've uploaded, ready whenever you need it.
             </p>
           </div>
 
@@ -572,13 +588,13 @@ export default function Dashboard() {
               </div>
 
               <h3 className="history-empty-title">
-                No prescriptions analysed yet
+                You haven't uploaded anything yet
               </h3>
 
               <p className="history-empty-sub">
-                Upload your first prescription and our AI will turn
-                complex medical jargon into simple, clear insights —
-                in seconds.
+                Upload your first prescription and we'll turn the
+                confusing parts into plain language — usually in
+                under a minute.
               </p>
 
               <Link
@@ -805,9 +821,9 @@ export default function Dashboard() {
       </section>
 
       <p className="dashboard-disclaimer">
-        Information provided is for understanding purposes
-        and should not replace advice from a qualified
-        healthcare professional.
+        This is here to help you understand your prescription —
+        it's not a substitute for advice from your doctor or
+        pharmacist.
       </p>
 
     </div>

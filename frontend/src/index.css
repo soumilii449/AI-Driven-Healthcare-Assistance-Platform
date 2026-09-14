@@ -27,6 +27,8 @@
   --clr-warning-bg:     rgba(253,230,138,0.70);
   --clr-info:           #0369a1;
   --clr-info-bg:        rgba(224,242,254,0.80);
+  --clr-warm:           #c2610f;
+  --clr-warm-bg:        rgba(217,119,32,0.11);
 
   /* Text */
   --txt-primary:   #172033;
@@ -2565,22 +2567,29 @@ textarea:focus-visible {
   width: fit-content;
   display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 8px 15px;
+  gap: 9px;
+  padding: 8px 16px;
   margin-bottom: 20px;
   border-radius: 30px;
-  background: rgba(37, 99, 235, 0.09);
-  color: #2563eb;
+  background: var(--clr-warm-bg);
+  color: var(--clr-warm);
   font-size: 13px;
   font-weight: 700;
+}
+
+.hero-badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--clr-warm);
 }
 
 .hero-content h1 {
   margin-bottom: 18px;
   color: #172554;
-  font-size: clamp(40px, 5vw, 62px);
-  line-height: 1.05;
-  letter-spacing: -2px;
+  font-size: clamp(38px, 5vw, 58px);
+  line-height: 1.12;
+  letter-spacing: -1.2px;
 }
 
 .hero-content h1 span {
@@ -2827,10 +2836,10 @@ textarea:focus-visible {
   gap: 7px;
   padding: 9px 14px;
   border-radius: 30px;
-  background: rgba(37, 99, 235, 0.09);
-  color: #2563eb;
+  background: rgba(100, 116, 139, 0.08);
+  color: #475569;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .pipeline {
