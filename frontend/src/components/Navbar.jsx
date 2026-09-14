@@ -36,7 +36,7 @@ export default function Navbar() {
       <nav className="navbar">
 
         <Link to="/dashboard" className="nav-logo">
-          AI Healthcare
+         SwasthyaSetu
         </Link>
 
         <div className="nav-links">

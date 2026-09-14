@@ -66,7 +66,6 @@ export default function Login() {
     setError("");
     setMessage("");
 
-    // Prevent errors — inline pre-validation (Principle 10)
     if (isRegistering && password.length < 6) {
       setError("Password must be at least 6 characters.");
       return;
@@ -104,150 +103,155 @@ export default function Login() {
 
   return (
     <div className="auth-page">
-      <div className="auth-card">
 
-        {/* Title — Hierarchy: h1 is the single biggest element */}
-        <h1>AI Healthcare Assistant</h1>
-
-        <p className="auth-subtitle">
-          {isRegistering
-            ? "Create your account to get started"
-            : "Sign in to your account"}
-        </p>
-
-        <form onSubmit={handleSubmit} noValidate>
-
-          {/* Username */}
-          <div className="form-group">
-            <label htmlFor="login-username">Username</label>
-            <input
-              id="login-username"
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter your username"
-              required
-              autoComplete="username"
-              aria-required="true"
-            />
-          </div>
-
-          {/* Password */}
-          <div className="form-group">
-            <label htmlFor="login-password">Password</label>
-            <div style={{ position: "relative" }}>
-              <input
-                id="login-password"
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder={isRegistering ? "Create a password" : "Enter your password"}
-                required
-                autoComplete={isRegistering ? "new-password" : "current-password"}
-                aria-required="true"
-                style={{ paddingRight: 44 }}
-              />
-              {/* Show/hide toggle (Prevent Errors — don't let users mistype) */}
-              <button
-                type="button"
-                onClick={() => setShowPassword((v) => !v)}
-                aria-label={showPassword ? "Hide password" : "Show password"}
-                style={{
-                  position: "absolute",
-                  right: 12,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  border: "none",
-                  background: "none",
-                  color: "#64748b",
-                  padding: 4,
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-              </button>
-            </div>
-
-            {/* Password strength — only during registration */}
-            <PasswordHint password={password} show={isRegistering} />
-          </div>
-
-          {/* Role — only during registration */}
-          {isRegistering && (
-            <div className="form-group">
-              <label htmlFor="login-role">Role</label>
-              <select
-                id="login-role"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                aria-label="Select your role"
-              >
-                <option value="patient">Patient</option>
-                <option value="doctor">Doctor</option>
-              </select>
-            </div>
-          )}
-
-          {/* Error feedback — Color with purpose: red = error */}
-          {error && (
-            <div className="error-message" role="alert" aria-live="polite">
-              <AlertCircle size={15} style={{ display: "inline", marginRight: 6, verticalAlign: "middle" }} />
-              {error}
-            </div>
-          )}
-
-          {/* Success feedback — green = success */}
-          {message && (
-            <div className="success-message" role="status" aria-live="polite">
-              <CheckCircle size={15} style={{ display: "inline", marginRight: 6, verticalAlign: "middle" }} />
-              {message}
-            </div>
-          )}
-
-          {/* Submit — animated loading state (Feedback: Principle 7) */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="primary-button"
-            style={{ width: "100%", marginTop: 8 }}
-            aria-busy={loading}
-          >
-            {loading ? (
-              <>
-                <Loader2 size={17} className="spin" />
-                {isRegistering ? "Creating account…" : "Signing in…"}
-              </>
-            ) : isRegistering ? (
-              "Create Account"
-            ) : (
-              "Sign In"
-            )}
-          </button>
-
-        </form>
-
-        {/* Switch mode */}
-        <div className="auth-switch">
-          {isRegistering ? (
-            <>
-              Already have an account?{" "}
-              <button type="button" onClick={() => switchMode(false)}>
-                Sign In
-              </button>
-            </>
-          ) : (
-            <>
-              Don't have an account?{" "}
-              <button type="button" onClick={() => switchMode(true)}>
-                Register
-              </button>
-            </>
-          )}
+      <div className="auth-image-panel">
+        <div className="auth-image-overlay">
+          <h2>AI Healthcare Assistant</h2>
+          <p>
+            Upload or scan a prescription and get simple,
+            translated, easy-to-understand medical information
+            in seconds.
+          </p>
         </div>
-
       </div>
+
+      <div className="auth-form-panel">
+        <div className="auth-card">
+
+          <h1>AI Healthcare Assistant</h1>
+
+          <p className="auth-subtitle">
+            {isRegistering
+              ? "Create your account to get started"
+              : "Sign in to your account"}
+          </p>
+
+          <form onSubmit={handleSubmit} noValidate>
+
+            <div className="form-group">
+              <label htmlFor="login-username">Username</label>
+              <input
+                id="login-username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Enter your username"
+                required
+                autoComplete="username"
+                aria-required="true"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="login-password">Password</label>
+              <div style={{ position: "relative" }}>
+                <input
+                  id="login-password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder={isRegistering ? "Create a password" : "Enter your password"}
+                  required
+                  autoComplete={isRegistering ? "new-password" : "current-password"}
+                  aria-required="true"
+                  style={{ paddingRight: 44 }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  style={{
+                    position: "absolute",
+                    right: 12,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    border: "none",
+                    background: "none",
+                    color: "#64748b",
+                    padding: 4,
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+
+              <PasswordHint password={password} show={isRegistering} />
+            </div>
+
+            {isRegistering && (
+              <div className="form-group">
+                <label htmlFor="login-role">Role</label>
+                <select
+                  id="login-role"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                  aria-label="Select your role"
+                >
+                  <option value="patient">Patient</option>
+                  <option value="doctor">Doctor</option>
+                </select>
+              </div>
+            )}
+
+            {error && (
+              <div className="error-message" role="alert" aria-live="polite">
+                <AlertCircle size={15} style={{ display: "inline", marginRight: 6, verticalAlign: "middle" }} />
+                {error}
+              </div>
+            )}
+
+            {message && (
+              <div className="success-message" role="status" aria-live="polite">
+                <CheckCircle size={15} style={{ display: "inline", marginRight: 6, verticalAlign: "middle" }} />
+                {message}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="primary-button"
+              style={{ width: "100%", marginTop: 8 }}
+              aria-busy={loading}
+            >
+              {loading ? (
+                <>
+                  <Loader2 size={17} className="spin" />
+                  {isRegistering ? "Creating account…" : "Signing in…"}
+                </>
+              ) : isRegistering ? (
+                "Create Account"
+              ) : (
+                "Sign In"
+              )}
+            </button>
+
+          </form>
+
+          <div className="auth-switch">
+            {isRegistering ? (
+              <>
+                Already have an account?{" "}
+                <button type="button" onClick={() => switchMode(false)}>
+                  Sign In
+                </button>
+              </>
+            ) : (
+              <>
+                Don't have an account?{" "}
+                <button type="button" onClick={() => switchMode(true)}>
+                  Register
+                </button>
+              </>
+            )}
+          </div>
+
+        </div>
+      </div>
+
     </div>
   );
 }

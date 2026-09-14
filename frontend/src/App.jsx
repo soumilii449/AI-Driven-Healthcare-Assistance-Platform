@@ -8,6 +8,7 @@ import {
 import { AuthProvider } from "./context/AuthContext";
 import { PrescriptionProvider } from "./context/PrescriptionContext";
 
+import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Upload from "./pages/uplo";
@@ -27,6 +28,11 @@ function App() {
             {/* =========================
                 PUBLIC ROUTES
             ========================= */}
+
+            <Route
+              path="/"
+              element={<Landing />}
+            />
 
             <Route
               path="/login"
@@ -82,20 +88,6 @@ function App() {
             </Route>
 
             {/* =========================
-                DEFAULT ROUTE
-            ========================= */}
-
-            <Route
-              path="/"
-              element={
-                <Navigate
-                  to="/dashboard"
-                  replace
-                />
-              }
-            />
-
-            {/* =========================
                 INVALID ROUTES
             ========================= */}
 
@@ -103,7 +95,7 @@ function App() {
               path="*"
               element={
                 <Navigate
-                  to="/dashboard"
+                  to="/"
                   replace
                 />
               }
