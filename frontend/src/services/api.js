@@ -238,10 +238,29 @@ export async function getTranslation(
 
 // IMPORTANT:
 // Translation.jsx expects this name
-export async function getDocumentTranslation(
-  documentId
-) {
-  return getTranslation(documentId);
+export async function getDocumentTranslation(documentId, lang = "hi") {
+  const response = await api.get(
+    `/documents/${documentId}/translation`,
+    { params: { lang } }
+  );
+  return response.data;
+}
+
+
+// =====================================
+// SPEECH (text-to-speech audio)
+// =====================================
+
+export async function getDocumentSpeech(documentId, lang = "hi") {
+  const response = await api.get(
+    `/documents/${documentId}/speech`,
+    {
+      params: { lang },
+      responseType: "blob",
+    }
+  );
+
+  return response.data; // Blob containing WAV audio
 }
 
 

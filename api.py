@@ -19,7 +19,10 @@ from ocr import extract_text
 from medical_extractor import extract_medical_information
 from standardizer import standardize_record
 from simplifier import simplify_record
-from translator import translate_to_hindi
+from translator import translate_to_language, translate_to_hindi, SUPPORTED_LANGUAGES
+from tts import text_to_speech_audio
+from fastapi.responses import Response
+from pipeline import translate_medical_record
 from treatment import generate_treatment
 
 
@@ -969,11 +972,16 @@ def process_document(
 
         # ------------------------------------
         # HINDI TRANSLATION
+        # (fixed: this now translates each field
+        # of the record properly instead of
+        # passing the whole dict to a
+        # string-only function)
         # ------------------------------------
 
         hindi_record = (
-            translate_to_hindi(
-                simplified_record
+            translate_medical_record(
+                simplified_record,
+                target_lang="hi"
             )
         )
 
@@ -992,8 +1000,9 @@ def process_document(
         # ------------------------------------
 
         treatment_hindi = (
-            translate_to_hindi(
-                treatment_english
+            translate_to_language(
+                treatment_english,
+                "hi"
             )
         )
 
@@ -1323,12 +1332,13 @@ def document_treatment(
 
 
 # ============================================================
-# TRANSLATION
+# TRANSLATION (now supports any language via ?lang=)
 # ============================================================
 
 @app.get("/documents/{document_id}/translation")
 def document_translation(
     document_id: int,
+    lang: str = "hi",
     db: Session = Depends(get_db),
     current_user: User = Depends(
         get_current_user
@@ -1354,30 +1364,158 @@ def document_translation(
             detail="Translation not found"
         )
 
+    lang = lang.lower().strip()
+
+    if lang not in SUPPORTED_LANGUAGES:
+
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                f"Unsupported language '{lang}'. "
+                f"Supported: {', '.join(SUPPORTED_LANGUAGES.keys())}"
+            )
+        )
+
+    processed_data = (
+        extraction.processed_data
+        or {}
+    )
+
     translated_data = (
         extraction.translated_text
         or {}
     )
+
+    if lang == "hi":
+
+        # Already generated during /process — no need
+        # to call the translator again.
+        translated_info = (
+            translated_data.get(
+                "hindi_information",
+                {}
+            )
+        )
+
+        treatment_translated = (
+            translated_data.get(
+                "treatment_hindi",
+                ""
+            )
+        )
+
+    else:
+
+        simplified_record = (
+            extraction.simplified_text
+            or {}
+        )
+
+        treatment_english = (
+            processed_data.get(
+                "treatment_english",
+                ""
+            )
+        )
+
+        translated_info = translate_medical_record(
+            simplified_record,
+            target_lang=lang
+        )
+
+        treatment_translated = translate_to_language(
+            treatment_english,
+            lang
+        )
 
     return {
         "document_id":
             document_id,
 
         "language":
-            extraction.language,
+            lang,
 
+        "language_name":
+            SUPPORTED_LANGUAGES[lang],
+
+        "translated_information":
+            translated_info,
+
+        "treatment_translated":
+            treatment_translated,
+
+        # legacy fields, kept so any old frontend code
+        # requesting the default (Hindi) still works
         "hindi_information":
-            translated_data.get(
-                "hindi_information",
-                {}
-            ),
+            translated_info if lang == "hi" else {},
 
         "treatment_hindi":
-            translated_data.get(
-                "treatment_hindi",
-                ""
-            )
+            treatment_translated if lang == "hi" else ""
     }
+
+
+# ============================================================
+# SUPPORTED LANGUAGES
+# ============================================================
+
+@app.get("/languages")
+def get_supported_languages():
+
+    return SUPPORTED_LANGUAGES
+
+# ============================================================
+# SPEECH (text-to-speech audio for the treatment translation)
+# ============================================================
+
+@app.get("/documents/{document_id}/speech")
+def document_speech(
+    document_id: int,
+    lang: str = "hi",
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+
+    extraction = (
+        db.query(MedicalExtraction)
+        .filter(MedicalExtraction.document_id == document_id)
+        .order_by(desc(MedicalExtraction.id))
+        .first()
+    )
+
+    if extraction is None:
+        raise HTTPException(status_code=404, detail="No processed result found")
+
+    lang = lang.lower().strip()
+
+    if lang not in SUPPORTED_LANGUAGES:
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                f"Unsupported language '{lang}'. "
+                f"Supported: {', '.join(SUPPORTED_LANGUAGES.keys())}"
+            )
+        )
+
+    processed_data = extraction.processed_data or {}
+    translated_data = extraction.translated_text or {}
+
+    if lang == "hi":
+        text = translated_data.get("treatment_hindi", "")
+    else:
+        text = translate_to_language(
+            processed_data.get("treatment_english", ""),
+            lang
+        )
+
+    if not text:
+        raise HTTPException(status_code=404, detail="No text available to speak")
+
+    audio_bytes = text_to_speech_audio(text, lang)
+
+    if audio_bytes is None:
+        raise HTTPException(status_code=500, detail="Speech generation failed")
+
+    return Response(content=audio_bytes, media_type="audio/wav")
 
 
 # ============================================================

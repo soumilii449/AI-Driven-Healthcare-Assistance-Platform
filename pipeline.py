@@ -3,7 +3,7 @@ import os
 
 from standardizer import standardize_record
 from simplifier import simplify_record
-from translator import translate_to_hindi
+from translator import translate_to_language, translate_to_hindi, SUPPORTED_LANGUAGES
 from treatment import generate_treatment
 from medical_extractor import extract_medical_information
 
@@ -11,46 +11,46 @@ from medical_extractor import extract_medical_information
 os.makedirs("output", exist_ok=True)
 
 
-def translate_medical_record(record):
+def translate_medical_record(record, target_lang="hi"):
 
-    hindi_record = {}
+    translated_record = {}
 
     patient = record.get("patient", {})
-    hindi_record["patient"] = patient.copy()
+    translated_record["patient"] = patient.copy()
 
-    hindi_record["hospitalization"] = record.get(
+    translated_record["hospitalization"] = record.get(
         "hospitalization",
         {}
     ).copy()
 
-    hindi_record["diagnoses"] = [
-        translate_to_hindi(str(item))
+    translated_record["diagnoses"] = [
+        translate_to_language(str(item), target_lang)
         for item in record.get("diagnoses", [])
     ]
 
-    hindi_record["symptoms"] = [
-        translate_to_hindi(str(item))
+    translated_record["symptoms"] = [
+        translate_to_language(str(item), target_lang)
         for item in record.get("symptoms", [])
     ]
 
-    hindi_record["medical_conditions"] = [
-        translate_to_hindi(str(item))
+    translated_record["medical_conditions"] = [
+        translate_to_language(str(item), target_lang)
         for item in record.get("medical_conditions", [])
     ]
 
-    hindi_record["allergies"] = [
-        translate_to_hindi(str(item))
+    translated_record["allergies"] = [
+        translate_to_language(str(item), target_lang)
         for item in record.get("allergies", [])
     ]
 
-    hindi_record["medications"] = []
+    translated_record["medications"] = []
 
     for medication in record.get("medications", []):
 
         if not isinstance(medication, dict):
             continue
 
-        hindi_medication = {
+        translated_medication = {
 
             "name": medication.get(
                 "name",
@@ -78,11 +78,12 @@ def translate_medical_record(record):
             ),
 
             "purpose": (
-                translate_to_hindi(
+                translate_to_language(
                     medication.get(
                         "purpose",
                         ""
-                    )
+                    ),
+                    target_lang
                 )
                 if medication.get(
                     "purpose",
@@ -92,7 +93,7 @@ def translate_medical_record(record):
             ),
 
             "adverse_effects": [
-                translate_to_hindi(str(effect))
+                translate_to_language(str(effect), target_lang)
                 for effect in medication.get(
                     "adverse_effects",
                     []
@@ -100,12 +101,12 @@ def translate_medical_record(record):
             ]
         }
 
-        hindi_record["medications"].append(
-            hindi_medication
+        translated_record["medications"].append(
+            translated_medication
         )
 
-    hindi_record["procedures"] = [
-        translate_to_hindi(str(item))
+    translated_record["procedures"] = [
+        translate_to_language(str(item), target_lang)
         for item in record.get("procedures", [])
     ]
 
@@ -114,10 +115,10 @@ def translate_medical_record(record):
         {}
     )
 
-    hindi_record["investigations"] = {
+    translated_record["investigations"] = {
 
         "imaging": [
-            translate_to_hindi(str(item))
+            translate_to_language(str(item), target_lang)
             for item in investigations.get(
                 "imaging",
                 []
@@ -125,7 +126,7 @@ def translate_medical_record(record):
         ],
 
         "laboratory_tests": [
-            translate_to_hindi(str(item))
+            translate_to_language(str(item), target_lang)
             for item in investigations.get(
                 "laboratory_tests",
                 []
@@ -133,7 +134,7 @@ def translate_medical_record(record):
         ],
 
         "laboratory_results": [
-            translate_to_hindi(str(item))
+            translate_to_language(str(item), target_lang)
             for item in investigations.get(
                 "laboratory_results",
                 []
@@ -141,29 +142,29 @@ def translate_medical_record(record):
         ]
     }
 
-    hindi_record["anatomy"] = [
-        translate_to_hindi(str(item))
+    translated_record["anatomy"] = [
+        translate_to_language(str(item), target_lang)
         for item in record.get("anatomy", [])
     ]
 
-    hindi_record["biomarkers"] = [
-        translate_to_hindi(str(item))
+    translated_record["biomarkers"] = [
+        translate_to_language(str(item), target_lang)
         for item in record.get("biomarkers", [])
     ]
 
-    hindi_record["physicians"] = record.get(
+    translated_record["physicians"] = record.get(
         "physicians",
         []
     )
 
-    return hindi_record
+    return translated_record
 
 
 # ========================================
 # PROCESS ONE MEDICAL RECORD
 # ========================================
 
-def process_record(record):
+def process_record(record, target_lang="hi"):
 
     ocr_text = record.get(
         "ocr_text",
@@ -175,6 +176,9 @@ def process_record(record):
         return {
             "error": "OCR text is empty."
         }
+
+    if target_lang not in SUPPORTED_LANGUAGES:
+        target_lang = "hi"
 
     # ----------------------------------------
     # 1. Medical Extraction
@@ -215,11 +219,12 @@ def process_record(record):
     )
 
     # ----------------------------------------
-    # 4. Hindi Translation
+    # 4. Translation (any supported language)
     # ----------------------------------------
 
-    hindi_data = translate_medical_record(
-        simplified_data
+    translated_data = translate_medical_record(
+        simplified_data,
+        target_lang=target_lang
     )
 
     # ----------------------------------------
@@ -230,8 +235,9 @@ def process_record(record):
         simplified_data
     )
 
-    treatment_hindi = translate_to_hindi(
-        treatment_english
+    treatment_translated = translate_to_language(
+        treatment_english,
+        target_lang
     )
 
     # ----------------------------------------
@@ -253,14 +259,25 @@ def process_record(record):
         "simplified_information":
             simplified_data,
 
-        "hindi_information":
-            hindi_data,
+        "language":
+            target_lang,
+
+        "translated_information":
+            translated_data,
 
         "treatment_english":
             treatment_english,
 
+        "treatment_translated":
+            treatment_translated,
+
+        # kept for backward compatibility with any code/files
+        # still reading the old Hindi-only field names
+        "hindi_information":
+            translated_data if target_lang == "hi" else translate_medical_record(simplified_data, "hi"),
+
         "treatment_hindi":
-            treatment_hindi
+            treatment_translated if target_lang == "hi" else translate_to_hindi(treatment_english)
     }
 
 
@@ -268,7 +285,7 @@ def process_record(record):
 # PROCESS COMPLETE OCR FILE
 # ========================================
 
-def process_all_records():
+def process_all_records(target_lang="hi"):
 
     with open(
         "output/ocr_results.json",
@@ -297,7 +314,8 @@ def process_all_records():
         try:
 
             result = process_record(
-                record
+                record,
+                target_lang=target_lang
             )
 
             final_pipeline.append(
@@ -342,4 +360,4 @@ def process_all_records():
 
 if __name__ == "__main__":
 
-    process_all_records()
+    process_all_records(target_lang="hi")
