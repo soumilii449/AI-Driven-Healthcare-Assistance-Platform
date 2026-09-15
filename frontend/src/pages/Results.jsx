@@ -314,7 +314,7 @@ export default function Results() {
           className="result-card"
           style={{
             borderLeft:
-              "4px solid #22c55e",
+              "4px solid #4caf64",
           }}
         >
 

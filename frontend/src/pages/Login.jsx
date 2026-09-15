@@ -167,7 +167,7 @@ export default function Login() {
                     transform: "translateY(-50%)",
                     border: "none",
                     background: "none",
-                    color: "#64748b",
+                    color: "#78786a",
                     padding: 4,
                     cursor: "pointer",
                     display: "flex",
