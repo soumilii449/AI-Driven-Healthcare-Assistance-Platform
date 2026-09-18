@@ -12,8 +12,7 @@ import {
   ShieldCheck,
   HeartHandshake,
   RefreshCw,
-  ChevronLeft,
-  ChevronRight,
+  Eye,
 } from "lucide-react";
 
 import { getDocuments } from "../services/api";
@@ -70,8 +69,7 @@ export default function Dashboard() {
   const [loadingDocuments, setLoadingDocuments] = useState(true);
   const [documentsError, setDocumentsError] = useState("");
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 5;
+  const RECENT_ITEMS_COUNT = 2;
 
   // =====================================
   // LOAD ALL PREVIOUS PRESCRIPTIONS
@@ -118,7 +116,6 @@ export default function Dashboard() {
       });
 
       setDocuments(documentList);
-      setCurrentPage(1);
     } catch (error) {
       console.error("Error loading documents:", error);
 
@@ -243,27 +240,11 @@ export default function Dashboard() {
   };
 
   // =====================================
-  // PAGINATION
+  // RECENT DOCUMENTS (dashboard shows a preview;
+  // the "View All" page shows everything)
   // =====================================
 
-  const totalPages = Math.max(
-    1,
-    Math.ceil(documents.length / ITEMS_PER_PAGE)
-  );
-
-  const paginatedDocuments = documents.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
-
-  const goToPage = (page) => {
-    const clamped = Math.min(
-      Math.max(page, 1),
-      totalPages
-    );
-
-    setCurrentPage(clamped);
-  };
+  const recentDocuments = documents.slice(0, RECENT_ITEMS_COUNT);
 
   return (
     <div className="dashboard-modern">
@@ -397,80 +378,6 @@ export default function Dashboard() {
       </section>
 
       {/* =================================
-          AI PIPELINE
-      ================================= */}
-
-      <section className="pipeline-card">
-
-        <div className="pipeline-header">
-
-          <div>
-            <span>HOW IT WORKS</span>
-            <h2>From prescription to plain English</h2>
-
-            <p>
-              Here's what happens after you upload — nothing skipped,
-              nothing rushed.
-            </p>
-          </div>
-
-          <div className="pipeline-ai-badge">
-            <Clock size={15} />
-            Usually under a minute
-          </div>
-
-        </div>
-
-        <div className="pipeline">
-
-          <div className="pipeline-step">
-            <div className="pipeline-number">01</div>
-            <Upload size={24} />
-            <strong>Upload</strong>
-            <span>Prescription</span>
-          </div>
-
-          <div className="pipeline-connector"></div>
-
-          <div className="pipeline-step">
-            <div className="pipeline-number">02</div>
-            <FileText size={24} />
-            <strong>Reading</strong>
-            <span>Text extraction</span>
-          </div>
-
-          <div className="pipeline-connector"></div>
-
-          <div className="pipeline-step">
-            <div className="pipeline-number">03</div>
-            <HeartHandshake size={24} />
-            <strong>Understanding</strong>
-            <span>What it means</span>
-          </div>
-
-          <div className="pipeline-connector"></div>
-
-          <div className="pipeline-step">
-            <div className="pipeline-number">04</div>
-            <BookOpen size={24} />
-            <strong>Simplifying</strong>
-            <span>Plain language</span>
-          </div>
-
-          <div className="pipeline-connector"></div>
-
-          <div className="pipeline-step">
-            <div className="pipeline-number">05</div>
-            <Languages size={24} />
-            <strong>Translating</strong>
-            <span>Hindi</span>
-          </div>
-
-        </div>
-
-      </section>
-
-      {/* =================================
           ALL PRESCRIPTIONS
       ================================= */}
 
@@ -490,22 +397,13 @@ export default function Dashboard() {
             </p>
           </div>
 
-          <button
+          <Link
+            to="/prescriptions"
             className="refresh-button"
-            onClick={loadDocuments}
-            disabled={loadingDocuments}
           >
-            <RefreshCw
-              size={16}
-              className={
-                loadingDocuments
-                  ? "spin"
-                  : ""
-              }
-            />
-
-            Refresh
-          </button>
+            <Eye size={16} />
+            View All
+          </Link>
 
         </div>
 
@@ -620,7 +518,7 @@ export default function Dashboard() {
 
               <div className="prescription-history">
 
-                {paginatedDocuments.map(
+                {recentDocuments.map(
                   (document, index) => {
 
                     const documentId =
@@ -735,47 +633,18 @@ export default function Dashboard() {
 
               </div>
 
-              {/* PAGINATION */}
+              {documents.length > RECENT_ITEMS_COUNT && (
 
-              {totalPages > 1 && (
+                <div className="view-all-row">
 
-                <div className="pagination">
-
-                  <button
-                    className="pagination-button"
-                    onClick={() =>
-                      goToPage(
-                        currentPage - 1
-                      )
-                    }
-                    disabled={
-                      currentPage === 1
-                    }
-                    aria-label="Previous page"
+                  <Link
+                    to="/prescriptions"
+                    className="view-all-link"
                   >
-                    <ChevronLeft size={18} />
-                    Prev
-                  </button>
-
-                  <span className="pagination-info">
-                    Page {currentPage} of {totalPages}
-                  </span>
-
-                  <button
-                    className="pagination-button"
-                    onClick={() =>
-                      goToPage(
-                        currentPage + 1
-                      )
-                    }
-                    disabled={
-                      currentPage === totalPages
-                    }
-                    aria-label="Next page"
-                  >
-                    Next
-                    <ChevronRight size={18} />
-                  </button>
+                    <Eye size={16} />
+                    View All Prescriptions
+                    <ArrowRight size={16} />
+                  </Link>
 
                 </div>
 

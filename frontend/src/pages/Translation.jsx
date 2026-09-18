@@ -75,6 +75,10 @@ export default function Translation() {
         );
       }
 
+      // Some legacy backend responses only populate `treatment_hindi`
+      // (the field name predates multi-language support). We fall back
+      // to it only when the current language is Hindi; every other
+      // language relies on the generic `treatment_translated` field.
       const treatmentTranslated =
         (language === "hi" &&
           (resultData?.treatment_hindi ||
@@ -294,7 +298,7 @@ export default function Translation() {
 
           {translatedInfo.medications?.length ? (
             translatedInfo.medications.map((medicine, index) => (
-              <div className="hindi-medicine" key={index}>
+              <div className="translated-medicine" key={index}>
                 <h3>{medicine.name || "Medicine"}</h3>
                 <p>
                   <strong>Dosage:</strong>{" "}
@@ -319,7 +323,7 @@ export default function Translation() {
             <h2>Treatment Information</h2>
           </div>
 
-          <div className="treatment-hindi">
+          <div className="treatment-translated">
 
             <p>
               {treatmentTranslated ||

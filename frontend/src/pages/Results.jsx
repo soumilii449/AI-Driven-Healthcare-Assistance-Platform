@@ -307,371 +307,353 @@ export default function Results() {
       <main className="results-container">
 
         {/* =================================
-            SUCCESS MESSAGE
+            SUCCESS BANNER
         ================================= */}
 
-        <section
-          className="result-card"
-          style={{
-            borderLeft:
-              "4px solid #4caf64",
-          }}
-        >
+        <section className="result-banner">
 
-          <div className="result-title">
+          <FileText size={22} />
 
-            <FileText size={25} />
+          <div className="result-banner-text">
+            <strong>Analysis completed successfully.</strong>
 
-            <h2>
-              Analysis Completed Successfully
-            </h2>
-
-          </div>
-
-          <p>
-            Prescription processed successfully.
-          </p>
-
-          {result?.document_id && (
-            <p>
-              <strong>Document ID:</strong>{" "}
-              {result.document_id}
-            </p>
-          )}
-
-          {result?.extraction_id && (
-            <p>
-              <strong>Extraction ID:</strong>{" "}
-              {result.extraction_id}
-            </p>
-          )}
-
-        </section>
-
-        {/* =================================
-            OCR
-        ================================= */}
-
-        <section className="result-card">
-
-          <div className="result-title">
-
-            <FileText size={25} />
-
-            <h2>
-              Extracted Prescription Text
-            </h2>
-
-          </div>
-
-          <div className="ocr-text">
-
-            {ocrText ||
-              "No OCR text available."}
-
-          </div>
-
-        </section>
-
-        {/* =================================
-            MEDICAL INFORMATION
-        ================================= */}
-
-        <section className="result-card">
-
-          <div className="result-title">
-
-            <Stethoscope size={25} />
-
-            <h2>
-              Medical Information
-            </h2>
-
-          </div>
-
-          <div className="medical-grid">
-
-            <div>
-
-              <strong>
-                Doctors
-              </strong>
-
-              <p>
-                {medicalInfo.physicians?.length
-                  ? medicalInfo.physicians.join(
-                      ", "
-                    )
-                  : "Not available"}
-              </p>
-
-            </div>
-
-            <div>
-
-              <strong>
-                Symptoms
-              </strong>
-
-              <p>
-                {medicalInfo.symptoms?.length
-                  ? medicalInfo.symptoms.join(
-                      ", "
-                    )
-                  : "Not available"}
-              </p>
-
-            </div>
-
-            <div>
-
-              <strong>
-                Conditions
-              </strong>
-
-              <p>
-                {medicalInfo.medical_conditions
-                  ?.length
-                  ? medicalInfo.medical_conditions.join(
-                      ", "
-                    )
-                  : "Not available"}
-              </p>
-
-            </div>
-
-            <div>
-
-              <strong>
-                Diagnoses
-              </strong>
-
-              <p>
-                {medicalInfo.diagnoses?.length
-                  ? medicalInfo.diagnoses.join(
-                      ", "
-                    )
-                  : "Not available"}
-              </p>
-
-            </div>
-
-            <div>
-
-              <strong>
-                Allergies
-              </strong>
-
-              <p>
-                {medicalInfo.allergies?.length
-                  ? medicalInfo.allergies.join(
-                      ", "
-                    )
-                  : "Not available"}
-              </p>
-
-            </div>
-
-          </div>
-
-        </section>
-
-        {/* =================================
-            MEDICATIONS
-        ================================= */}
-
-        <section className="result-card">
-
-          <div className="result-title">
-
-            <Pill size={25} />
-
-            <h2>
-              Medications
-            </h2>
-
-          </div>
-
-          {medications.length === 0 ? (
-
-            <p>
-              No medications detected.
-            </p>
-
-          ) : (
-
-            <div className="medication-list">
-
-              {medications.map(
-                (medicine, index) => (
-
-                  <div
-                    className="medication-item"
-                    key={index}
-                  >
-
-                    <h3>
-                      {medicine.name ||
-                        "Unknown medicine"}
-                    </h3>
-
-                    <p>
-                      <strong>
-                        Dosage:
-                      </strong>{" "}
-                      {medicine.dosage ||
-                        "N/A"}
-                    </p>
-
-                    <p>
-                      <strong>
-                        Frequency:
-                      </strong>{" "}
-                      {medicine.frequency ||
-                        "N/A"}
-                    </p>
-
-                    <p>
-                      <strong>
-                        Duration:
-                      </strong>{" "}
-                      {medicine.duration ||
-                        "N/A"}
-                    </p>
-
-                    <p>
-                      <strong>
-                        Route:
-                      </strong>{" "}
-                      {medicine.route ||
-                        "N/A"}
-                    </p>
-
-                    {medicine.purpose && (
-                      <p>
-                        <strong>
-                          Purpose:
-                        </strong>{" "}
-                        {medicine.purpose}
-                      </p>
-                    )}
-
-                  </div>
-
-                )
+            <span>
+              {result?.document_id && (
+                <>Document #{result.document_id}</>
               )}
-
-            </div>
-
-          )}
+              {result?.document_id &&
+                result?.extraction_id &&
+                " · "}
+              {result?.extraction_id && (
+                <>Extraction #{result.extraction_id}</>
+              )}
+            </span>
+          </div>
 
         </section>
 
         {/* =================================
-            SIMPLIFIED INFORMATION
+            RESULTS GRID
         ================================= */}
 
-        {Object.keys(simplifiedInfo).length >
-          0 && (
+        <div className="results-grid">
+
+          {/* MEDICAL INFORMATION */}
 
           <section className="result-card">
 
             <div className="result-title">
 
-              <FileText size={25} />
+              <Stethoscope size={22} />
 
               <h2>
-                Simplified Medical Information
+                Medical Information
               </h2>
 
             </div>
 
-            <div>
+            <div className="medical-grid">
 
-              {simplifiedInfo.medications?.length >
-                0 && (
+              <div>
 
-                <div>
-
-                  <strong>
-                    Medications
-                  </strong>
-
-                  {simplifiedInfo.medications.map(
-                    (medicine, index) => (
-
-                      <p key={index}>
-                        {medicine.name}
-                        {medicine.dosage
-                          ? ` - ${medicine.dosage}`
-                          : ""}
-                      </p>
-
-                    )
-                  )}
-
-                </div>
-
-              )}
-
-              {simplifiedInfo.diagnoses?.length >
-                0 && (
+                <strong>
+                  Doctors
+                </strong>
 
                 <p>
-                  <strong>
-                    Diagnoses:
-                  </strong>{" "}
-                  {simplifiedInfo.diagnoses.join(
-                    ", "
-                  )}
+                  {medicalInfo.physicians?.length
+                    ? medicalInfo.physicians.join(
+                        ", "
+                      )
+                    : "Not available"}
                 </p>
 
-              )}
+              </div>
 
-              {simplifiedInfo.symptoms?.length >
-                0 && (
+              <div>
+
+                <strong>
+                  Symptoms
+                </strong>
 
                 <p>
-                  <strong>
-                    Symptoms:
-                  </strong>{" "}
-                  {simplifiedInfo.symptoms.join(
-                    ", "
-                  )}
+                  {medicalInfo.symptoms?.length
+                    ? medicalInfo.symptoms.join(
+                        ", "
+                      )
+                    : "Not available"}
                 </p>
 
-              )}
+              </div>
+
+              <div>
+
+                <strong>
+                  Conditions
+                </strong>
+
+                <p>
+                  {medicalInfo.medical_conditions
+                    ?.length
+                    ? medicalInfo.medical_conditions.join(
+                        ", "
+                      )
+                    : "Not available"}
+                </p>
+
+              </div>
+
+              <div>
+
+                <strong>
+                  Diagnoses
+                </strong>
+
+                <p>
+                  {medicalInfo.diagnoses?.length
+                    ? medicalInfo.diagnoses.join(
+                        ", "
+                      )
+                    : "Not available"}
+                </p>
+
+              </div>
+
+              <div>
+
+                <strong>
+                  Allergies
+                </strong>
+
+                <p>
+                  {medicalInfo.allergies?.length
+                    ? medicalInfo.allergies.join(
+                        ", "
+                      )
+                    : "Not available"}
+                </p>
+
+              </div>
 
             </div>
 
           </section>
 
-        )}
+          {/* MEDICATIONS */}
 
-        {/* =================================
-            TREATMENT
-        ================================= */}
+          <section className="result-card">
 
-        <section className="result-card">
+            <div className="result-title">
 
-          <div className="result-title">
+              <Pill size={22} />
 
-            <Stethoscope size={25} />
+              <h2>
+                Medications
+              </h2>
 
-            <h2>
-              Treatment Information
-            </h2>
+            </div>
 
-          </div>
+            {medications.length === 0 ? (
 
-          <p className="treatment-text">
+              <p>
+                No medications detected.
+              </p>
 
-            {treatment ||
-              "No treatment information available."}
+            ) : (
 
-          </p>
+              <div className="medication-list">
 
-        </section>
+                {medications.map(
+                  (medicine, index) => (
+
+                    <div
+                      className="medication-item"
+                      key={index}
+                    >
+
+                      <h3>
+                        {medicine.name ||
+                          "Unknown medicine"}
+                      </h3>
+
+                      <p>
+                        <strong>
+                          Dosage:
+                        </strong>{" "}
+                        {medicine.dosage ||
+                          "N/A"}
+                      </p>
+
+                      <p>
+                        <strong>
+                          Frequency:
+                        </strong>{" "}
+                        {medicine.frequency ||
+                          "N/A"}
+                      </p>
+
+                      <p>
+                        <strong>
+                          Duration:
+                        </strong>{" "}
+                        {medicine.duration ||
+                          "N/A"}
+                      </p>
+
+                      <p>
+                        <strong>
+                          Route:
+                        </strong>{" "}
+                        {medicine.route ||
+                          "N/A"}
+                      </p>
+
+                      {medicine.purpose && (
+                        <p>
+                          <strong>
+                            Purpose:
+                          </strong>{" "}
+                          {medicine.purpose}
+                        </p>
+                      )}
+
+                    </div>
+
+                  )
+                )}
+
+              </div>
+
+            )}
+
+          </section>
+
+          {/* OCR TEXT */}
+
+          <section className="result-card">
+
+            <div className="result-title">
+
+              <FileText size={22} />
+
+              <h2>
+                Extracted Prescription Text
+              </h2>
+
+            </div>
+
+            <div className="ocr-text">
+
+              {ocrText ||
+                "No OCR text available."}
+
+            </div>
+
+          </section>
+
+          {/* SIMPLIFIED INFORMATION */}
+
+          {Object.keys(simplifiedInfo).length >
+            0 && (
+
+            <section className="result-card">
+
+              <div className="result-title">
+
+                <FileText size={22} />
+
+                <h2>
+                  Simplified Medical Information
+                </h2>
+
+              </div>
+
+              <div className="simplified-info-body">
+
+                {simplifiedInfo.medications?.length >
+                  0 && (
+
+                  <div>
+
+                    <strong>
+                      Medications
+                    </strong>
+
+                    {simplifiedInfo.medications.map(
+                      (medicine, index) => (
+
+                        <p key={index}>
+                          {medicine.name}
+                          {medicine.dosage
+                            ? ` - ${medicine.dosage}`
+                            : ""}
+                        </p>
+
+                      )
+                    )}
+
+                  </div>
+
+                )}
+
+                {simplifiedInfo.diagnoses?.length >
+                  0 && (
+
+                  <p>
+                    <strong>
+                      Diagnoses:
+                    </strong>{" "}
+                    {simplifiedInfo.diagnoses.join(
+                      ", "
+                    )}
+                  </p>
+
+                )}
+
+                {simplifiedInfo.symptoms?.length >
+                  0 && (
+
+                  <p>
+                    <strong>
+                      Symptoms:
+                    </strong>{" "}
+                    {simplifiedInfo.symptoms.join(
+                      ", "
+                    )}
+                  </p>
+
+                )}
+
+              </div>
+
+            </section>
+
+          )}
+
+          {/* TREATMENT */}
+
+          <section className="result-card">
+
+            <div className="result-title">
+
+              <Stethoscope size={22} />
+
+              <h2>
+                Treatment Information
+              </h2>
+
+            </div>
+
+            <p className="treatment-text">
+
+              {treatment ||
+                "No treatment information available."}
+
+            </p>
+
+          </section>
+
+        </div>
 
         {/* =================================
             ACTIONS

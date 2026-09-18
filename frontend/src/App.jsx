@@ -11,6 +11,7 @@ import { PrescriptionProvider } from "./context/PrescriptionContext";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import AllPrescriptions from "./pages/AllPrescriptions";
 import Upload from "./pages/uplo";
 import Results from "./pages/Results";
 import Translation from "./pages/Translation";
@@ -51,6 +52,16 @@ function App() {
                   <>
                     <Navbar />
                     <Dashboard />
+                  </>
+                }
+              />
+
+              <Route
+                path="/prescriptions"
+                element={
+                  <>
+                    <Navbar />
+                    <AllPrescriptions />
                   </>
                 }
               />

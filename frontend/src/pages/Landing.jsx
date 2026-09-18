@@ -7,6 +7,10 @@ import {
   ArrowRight,
   Camera,
   Volume2,
+  Clock,
+  FileText,
+  HeartHandshake,
+  BookOpen,
 } from "lucide-react";
 
 import { useAuth } from "../context/AuthContext";
@@ -125,6 +129,80 @@ export default function Landing() {
               <p>{description}</p>
             </div>
           ))}
+
+        </div>
+
+      </section>
+
+      {/* =================================
+          AI PIPELINE / HOW IT WORKS
+      ================================= */}
+
+      <section className="pipeline-card">
+
+        <div className="pipeline-header">
+
+          <div>
+            <span>HOW IT WORKS</span>
+            <h2>From prescription to plain English</h2>
+
+            <p>
+              Here's what happens after you upload — nothing skipped,
+              nothing rushed.
+            </p>
+          </div>
+
+          <div className="pipeline-ai-badge">
+            <Clock size={15} />
+            Usually under a minute
+          </div>
+
+        </div>
+
+        <div className="pipeline">
+
+          <div className="pipeline-step">
+            <div className="pipeline-number">01</div>
+            <Upload size={24} />
+            <strong>Upload</strong>
+            <span>Prescription</span>
+          </div>
+
+          <div className="pipeline-connector"></div>
+
+          <div className="pipeline-step">
+            <div className="pipeline-number">02</div>
+            <FileText size={24} />
+            <strong>Reading</strong>
+            <span>Text extraction</span>
+          </div>
+
+          <div className="pipeline-connector"></div>
+
+          <div className="pipeline-step">
+            <div className="pipeline-number">03</div>
+            <HeartHandshake size={24} />
+            <strong>Understanding</strong>
+            <span>What it means</span>
+          </div>
+
+          <div className="pipeline-connector"></div>
+
+          <div className="pipeline-step">
+            <div className="pipeline-number">04</div>
+            <BookOpen size={24} />
+            <strong>Simplifying</strong>
+            <span>Plain language</span>
+          </div>
+
+          <div className="pipeline-connector"></div>
+
+          <div className="pipeline-step">
+            <div className="pipeline-number">05</div>
+            <Languages size={24} />
+            <strong>Translating</strong>
+            <span>Hindi</span>
+          </div>
 
         </div>
 
