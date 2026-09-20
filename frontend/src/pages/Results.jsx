@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 import { getDocumentResult } from "../services/api";
+import VoiceQuery from "../components/VoiceQuery";
 
 export default function Results() {
   const [searchParams] = useSearchParams();
@@ -652,6 +653,10 @@ export default function Results() {
             </p>
 
           </section>
+
+          {/* VOICE QUERY */}
+
+          <VoiceQuery documentId={documentId} />
 
         </div>
 

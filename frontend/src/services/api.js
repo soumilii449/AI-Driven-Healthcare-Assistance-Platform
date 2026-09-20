@@ -265,6 +265,53 @@ export async function getDocumentSpeech(documentId, lang = "hi") {
 
 
 // =====================================
+// VOICE QUERY (speak a question about a
+// specific prescription, get a spoken +
+// text answer back)
+//
+// Two steps: transcribe the recorded
+// audio first (so the recognized text
+// can be shown for confirmation), then
+// send it off for an answer once the
+// person taps "Send".
+// =====================================
+
+export async function transcribeVoiceQuery(
+  documentId,
+  audioBlob,
+  filename = "query.webm"
+) {
+  const formData = new FormData();
+
+  formData.append("audio", audioBlob, filename);
+
+  const response = await api.post(
+    `/documents/${documentId}/voice-query/transcribe`,
+    formData
+  );
+
+  return response.data;
+}
+
+
+export async function sendVoiceQuery(
+  documentId,
+  questionTextEnglish,
+  detectedLanguage = "en"
+) {
+  const response = await api.post(
+    `/documents/${documentId}/voice-query/answer`,
+    {
+      question_text_english: questionTextEnglish,
+      detected_language: detectedLanguage,
+    }
+  );
+
+  return response.data;
+}
+
+
+// =====================================
 // DELETE DOCUMENT
 // =====================================
 

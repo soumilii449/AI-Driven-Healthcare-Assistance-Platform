@@ -9,6 +9,14 @@ import os
 import shutil
 import hashlib
 import secrets
+import base64
+
+from dotenv import load_dotenv
+
+# Load variables from a .env file (if present) into the environment
+# BEFORE importing translator/tts/speech_to_text below — those modules
+# read SARVAM_API_KEY at import time, so this must run first.
+load_dotenv()
 
 from jose import JWTError, jwt
 
@@ -24,6 +32,8 @@ from tts import text_to_speech_audio
 from fastapi.responses import Response
 from pipeline import translate_medical_record
 from treatment import generate_treatment
+from speech_to_text import transcribe_and_translate
+from voice_query import answer_query
 
 
 # ============================================================
@@ -169,6 +179,11 @@ class PatientCreate(BaseModel):
     date_of_birth: str = ""
     gender: str = ""
     contact_information: str = ""
+
+
+class VoiceQueryAnswerRequest(BaseModel):
+    question_text_english: str
+    detected_language: str = "en"
 
 
 # ============================================================
@@ -1516,6 +1531,121 @@ def document_speech(
         raise HTTPException(status_code=500, detail="Speech generation failed")
 
     return Response(content=audio_bytes, media_type="audio/wav")
+
+
+# ============================================================
+# VOICE QUERY (speak a question, in any supported language, about
+# a specific prescription — get back a spoken + text answer)
+#
+# Split into two steps so the frontend can show the recognized
+# text and let the person confirm/edit before it's actually sent:
+#   1. /voice-query/transcribe — audio in, recognized text out
+#   2. /voice-query/answer     — confirmed text in, answer out
+# ============================================================
+
+@app.post("/documents/{document_id}/voice-query/transcribe")
+async def document_voice_query_transcribe(
+    document_id: int,
+    audio: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+
+    extraction = (
+        db.query(MedicalExtraction)
+        .filter(MedicalExtraction.document_id == document_id)
+        .order_by(desc(MedicalExtraction.id))
+        .first()
+    )
+
+    if extraction is None:
+        raise HTTPException(status_code=404, detail="No processed result found")
+
+    audio_bytes = await audio.read()
+
+    question_english, detected_lang, error_reason = transcribe_and_translate(
+        audio_bytes,
+        filename=audio.filename or "query.wav"
+    )
+
+    if question_english is None:
+        raise HTTPException(
+            status_code=422,
+            detail=(
+                "Could not understand the audio. "
+                f"({error_reason})" if error_reason else
+                "Could not understand the audio. Please try speaking again."
+            )
+        )
+
+    if detected_lang not in SUPPORTED_LANGUAGES:
+        detected_lang = "en"
+
+    if detected_lang == "en":
+        question_text = question_english
+    else:
+        question_text = translate_to_language(question_english, detected_lang)
+
+    return {
+        "document_id": document_id,
+        "detected_language": detected_lang,
+        "question_text": question_text,
+        "question_text_english": question_english,
+    }
+
+
+@app.post("/documents/{document_id}/voice-query/answer")
+def document_voice_query_answer(
+    document_id: int,
+    payload: VoiceQueryAnswerRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+
+    extraction = (
+        db.query(MedicalExtraction)
+        .filter(MedicalExtraction.document_id == document_id)
+        .order_by(desc(MedicalExtraction.id))
+        .first()
+    )
+
+    if extraction is None:
+        raise HTTPException(status_code=404, detail="No processed result found")
+
+    question_english = (payload.question_text_english or "").strip()
+
+    if not question_english:
+        raise HTTPException(status_code=400, detail="No question text was provided.")
+
+    detected_lang = payload.detected_language
+
+    if detected_lang not in SUPPORTED_LANGUAGES:
+        detected_lang = "en"
+
+    processed_data = extraction.processed_data or {}
+    record = processed_data.get("medical_information", {}) or {}
+    treatment_text = processed_data.get("treatment_english", "")
+
+    answer_english = answer_query(question_english, record, treatment_text)
+
+    if detected_lang == "en":
+        answer_text = answer_english
+    else:
+        answer_text = translate_to_language(answer_english, detected_lang)
+
+    answer_audio_base64 = None
+    answer_audio_bytes = text_to_speech_audio(answer_text, detected_lang)
+
+    if answer_audio_bytes:
+        answer_audio_base64 = base64.b64encode(answer_audio_bytes).decode("utf-8")
+
+    return {
+        "document_id": document_id,
+        "detected_language": detected_lang,
+        "answer_text": answer_text,
+        "answer_text_english": answer_english,
+        "answer_audio_base64": answer_audio_base64,
+    }
 
 
 # ============================================================
