@@ -1908,6 +1908,122 @@ textarea:focus-visible {
   margin-top: 12px;
 }
 
+.voice-query-close {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: #78786a;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 8px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.voice-query-close:hover {
+  background: rgba(74,120,86,0.10);
+  color: #345940;
+}
+
+/* ========================================================= 
+   FLOATING CHAT WIDGET (bottom-of-page chatbot launcher) 
+========================================================= */
+
+.chat-fab {
+  position: fixed;
+  right: 22px;
+  bottom: 94px;
+  z-index: 900;
+
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(135deg, #4a7856, #6b8f5e);
+  color: white;
+  box-shadow: 0 10px 26px rgba(74,120,86,0.38);
+  cursor: pointer;
+
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.chat-fab:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 14px 32px rgba(74,120,86,0.45);
+}
+
+.chat-widget-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+
+  padding: 24px;
+
+  background: rgba(30,32,26,0.35);
+  backdrop-filter: blur(2px);
+
+  animation: chat-widget-fade-in 0.15s ease;
+}
+
+.chat-widget-panel {
+  width: 100%;
+  max-width: 420px;
+  max-height: min(640px, 80vh);
+  overflow-y: auto;
+
+  border-radius: var(--r-xl, 24px);
+  animation: chat-widget-slide-up 0.2s ease;
+}
+
+.chat-widget-panel .voice-query-card {
+  margin: 0;
+  height: 100%;
+}
+
+@keyframes chat-widget-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes chat-widget-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .chat-widget-overlay {
+    align-items: flex-end;
+    justify-content: center;
+    padding: 12px;
+  }
+
+  .chat-widget-panel {
+    max-width: 100%;
+  }
+
+  .chat-fab {
+    right: 16px;
+    bottom: 84px;
+  }
+}
+
 /* ========================================================= 
    LOADING 
 ========================================================= */ 

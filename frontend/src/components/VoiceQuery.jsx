@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Mic, Square, Loader2, Send, Volume2, RotateCcw } from "lucide-react";
+import { Mic, Square, Loader2, Send, Volume2, RotateCcw, X } from "lucide-react";
 
 import { transcribeVoiceQuery, sendVoiceQuery } from "../services/api";
 import { LANGUAGES } from "../constants/languages";
@@ -13,7 +13,9 @@ function languageLabel(code) {
 }
 
 // Stages: idle -> recording -> transcribing -> review -> sending -> done
-export default function VoiceQuery({ documentId }) {
+// "review" is now transitional — as soon as a transcript comes back,
+// the question is sent automatically instead of waiting for a tap.
+export default function VoiceQuery({ documentId, onClose }) {
   const [stage, setStage] = useState("idle");
   const [error, setError] = useState("");
   const [transcript, setTranscript] = useState(null);
@@ -130,6 +132,10 @@ export default function VoiceQuery({ documentId }) {
 
       setTranscript(data);
       setStage("review");
+
+      // Auto-send: don't wait for a manual "Send" tap, fire the
+      // question off as soon as we have a transcript.
+      sendQuestion(data);
     } catch (err) {
       console.error("Transcription failed:", err);
 
@@ -141,8 +147,10 @@ export default function VoiceQuery({ documentId }) {
     }
   };
 
-  const sendQuestion = async () => {
-    if (!transcript) {
+  const sendQuestion = async (transcriptOverride) => {
+    const activeTranscript = transcriptOverride || transcript;
+
+    if (!activeTranscript) {
       return;
     }
 
@@ -152,8 +160,8 @@ export default function VoiceQuery({ documentId }) {
     try {
       const data = await sendVoiceQuery(
         documentId,
-        transcript.question_text_english,
-        transcript.detected_language
+        activeTranscript.question_text_english,
+        activeTranscript.detected_language
       );
 
       setAnswer(data);
@@ -188,12 +196,24 @@ export default function VoiceQuery({ documentId }) {
       <div className="result-title">
         <Mic size={22} />
         <h2>Ask About This Prescription</h2>
+        {onClose && (
+          <button
+            type="button"
+            className="voice-query-close"
+            onClick={onClose}
+            aria-label="Close chat"
+          >
+            <X size={20} />
+          </button>
+        )}
       </div>
 
       <p className="voice-query-hint">
         Tap the mic and ask a question out loud, in any
         supported language — for example, "What is this
-        medicine for?" or "When should I take it?"
+        medicine for?" or "When should I take it?" Your
+        question is sent automatically as soon as it's
+        recognized.
       </p>
 
       {(stage === "idle" ||
@@ -251,7 +271,7 @@ export default function VoiceQuery({ documentId }) {
               <button
                 type="button"
                 className="mic-button"
-                onClick={sendQuestion}
+                onClick={() => sendQuestion()}
                 disabled={sending}
               >
                 {sending ? (
@@ -262,7 +282,7 @@ export default function VoiceQuery({ documentId }) {
                 ) : (
                   <>
                     <Send size={18} />
-                    Send
+                    Retry Send
                   </>
                 )}
               </button>

@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 import { getDocumentResult } from "../services/api";
-import VoiceQuery from "../components/VoiceQuery";
+import ChatWidget from "../components/ChatWidget";
 
 export default function Results() {
   const [searchParams] = useSearchParams();
@@ -677,10 +677,6 @@ export default function Results() {
 
           </section>
 
-          {/* VOICE QUERY */}
-
-          <VoiceQuery documentId={documentId} />
-
         </div>
 
         {/* =================================
@@ -707,6 +703,10 @@ export default function Results() {
         </div>
 
       </main>
+
+      {/* FLOATING "ASK ABOUT THIS PRESCRIPTION" CHATBOT */}
+
+      <ChatWidget documentId={documentId} />
 
     </div>
   );

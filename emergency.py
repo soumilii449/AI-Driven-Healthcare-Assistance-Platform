@@ -301,7 +301,7 @@ PLACES_NEARBY_URL = "https://places.googleapis.com/v1/places:searchNearby"
 
 # Facility filter -> Google Places "included type" list.
 FACILITY_TYPE_MAP = {
-    "hospital": ["hospital", "emergency_room"],
+    "hospital": ["hospital"],
     "clinic": ["doctor", "medical_lab"],
     "pharmacy": ["pharmacy", "drugstore"],
     "ambulance": ["hospital"],  # ambulances are dispatched via hospitals in most areas

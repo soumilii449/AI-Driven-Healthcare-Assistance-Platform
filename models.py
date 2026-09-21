@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, JSON, Boolean
+from sqlalchemy import Column, Integer, String, Text, DateTime, JSON, Boolean, Float
 from database import Base
 
 
@@ -156,6 +156,58 @@ class Reminder(Base):
     )
 
     created_at = Column(
+        DateTime,
+        nullable=True
+    )
+
+
+class SOSAlert(Base):
+    __tablename__ = "sos_alerts"
+
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True
+    )
+
+    user_id = Column(
+        Integer,
+        nullable=False,
+        index=True
+    )
+
+    latitude = Column(
+        Float,
+        nullable=True
+    )
+
+    longitude = Column(
+        Float,
+        nullable=True
+    )
+
+    note = Column(
+        String,
+        nullable=True
+    )
+
+    status = Column(
+        String,
+        default="active",
+        nullable=False
+    )
+
+    nearest_facility = Column(
+        JSON,
+        nullable=True
+    )
+
+    created_at = Column(
+        DateTime,
+        nullable=True
+    )
+
+    resolved_at = Column(
         DateTime,
         nullable=True
     )

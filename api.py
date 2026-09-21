@@ -22,7 +22,7 @@ load_dotenv()
 from jose import JWTError, jwt
 
 from database import engine, Base, get_db
-from models import Document, MedicalExtraction, Reminder
+from models import Document, MedicalExtraction, Reminder, SOSAlert
 
 from ocr import extract_text
 from medical_extractor import extract_medical_information
@@ -35,6 +35,13 @@ from pipeline import translate_medical_record
 from treatment import generate_treatment
 from speech_to_text import transcribe_and_translate
 from voice_query import answer_query
+from emergency import (
+    FIRST_AID_DATA,
+    EMERGENCY_CONTACTS,
+    fetch_nearby_facilities,
+    NearbyFacilitiesError,
+    build_share_location_message,
+)
 
 
 # ============================================================
@@ -208,6 +215,18 @@ class ReminderUpdate(BaseModel):
     notes: Optional[str] = None
     document_id: Optional[int] = None
     is_active: Optional[bool] = None
+
+
+class ShareLocationRequest(BaseModel):
+    latitude: float
+    longitude: float
+    note: str = ""
+
+
+class SOSRequest(BaseModel):
+    latitude: float
+    longitude: float
+    note: str = ""
 
 
 # ============================================================
@@ -2243,4 +2262,216 @@ def delete_reminder(
 
     return {
         "message": "Reminder deleted successfully"
+    }
+
+
+# ============================================================
+# EMERGENCY — FIRST AID GUIDE
+# ============================================================
+
+@app.get("/emergency/first-aid")
+def get_first_aid_guide():
+
+    return {
+        "categories": FIRST_AID_DATA
+    }
+
+
+# ============================================================
+# EMERGENCY — CONTACT NUMBERS
+# ============================================================
+
+@app.get("/emergency/contacts")
+def get_emergency_contacts():
+
+    return {
+        "contacts": EMERGENCY_CONTACTS
+    }
+
+
+# ============================================================
+# EMERGENCY — NEARBY FACILITIES
+# ============================================================
+
+@app.get("/emergency/nearby-facilities")
+def get_nearby_facilities(
+    lat: float,
+    lng: float,
+    type: str = "hospital",
+    radius: int = 5000,
+    current_user: User = Depends(get_current_user)
+):
+
+    try:
+
+        facilities = fetch_nearby_facilities(
+            latitude=lat,
+            longitude=lng,
+            facility_type=type,
+            radius_meters=radius
+        )
+
+    except NearbyFacilitiesError as exc:
+
+        raise HTTPException(
+            status_code=502,
+            detail=str(exc)
+        )
+
+    return {
+        "facilities": facilities
+    }
+
+
+# ============================================================
+# EMERGENCY — SHARE MY LOCATION
+# ============================================================
+
+@app.post("/emergency/share-location")
+def share_location(
+    location_data: ShareLocationRequest,
+    current_user: User = Depends(get_current_user)
+):
+
+    return build_share_location_message(
+        location_data.latitude,
+        location_data.longitude,
+        location_data.note.strip()
+    )
+
+
+# ============================================================
+# EMERGENCY — SOS
+# ============================================================
+
+def _sos_alert_to_dict(alert: "SOSAlert", db: Session):
+
+    user = (
+        db.query(User)
+        .filter(User.id == alert.user_id)
+        .first()
+    )
+
+    return {
+        "id": alert.id,
+        "user_id": alert.user_id,
+        "username": user.username if user else None,
+        "latitude": alert.latitude,
+        "longitude": alert.longitude,
+        "note": alert.note,
+        "status": alert.status,
+        "nearest_facility": alert.nearest_facility,
+        "created_at": (
+            alert.created_at.isoformat()
+            if alert.created_at
+            else None
+        ),
+    }
+
+
+@app.post("/emergency/sos")
+def trigger_sos(
+    sos_data: SOSRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+
+    nearest_facility = None
+
+    try:
+
+        facilities = fetch_nearby_facilities(
+            latitude=sos_data.latitude,
+            longitude=sos_data.longitude,
+            facility_type="hospital"
+        )
+
+        if facilities:
+            nearest_facility = facilities[0]
+
+    except NearbyFacilitiesError:
+
+        # Nearest-hospital lookup is a bonus, not a requirement —
+        # the SOS alert still gets logged without it.
+        nearest_facility = None
+
+    share_location = build_share_location_message(
+        sos_data.latitude,
+        sos_data.longitude,
+        sos_data.note.strip()
+    )
+
+    alert = SOSAlert(
+        user_id=current_user.id,
+        latitude=sos_data.latitude,
+        longitude=sos_data.longitude,
+        note=sos_data.note.strip(),
+        status="active",
+        nearest_facility=nearest_facility,
+        created_at=datetime.utcnow()
+    )
+
+    db.add(alert)
+    db.commit()
+    db.refresh(alert)
+
+    return {
+        "id": alert.id,
+        "status": alert.status,
+        "nearest_facility": nearest_facility,
+        "share_location": share_location,
+    }
+
+
+@app.get("/emergency/sos")
+def get_sos_log(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_roles("admin", "doctor")
+    )
+):
+
+    alerts = (
+        db.query(SOSAlert)
+        .order_by(desc(SOSAlert.id))
+        .all()
+    )
+
+    return [
+        _sos_alert_to_dict(alert, db)
+        for alert in alerts
+    ]
+
+
+@app.patch("/emergency/sos/{sos_id}/resolve")
+def resolve_sos(
+    sos_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_roles("admin", "doctor")
+    )
+):
+
+    alert = (
+        db.query(SOSAlert)
+        .filter(SOSAlert.id == sos_id)
+        .first()
+    )
+
+    if not alert:
+
+        raise HTTPException(
+            status_code=404,
+            detail="SOS alert not found"
+        )
+
+    alert.status = "resolved"
+    alert.resolved_at = datetime.utcnow()
+
+    db.commit()
+    db.refresh(alert)
+
+    return {
+        "message": "SOS alert marked resolved",
+        "alert": _sos_alert_to_dict(alert, db)
     }
