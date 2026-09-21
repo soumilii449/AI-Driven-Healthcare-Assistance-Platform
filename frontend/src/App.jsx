@@ -15,9 +15,12 @@ import AllPrescriptions from "./pages/AllPrescriptions";
 import Upload from "./pages/uplo";
 import Results from "./pages/Results";
 import Translation from "./pages/Translation";
+import Emergency from "./pages/Emergency";
+import SOSLog from "./pages/emergency/SOSLog";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
+import SOSButton from "./components/SOSButton";
 
 function App() {
   return (
@@ -52,6 +55,7 @@ function App() {
                   <>
                     <Navbar />
                     <Dashboard />
+                    <SOSButton />
                   </>
                 }
               />
@@ -62,6 +66,7 @@ function App() {
                   <>
                     <Navbar />
                     <AllPrescriptions />
+                    <SOSButton />
                   </>
                 }
               />
@@ -72,6 +77,7 @@ function App() {
                   <>
                     <Navbar />
                     <Upload />
+                    <SOSButton />
                   </>
                 }
               />
@@ -82,6 +88,7 @@ function App() {
                   <>
                     <Navbar />
                     <Results />
+                    <SOSButton />
                   </>
                 }
               />
@@ -92,6 +99,29 @@ function App() {
                   <>
                     <Navbar />
                     <Translation />
+                    <SOSButton />
+                  </>
+                }
+              />
+
+              <Route
+                path="/emergency"
+                element={
+                  <>
+                    <Navbar />
+                    <Emergency />
+                    <SOSButton />
+                  </>
+                }
+              />
+
+              <Route
+                path="/emergency/sos-log"
+                element={
+                  <>
+                    <Navbar />
+                    <SOSLog />
+                    <SOSButton />
                   </>
                 }
               />

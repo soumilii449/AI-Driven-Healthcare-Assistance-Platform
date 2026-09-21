@@ -386,6 +386,84 @@ export async function searchDocuments(
 
 
 // =====================================
+// EMERGENCY — FIRST AID GUIDE
+// =====================================
+
+export async function getFirstAidGuide() {
+  const response = await api.get("/emergency/first-aid");
+  return response.data;
+}
+
+
+// =====================================
+// EMERGENCY — CONTACT NUMBERS
+// =====================================
+
+export async function getEmergencyContacts() {
+  const response = await api.get("/emergency/contacts");
+  return response.data;
+}
+
+
+// =====================================
+// EMERGENCY — NEARBY FACILITIES
+// type: "hospital" | "clinic" | "pharmacy" | "ambulance"
+// =====================================
+
+export async function getNearbyFacilities(
+  latitude,
+  longitude,
+  type = "hospital",
+  radius = 5000
+) {
+  const response = await api.get("/emergency/nearby-facilities", {
+    params: { lat: latitude, lng: longitude, type, radius },
+  });
+  return response.data;
+}
+
+
+// =====================================
+// EMERGENCY — SHARE MY LOCATION
+// =====================================
+
+export async function shareMyLocation(latitude, longitude, note = "") {
+  const response = await api.post("/emergency/share-location", {
+    latitude,
+    longitude,
+    note,
+  });
+  return response.data;
+}
+
+
+// =====================================
+// EMERGENCY — SOS
+// =====================================
+
+export async function triggerSOS(latitude, longitude, note = "") {
+  const response = await api.post("/emergency/sos", {
+    latitude,
+    longitude,
+    note,
+  });
+  return response.data;
+}
+
+
+export async function getSOSLog() {
+  const response = await api.get("/emergency/sos");
+  return response.data;
+}
+
+
+export async function resolveSOS(sosId) {
+  const response = await api.patch(`/emergency/sos/${sosId}/resolve`);
+  return response.data;
+}
+
+
+// =====================================
 // EXPORT AXIOS INSTANCE
 // =====================================
 
