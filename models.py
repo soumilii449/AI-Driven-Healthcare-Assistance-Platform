@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, JSON
+from sqlalchemy import Column, Integer, String, Text, DateTime, JSON, Float
 from database import Base
 
 
@@ -87,6 +87,60 @@ class MedicalExtraction(Base):
     )
 
     processed_at = Column(
+        DateTime,
+        nullable=True
+    )
+
+class EmergencySOS(Base):
+    __tablename__ = "emergency_sos"
+
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True
+    )
+
+    user_id = Column(
+        Integer,
+        nullable=True
+    )
+
+    username = Column(
+        String,
+        nullable=True
+    )
+
+    latitude = Column(
+        Float,
+        nullable=False
+    )
+
+    longitude = Column(
+        Float,
+        nullable=False
+    )
+
+    note = Column(
+        Text,
+        nullable=True
+    )
+
+    nearest_facility = Column(
+        JSON,
+        nullable=True
+    )
+
+    status = Column(
+        String,
+        default="active"
+    )
+
+    created_at = Column(
+        DateTime,
+        nullable=True
+    )
+
+    resolved_at = Column(
         DateTime,
         nullable=True
     )
