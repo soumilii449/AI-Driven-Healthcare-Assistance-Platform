@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, JSON, Float
+from sqlalchemy import Column, Integer, String, Text, DateTime, JSON, Boolean
 from database import Base
 
 
@@ -91,8 +91,8 @@ class MedicalExtraction(Base):
         nullable=True
     )
 
-class EmergencySOS(Base):
-    __tablename__ = "emergency_sos"
+class Reminder(Base):
+    __tablename__ = "reminders"
 
     id = Column(
         Integer,
@@ -102,45 +102,60 @@ class EmergencySOS(Base):
 
     user_id = Column(
         Integer,
-        nullable=True
+        nullable=False,
+        index=True
     )
 
-    username = Column(
+    document_id = Column(
+        Integer,
+        nullable=True,
+        index=True
+    )
+
+    medicine_name = Column(
+        String,
+        nullable=False
+    )
+
+    dosage = Column(
         String,
         nullable=True
     )
 
-    latitude = Column(
-        Float,
-        nullable=False
-    )
-
-    longitude = Column(
-        Float,
-        nullable=False
-    )
-
-    note = Column(
-        Text,
+    frequency = Column(
+        String,
         nullable=True
     )
 
-    nearest_facility = Column(
+    # List of "HH:MM" strings, e.g. ["08:00", "14:00", "20:00"]
+    times = Column(
         JSON,
+        nullable=True,
+        default=list
+    )
+
+    start_date = Column(
+        String,
         nullable=True
     )
 
-    status = Column(
+    end_date = Column(
         String,
-        default="active"
+        nullable=True
+    )
+
+    notes = Column(
+        String,
+        nullable=True
+    )
+
+    is_active = Column(
+        Boolean,
+        default=True,
+        nullable=False
     )
 
     created_at = Column(
-        DateTime,
-        nullable=True
-    )
-
-    resolved_at = Column(
         DateTime,
         nullable=True
     )

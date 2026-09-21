@@ -11,6 +11,7 @@ import {
   Pill,
   Stethoscope,
   Languages,
+  Bell,
 } from "lucide-react";
 
 import { getDocumentResult } from "../services/api";
@@ -517,6 +518,28 @@ export default function Results() {
                           {medicine.purpose}
                         </p>
                       )}
+
+                      <button
+                        type="button"
+                        className="btn-secondary medication-reminder-btn"
+                        onClick={() =>
+                          navigate("/reminders", {
+                            state: {
+                              prefill: {
+                                medicine_name: medicine.name || "",
+                                dosage: medicine.dosage || "",
+                                frequency: medicine.frequency || "",
+                                document_id: documentId
+                                  ? Number(documentId)
+                                  : null,
+                              },
+                            },
+                          })
+                        }
+                      >
+                        <Bell size={14} />
+                        Set Reminder
+                      </button>
 
                     </div>
 

@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import desc, Column, Integer, String
 from pydantic import BaseModel
 from datetime import datetime, timedelta
+from typing import Optional, List
 import os
 import shutil
 import hashlib
@@ -21,7 +22,7 @@ load_dotenv()
 from jose import JWTError, jwt
 
 from database import engine, Base, get_db
-from models import Document, MedicalExtraction
+from models import Document, MedicalExtraction, Reminder
 
 from ocr import extract_text
 from medical_extractor import extract_medical_information
@@ -184,6 +185,29 @@ class PatientCreate(BaseModel):
 class VoiceQueryAnswerRequest(BaseModel):
     question_text_english: str
     detected_language: str = "en"
+
+
+class ReminderCreate(BaseModel):
+    medicine_name: str
+    dosage: str = ""
+    frequency: str = ""
+    times: List[str] = []
+    start_date: str = ""
+    end_date: str = ""
+    notes: str = ""
+    document_id: Optional[int] = None
+
+
+class ReminderUpdate(BaseModel):
+    medicine_name: Optional[str] = None
+    dosage: Optional[str] = None
+    frequency: Optional[str] = None
+    times: Optional[List[str]] = None
+    start_date: Optional[str] = None
+    end_date: Optional[str] = None
+    notes: Optional[str] = None
+    document_id: Optional[int] = None
+    is_active: Optional[bool] = None
 
 
 # ============================================================
@@ -1957,4 +1981,266 @@ def statistics(
 
         "total_medical_extractions":
             total_extractions
+    }
+
+# ============================================================
+# MEDICAL REMINDERS
+# ============================================================
+#
+# Reminders let a patient (or the doctor/admin managing their
+# care) set daily times to be prompted to take a medication.
+# Each reminder belongs to the user who created it; admins can
+# see and manage every reminder, everyone else only their own.
+# ============================================================
+
+def _reminder_to_dict(reminder: Reminder):
+    return {
+        "id": reminder.id,
+        "user_id": reminder.user_id,
+        "document_id": reminder.document_id,
+        "medicine_name": reminder.medicine_name,
+        "dosage": reminder.dosage,
+        "frequency": reminder.frequency,
+        "times": reminder.times or [],
+        "start_date": reminder.start_date,
+        "end_date": reminder.end_date,
+        "notes": reminder.notes,
+        "is_active": reminder.is_active,
+        "created_at": reminder.created_at,
+    }
+
+
+def _get_owned_reminder(
+    reminder_id: int,
+    db: Session,
+    current_user: User
+) -> Reminder:
+
+    reminder = (
+        db.query(Reminder)
+        .filter(Reminder.id == reminder_id)
+        .first()
+    )
+
+    if reminder is None:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Reminder not found"
+        )
+
+    if (
+        reminder.user_id != current_user.id
+        and current_user.role != "admin"
+    ):
+
+        raise HTTPException(
+            status_code=403,
+            detail="You do not have permission to access this reminder."
+        )
+
+    return reminder
+
+
+@app.post("/reminders")
+def create_reminder(
+    reminder_data: ReminderCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+
+    medicine_name = reminder_data.medicine_name.strip()
+
+    if not medicine_name:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Medicine name cannot be empty"
+        )
+
+    cleaned_times = [
+        time_value.strip()
+        for time_value in reminder_data.times
+        if time_value and time_value.strip()
+    ]
+
+    reminder = Reminder(
+        user_id=current_user.id,
+        document_id=reminder_data.document_id,
+        medicine_name=medicine_name,
+        dosage=reminder_data.dosage.strip(),
+        frequency=reminder_data.frequency.strip(),
+        times=cleaned_times,
+        start_date=reminder_data.start_date.strip(),
+        end_date=reminder_data.end_date.strip(),
+        notes=reminder_data.notes.strip(),
+        is_active=True,
+        created_at=datetime.utcnow()
+    )
+
+    db.add(reminder)
+    db.commit()
+    db.refresh(reminder)
+
+    return {
+        "message": "Reminder created successfully",
+        "reminder": _reminder_to_dict(reminder)
+    }
+
+
+@app.get("/reminders")
+def get_reminders(
+    document_id: Optional[int] = None,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+
+    query = db.query(Reminder)
+
+    if current_user.role != "admin":
+
+        query = query.filter(
+            Reminder.user_id == current_user.id
+        )
+
+    if document_id is not None:
+
+        query = query.filter(
+            Reminder.document_id == document_id
+        )
+
+    reminders = (
+        query
+        .order_by(desc(Reminder.id))
+        .all()
+    )
+
+    return [
+        _reminder_to_dict(reminder)
+        for reminder in reminders
+    ]
+
+
+@app.get("/reminders/{reminder_id}")
+def get_reminder(
+    reminder_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+
+    reminder = _get_owned_reminder(
+        reminder_id,
+        db,
+        current_user
+    )
+
+    return _reminder_to_dict(reminder)
+
+
+@app.put("/reminders/{reminder_id}")
+def update_reminder(
+    reminder_id: int,
+    reminder_data: ReminderUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+
+    reminder = _get_owned_reminder(
+        reminder_id,
+        db,
+        current_user
+    )
+
+    if reminder_data.medicine_name is not None:
+
+        cleaned_name = reminder_data.medicine_name.strip()
+
+        if not cleaned_name:
+
+            raise HTTPException(
+                status_code=400,
+                detail="Medicine name cannot be empty"
+            )
+
+        reminder.medicine_name = cleaned_name
+
+    if reminder_data.dosage is not None:
+        reminder.dosage = reminder_data.dosage.strip()
+
+    if reminder_data.frequency is not None:
+        reminder.frequency = reminder_data.frequency.strip()
+
+    if reminder_data.times is not None:
+        reminder.times = [
+            time_value.strip()
+            for time_value in reminder_data.times
+            if time_value and time_value.strip()
+        ]
+
+    if reminder_data.start_date is not None:
+        reminder.start_date = reminder_data.start_date.strip()
+
+    if reminder_data.end_date is not None:
+        reminder.end_date = reminder_data.end_date.strip()
+
+    if reminder_data.notes is not None:
+        reminder.notes = reminder_data.notes.strip()
+
+    if reminder_data.document_id is not None:
+        reminder.document_id = reminder_data.document_id
+
+    if reminder_data.is_active is not None:
+        reminder.is_active = reminder_data.is_active
+
+    db.commit()
+    db.refresh(reminder)
+
+    return {
+        "message": "Reminder updated successfully",
+        "reminder": _reminder_to_dict(reminder)
+    }
+
+
+@app.patch("/reminders/{reminder_id}/toggle")
+def toggle_reminder(
+    reminder_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+
+    reminder = _get_owned_reminder(
+        reminder_id,
+        db,
+        current_user
+    )
+
+    reminder.is_active = not reminder.is_active
+
+    db.commit()
+    db.refresh(reminder)
+
+    return {
+        "message": "Reminder updated successfully",
+        "reminder": _reminder_to_dict(reminder)
+    }
+
+
+@app.delete("/reminders/{reminder_id}")
+def delete_reminder(
+    reminder_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+
+    reminder = _get_owned_reminder(
+        reminder_id,
+        db,
+        current_user
+    )
+
+    db.delete(reminder)
+    db.commit()
+
+    return {
+        "message": "Reminder deleted successfully"
     }

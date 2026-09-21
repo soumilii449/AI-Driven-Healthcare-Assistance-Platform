@@ -14,6 +14,7 @@ import Dashboard from "./pages/Dashboard";
 import AllPrescriptions from "./pages/AllPrescriptions";
 import Upload from "./pages/uplo";
 import Results from "./pages/Results";
+import Reminders from "./pages/Reminders";
 import Translation from "./pages/Translation";
 import Emergency from "./pages/Emergency";
 import SOSLog from "./pages/emergency/SOSLog";
@@ -88,6 +89,17 @@ function App() {
                   <>
                     <Navbar />
                     <Results />
+                    <SOSButton />
+                  </>
+                }
+              />
+
+              <Route
+                path="/reminders"
+                element={
+                  <>
+                    <Navbar />
+                    <Reminders />
                     <SOSButton />
                   </>
                 }

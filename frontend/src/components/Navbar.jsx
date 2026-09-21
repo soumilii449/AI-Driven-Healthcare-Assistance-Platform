@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { LogOut, Home, Upload, X, Moon, Sun, Siren } from "lucide-react";
+import { LogOut, Home, Upload, X, Moon, Sun, Siren, Bell } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
@@ -49,6 +49,11 @@ export default function Navbar() {
           <Link to="/upload">
             <Upload size={18} />
             Upload
+          </Link>
+
+          <Link to="/reminders">
+            <Bell size={18} />
+            Reminders
           </Link>
 
           <Link to="/emergency" className="nav-link-emergency">
@@ -110,6 +115,11 @@ export default function Navbar() {
         <Link to="/upload" className="mobile-nav-link">
           <Upload size={18} />
           Upload Prescription
+        </Link>
+
+        <Link to="/reminders" className="mobile-nav-link">
+          <Bell size={18} />
+          Reminders
         </Link>
 
         <Link to="/emergency" className="mobile-nav-link mobile-nav-link--emergency">

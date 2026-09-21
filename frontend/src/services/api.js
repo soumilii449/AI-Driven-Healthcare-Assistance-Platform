@@ -464,6 +464,51 @@ export async function resolveSOS(sosId) {
 
 
 // =====================================
+// MEDICAL REMINDERS
+// =====================================
+
+export async function getReminders(documentId) {
+  const response = await api.get("/reminders", {
+    params: documentId ? { document_id: documentId } : {},
+  });
+
+  return response.data;
+}
+
+export async function getReminder(reminderId) {
+  const response = await api.get(`/reminders/${reminderId}`);
+  return response.data;
+}
+
+export async function createReminder(reminderData) {
+  const response = await api.post("/reminders", reminderData);
+  return response.data;
+}
+
+export async function updateReminder(reminderId, reminderData) {
+  const response = await api.put(
+    `/reminders/${reminderId}`,
+    reminderData
+  );
+
+  return response.data;
+}
+
+export async function toggleReminder(reminderId) {
+  const response = await api.patch(
+    `/reminders/${reminderId}/toggle`
+  );
+
+  return response.data;
+}
+
+export async function deleteReminder(reminderId) {
+  const response = await api.delete(`/reminders/${reminderId}`);
+  return response.data;
+}
+
+
+// =====================================
 // EXPORT AXIOS INSTANCE
 // =====================================
 
