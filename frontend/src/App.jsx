@@ -16,6 +16,7 @@ import Upload from "./pages/uplo";
 import Results from "./pages/Results";
 import Reminders from "./pages/Reminders";
 import Translation from "./pages/Translation";
+import HealthEducation from "./pages/HealthEducation";
 import Emergency from "./pages/Emergency";
 import SOSLog from "./pages/emergency/SOSLog";
 
@@ -111,6 +112,17 @@ function App() {
                   <>
                     <Navbar />
                     <Translation />
+                    <SOSButton />
+                  </>
+                }
+              />
+
+              <Route
+                path="/education"
+                element={
+                  <>
+                    <Navbar />
+                    <HealthEducation />
                     <SOSButton />
                   </>
                 }

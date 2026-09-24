@@ -509,6 +509,35 @@ export async function deleteReminder(reminderId) {
 
 
 // =====================================
+// HEALTH EDUCATION
+// =====================================
+
+export async function getEducationTopics(lang = "en") {
+  const response = await api.get("/education/topics", {
+    params: { lang },
+  });
+
+  return response.data;
+}
+
+export async function getEducationTopic(topicId, lang = "en") {
+  const response = await api.get(`/education/topics/${topicId}`, {
+    params: { lang },
+  });
+
+  return response.data;
+}
+
+export async function searchEducationTopics(query, lang = "en") {
+  const response = await api.get("/education/search", {
+    params: { query, lang },
+  });
+
+  return response.data;
+}
+
+
+// =====================================
 // EXPORT AXIOS INSTANCE
 // =====================================
 

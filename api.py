@@ -42,6 +42,14 @@ from emergency import (
     NearbyFacilitiesError,
     build_share_location_message,
 )
+from health_education import (
+    list_topics as list_education_topics,
+    get_topic as get_education_topic,
+    search_topics as search_education_topics,
+    translate_topic_summary,
+    translate_topic_full,
+)
+from medlineplus import search_medlineplus
 
 
 # ============================================================
@@ -2474,4 +2482,129 @@ def resolve_sos(
     return {
         "message": "SOS alert marked resolved",
         "alert": _sos_alert_to_dict(alert, db)
+    }
+
+
+# ============================================================
+# HEALTH EDUCATION
+# ============================================================
+#
+# A library of commonly searched health topics, each with a short
+# summary (for cards) and full structured content (for the detail
+# view). Users can also type a free-text question/symptom and get
+# back the closest matching topics for guidance. Every topic can be
+# translated into any language in SUPPORTED_LANGUAGES.
+
+def _validated_lang(lang: str) -> str:
+
+    lang = (lang or "en").lower().strip()
+
+    if lang not in SUPPORTED_LANGUAGES:
+
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                f"Unsupported language '{lang}'. "
+                f"Supported: {', '.join(SUPPORTED_LANGUAGES.keys())}"
+            )
+        )
+
+    return lang
+
+
+@app.get("/education/topics")
+def get_education_topics(
+    lang: str = "en",
+    current_user: User = Depends(get_current_user)
+):
+    """Most-searched-first list of topic cards (id, title, summary, tags...)."""
+
+    lang = _validated_lang(lang)
+
+    topics = list_education_topics()
+
+    return {
+        "language": lang,
+        "topics": [
+            translate_topic_summary(topic, lang)
+            for topic in topics
+        ]
+    }
+
+
+@app.get("/education/topics/{topic_id}")
+def get_education_topic_detail(
+    topic_id: str,
+    lang: str = "en",
+    current_user: User = Depends(get_current_user)
+):
+    """Full detail for one topic, including structured content sections."""
+
+    lang = _validated_lang(lang)
+
+    topic = get_education_topic(topic_id)
+
+    if topic is None:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Education topic not found"
+        )
+
+    return translate_topic_full(topic, lang)
+
+
+@app.get("/education/search")
+def search_education(
+    query: str,
+    lang: str = "en",
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Free-text guidance search. Checks our curated local topics first;
+    if nothing matches, falls back to the MedlinePlus Web service so
+    the user still gets a real answer instead of "no results."
+    """
+
+    lang = _validated_lang(lang)
+
+    query = (query or "").strip()
+
+    if not query:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Please enter something to search for."
+        )
+
+    local_matches = search_education_topics(query)
+
+    if local_matches:
+
+        return {
+            "language": lang,
+            "query": query,
+            "results": [
+                translate_topic_summary(topic, lang)
+                for topic in local_matches
+            ],
+            "message": None,
+        }
+
+    medlineplus_results = search_medlineplus(query, lang=lang)
+
+    return {
+        "language": lang,
+        "query": query,
+        "results": medlineplus_results,
+        "message": (
+            None
+            if medlineplus_results
+            else (
+                "No matching topic was found for that search. "
+                "Try different words, browse the topics below, "
+                "or consult a healthcare professional for guidance "
+                "specific to your situation."
+            )
+        )
     }
