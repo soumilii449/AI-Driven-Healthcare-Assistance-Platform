@@ -2561,9 +2561,9 @@ def search_education(
     current_user: User = Depends(get_current_user)
 ):
     """
-    Free-text guidance search. Checks our curated local topics first;
-    if nothing matches, falls back to the MedlinePlus Web service so
-    the user still gets a real answer instead of "no results."
+    Health Education search. Results are returned only when the searched
+    keywords match the title of a curated health education article.
+    Matching is case-insensitive and supports partial keywords.
     """
 
     lang = _validated_lang(lang)
@@ -2591,20 +2591,12 @@ def search_education(
             "message": None,
         }
 
-    medlineplus_results = search_medlineplus(query, lang=lang)
-
     return {
         "language": lang,
         "query": query,
-        "results": medlineplus_results,
+        "results": [],
         "message": (
-            None
-            if medlineplus_results
-            else (
-                "No matching topic was found for that search. "
-                "Try different words, browse the topics below, "
-                "or consult a healthcare professional for guidance "
-                "specific to your situation."
-            )
+            "No article title matched your search. "
+            "Try keywords that appear in the health article title."
         )
     }

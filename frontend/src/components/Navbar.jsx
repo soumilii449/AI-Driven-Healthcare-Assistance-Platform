@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { LogOut, Home, Upload, X, Moon, Sun, Siren, Bell, Book, BookIcon, BookCopyIcon } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import MedicalNotificationCenter from "./MedicalNotificationCenter";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -69,6 +70,8 @@ export default function Navbar() {
         </div>
 
         <div className="nav-user">
+
+          <MedicalNotificationCenter />
 
           <span>{user?.username}</span>
 

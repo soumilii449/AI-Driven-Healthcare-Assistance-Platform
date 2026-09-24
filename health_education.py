@@ -693,71 +693,55 @@ _WORD_RE = re.compile(r"[a-zA-Z]+")
 
 
 def _words(text):
-    return set(_WORD_RE.findall(text.lower()))
-
-
-def _topic_score(topic, query_words):
-
-    if not query_words:
-        return 0
-
-    score = 0
-
-    title_words = _words(topic["title"])
-    tag_words = set()
-
-    for tag in topic.get("tags", []):
-        tag_words |= _words(tag)
-
-    category_words = _words(topic.get("category", ""))
-    summary_words = _words(topic.get("summary", ""))
-
-    content = topic.get("content", {})
-    content_text = " ".join(
-        " ".join(value) if isinstance(value, list) else str(value)
-        for value in content.values()
-    )
-    content_words = _words(content_text)
-
-    for word in query_words:
-
-        if len(word) < 3:
-            # skip very short/common words ("a", "is", "to" ...)
-            continue
-
-        if word in title_words:
-            score += 5
-        if word in tag_words:
-            score += 4
-        if word in category_words:
-            score += 2
-        if word in summary_words:
-            score += 2
-        if word in content_words:
-            score += 1
-
-    return score
+    return [word for word in _WORD_RE.findall(str(text).lower()) if word]
 
 
 def search_topics(query, limit=6):
     """
-    Return topics ranked by relevance to a free-text query, so a user can
-    type a question or symptom ("how to control blood sugar", "mosquito
-    fever") and get back the closest matching education topics for
-    guidance, even if they don't know the exact topic name.
+    Search education articles using keywords from the ARTICLE TITLE only.
+
+    Every meaningful keyword entered by the user must occur in the title.
+    Matching is case-insensitive and supports partial keywords, so searches
+    such as ``diabet`` can match ``Diabetes``. Results are ordered by the
+    number of matching title keywords and then by the existing search count.
     """
 
     query_words = _words(query or "")
 
-    scored = [
-        (topic, _topic_score(topic, query_words))
-        for topic in EDUCATION_TOPICS
-    ]
+    if not query_words:
+        return []
 
-    matches = [item for item in scored if item[1] > 0]
-    matches.sort(key=lambda item: item[1], reverse=True)
+    # Ignore very short words because they produce many accidental matches.
+    query_words = [word for word in query_words if len(word) >= 2]
 
-    return [topic for topic, _score in matches[:limit]]
+    if not query_words:
+        return []
+
+    scored = []
+
+    for topic in EDUCATION_TOPICS:
+        title = str(topic.get("title", "")).lower()
+
+        matched_keywords = sum(
+            1
+            for word in query_words
+            if word in title
+        )
+
+        # All searched keywords must match the article title.
+        if matched_keywords == len(query_words):
+            scored.append((
+                topic,
+                matched_keywords,
+                topic.get("search_count", 0),
+            ))
+
+    scored.sort(
+        key=lambda item: (item[1], item[2]),
+        reverse=True,
+    )
+
+    return [topic for topic, _matched, _count in scored[:limit]]
 
 
 # ============================================================

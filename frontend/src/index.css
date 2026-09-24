@@ -6243,3 +6243,307 @@ body.dark-theme .edu-search-input {
 body.dark-theme .edu-card-body {
   border-top-color: rgba(255,255,255,0.1);
 }
+
+/* ==========================================================
+   MEDICAL IN-APP NOTIFICATIONS
+   ========================================================== */
+
+.medical-notification-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.medical-notification-button {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.72);
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.medical-notification-button:hover {
+  transform: translateY(-1px);
+  background: #ffffff;
+  box-shadow: 0 7px 18px rgba(15, 23, 42, 0.12);
+}
+
+.medical-notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border: 2px solid #ffffff;
+  border-radius: 999px;
+  background: #ef4444;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.medical-notification-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9997;
+}
+
+.medical-notification-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 370px;
+  max-width: calc(100vw - 24px);
+  max-height: 570px;
+  overflow: hidden;
+  z-index: 9998;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 17px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.18);
+}
+
+.medical-notification-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 18px;
+  background: linear-gradient(135deg, #eff6ff, #ffffff);
+  border-bottom: 1px solid #eef2f7;
+}
+
+.medical-notification-header h3 {
+  margin: 0;
+  color: #111827;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.medical-notification-header p {
+  margin: 4px 0 0;
+  color: #64748b;
+  font-size: 11px;
+}
+
+.medical-notification-close {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 8px;
+  background: #f1f5f9;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.medical-notification-content {
+  max-height: 480px;
+  overflow-y: auto;
+  padding: 14px;
+}
+
+.medical-notification-section {
+  margin-bottom: 16px;
+}
+
+.medical-notification-section:last-child {
+  margin-bottom: 0;
+}
+
+.medical-notification-section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  color: #475569;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.medical-notification-section-title.due {
+  color: #dc2626;
+}
+
+.medical-reminder-card {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 12px;
+  margin-bottom: 8px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.medical-reminder-card.due-card {
+  border-color: #fecaca;
+  background: #fff7f7;
+}
+
+.medical-reminder-icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #eff6ff;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.due-card .medical-reminder-icon {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.medical-reminder-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.medical-reminder-info strong {
+  color: #111827;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.medical-reminder-info span {
+  color: #64748b;
+  font-size: 11px;
+}
+
+.medical-reminder-info small {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #64748b;
+  font-size: 10px;
+}
+
+.medical-notification-empty {
+  padding: 35px 18px;
+  text-align: center;
+  color: #64748b;
+}
+
+.medical-notification-empty > svg {
+  margin-bottom: 8px;
+  color: #22c55e;
+}
+
+.medical-notification-empty h4 {
+  margin: 0 0 5px;
+  color: #334155;
+  font-size: 14px;
+}
+
+.medical-notification-empty p {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.medical-reminder-toast {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 10000;
+  width: 350px;
+  max-width: calc(100vw - 30px);
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 15px;
+  border: 1px solid #fecaca;
+  border-radius: 15px;
+  background: #ffffff;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+  animation: medicalReminderToastIn 0.3s ease;
+}
+
+.medical-reminder-toast-icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #fee2e2;
+  color: #dc2626;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.medical-reminder-toast-content {
+  flex: 1;
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.medical-reminder-toast-content strong {
+  display: block;
+  margin-bottom: 3px;
+  color: #111827;
+  font-size: 13px;
+}
+
+.medical-reminder-toast-content p {
+  margin: 0;
+}
+
+.medical-reminder-toast-close {
+  width: 27px;
+  height: 27px;
+  border: 0;
+  background: transparent;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+@keyframes medicalReminderToastIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateX(0);
+  }
+}
+
+@media (max-width: 700px) {
+  .medical-notification-panel {
+    position: fixed;
+    top: 70px;
+    right: 12px;
+    width: calc(100vw - 24px);
+  }
+
+  .medical-reminder-toast {
+    right: 15px;
+    bottom: 15px;
+    width: calc(100vw - 30px);
+  }
+}

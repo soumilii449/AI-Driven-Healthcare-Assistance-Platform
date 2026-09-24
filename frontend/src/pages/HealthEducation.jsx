@@ -311,9 +311,8 @@ export default function HealthEducation() {
         <h1>Learn about your health</h1>
 
         <p>
-          Browse commonly searched health topics, or ask about something
-          specific to get simple, practical guidance — available in your
-          language.
+          Browse commonly searched health topics, or search using keywords from
+          an article title to quickly find matching health education content.
         </p>
       </div>
 
@@ -325,7 +324,7 @@ export default function HealthEducation() {
             <input
               type="text"
               className="edu-search-input"
-              placeholder="Ask about a symptom or topic — e.g. 'how to control blood sugar'"
+              placeholder="Search by article title — e.g. Diabetes, Blood Pressure, Anemia"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
