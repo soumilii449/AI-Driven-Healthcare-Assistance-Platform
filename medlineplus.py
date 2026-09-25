@@ -1,22 +1,33 @@
 """
 MedlinePlus Web Service integration
-==================================
+====================================
 
-Provides broad healthcare article search and full-article retrieval from
-the free NLM MedlinePlus service. No API key is required for MedlinePlus.
+Free-text fallback search against the NLM MedlinePlus Web service, used
+when a user's search doesn't match any of our curated local topics
+(see health_education.py). No API key required.
 
-Regional-language translation is performed by the project's translator.py
-after the English article is retrieved.
+Docs: https://medlineplus.gov/about/developers/webservices/
 """
 
 import re
 import requests
 import xml.etree.ElementTree as ET
+from urllib.parse import urlparse
+
 from bs4 import BeautifulSoup
 
 MEDLINEPLUS_BASE_URL = "https://wsearch.nlm.nih.gov/ws/query"
 
+# Only ever fetch pages from medlineplus.gov itself — the URL for
+# fetch_medlineplus_article() ultimately comes from the client, so this
+# stops the backend being used to fetch arbitrary third-party pages.
+ALLOWED_ARTICLE_HOST_SUFFIX = "medlineplus.gov"
+
 _TAG_RE = re.compile(r"<[^>]+>")
+
+
+class MedlinePlusError(Exception):
+    """Raised when a MedlinePlus lookup can't be completed."""
 
 
 def _strip_tags(text):
@@ -25,15 +36,16 @@ def _strip_tags(text):
     return _TAG_RE.sub("", text).strip()
 
 
-def search_medlineplus(query, lang="en", limit=12):
+def search_medlineplus(query, lang="en", limit=6):
     """
     Search MedlinePlus health topics for a free-text query.
 
-    Returns:
-      id, title, category, icon, summary, url, source
+    Returns a list of dicts shaped like our local topic summaries so the
+    frontend can render them with the same card component:
+      { id, title, category, icon, summary, url, source }
 
-    The returned id is intentionally frontend-safe. The actual URL is kept
-    separately and is used by the article-detail endpoint.
+    Returns an empty list on any network, HTTP, or parsing error — this
+    is a best-effort fallback, not a hard dependency.
     """
 
     query = (query or "").strip()
@@ -50,12 +62,7 @@ def search_medlineplus(query, lang="en", limit=12):
     }
 
     try:
-        response = requests.get(
-            MEDLINEPLUS_BASE_URL,
-            params=params,
-            timeout=8,
-            headers={"User-Agent": "AI-Healthcare-Assistance-Platform/1.0"},
-        )
+        response = requests.get(MEDLINEPLUS_BASE_URL, params=params, timeout=6)
         response.raise_for_status()
     except requests.RequestException:
         return []
@@ -67,7 +74,7 @@ def search_medlineplus(query, lang="en", limit=12):
 
     results = []
 
-    for index, doc in enumerate(root.findall(".//document")):
+    for doc in root.findall(".//document"):
         url = doc.get("url", "")
         title = ""
         snippet = ""
@@ -81,19 +88,15 @@ def search_medlineplus(query, lang="en", limit=12):
             elif name in ("snippet", "FullSummary") and not snippet:
                 snippet = _strip_tags(text)
 
-        if not title or not url:
+        if not title:
             continue
 
         results.append({
-            "id": f"medlineplus-{index}-{abs(hash(url))}",
+            "id": url,
             "title": title,
-            "category": "MedlinePlus Health Article",
+            "category": "MedlinePlus",
             "icon": "BookOpen",
-            "summary": (
-                snippet[:500]
-                if snippet
-                else "Open this article to read the full healthcare information."
-            ),
+            "summary": snippet[:400] if snippet else "Tap to read the full article on MedlinePlus.",
             "url": url,
             "source": "medlineplus",
         })
@@ -101,85 +104,69 @@ def search_medlineplus(query, lang="en", limit=12):
     return results[:limit]
 
 
-def fetch_medlineplus_article(url):
+def fetch_medlineplus_article(url, timeout=8):
     """
-    Fetch and extract the readable article content from a MedlinePlus page.
+    Fetch and extract the readable body text of a single MedlinePlus
+    article page (used when the user opens a MedlinePlus search result).
 
-    The function deliberately extracts article text rather than returning
-    arbitrary HTML, so the frontend can safely render the content.
+    Returns { title, content: [paragraph, ...], url, source }.
+    Raises MedlinePlusError with a human-readable message on any failure,
+    so the API layer can turn that into a clean HTTP error.
     """
 
-    if not url or not url.startswith("https://medlineplus.gov/"):
-        return None
+    url = (url or "").strip()
+
+    if not url:
+        raise MedlinePlusError("No article URL was provided.")
+
+    parsed = urlparse(url)
+
+    if parsed.scheme not in ("http", "https") or not parsed.netloc.endswith(
+        ALLOWED_ARTICLE_HOST_SUFFIX
+    ):
+        raise MedlinePlusError("Only medlineplus.gov article URLs can be fetched.")
 
     try:
         response = requests.get(
             url,
-            timeout=10,
-            headers={
-                "User-Agent": "AI-Healthcare-Assistance-Platform/1.0"
-            },
+            timeout=timeout,
+            headers={"User-Agent": "Mozilla/5.0 (compatible; HealthcareAssistant/1.0)"},
         )
         response.raise_for_status()
-    except requests.RequestException:
-        return None
+    except requests.RequestException as exc:
+        raise MedlinePlusError(f"Could not reach MedlinePlus: {exc}")
 
-    try:
-        soup = BeautifulSoup(response.text, "html.parser")
+    soup = BeautifulSoup(response.content, "html.parser")
 
-        for element in soup([
-            "script",
-            "style",
-            "noscript",
-            "nav",
-            "header",
-            "footer",
-            "aside",
-            "form",
-        ]):
-            element.decompose()
+    title_tag = soup.find("h1")
+    title = title_tag.get_text(strip=True) if title_tag else ""
 
-        title_node = soup.find("h1")
-        title = title_node.get_text(" ", strip=True) if title_node else ""
+    # MedlinePlus uses different container ids depending on the page type
+    # (encyclopedia article vs. topic summary) — try the known ones, then
+    # fall back to the whole page.
+    main = (
+        soup.find("div", id="ency_summary")
+        or soup.find("div", id="topic-summary")
+        or soup.find("main")
+        or soup
+    )
 
-        main = (
-            soup.find("main")
-            or soup.find("article")
-            or soup.select_one("#main")
-            or soup.select_one(".main-content")
-            or soup.body
-        )
+    paragraphs = []
 
-        if main is None:
-            return None
+    for p in main.find_all("p"):
+        text = p.get_text(" ", strip=True)
 
-        paragraphs = []
+        # Skip short fragments — usually nav links, captions, or ads
+        # rather than actual article body text.
+        if len(text) >= 40:
+            paragraphs.append(text)
 
-        for node in main.find_all(["p", "li"]):
-            text = node.get_text(" ", strip=True)
-            text = re.sub(r"\s+", " ", text).strip()
+    if not paragraphs:
+        raise MedlinePlusError("This article has no readable text to display.")
 
-            if len(text) < 20:
-                continue
-
-            if text not in paragraphs:
-                paragraphs.append(text)
-
-        content = "\n\n".join(paragraphs)
-
-        if not content:
-            return None
-
-        # Keep the article readable and prevent an unexpectedly huge
-        # translation request. The translator itself chunks the text.
-        content = content[:18000]
-
-        return {
-            "title": title,
-            "content": content,
-            "url": url,
-            "source": "medlineplus",
-        }
-
-    except Exception:
-        return None
+    return {
+        "title": title,
+        "content": paragraphs[:25],
+        "url": url,
+        "source": "medlineplus",
+    }

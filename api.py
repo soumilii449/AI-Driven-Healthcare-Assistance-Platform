@@ -42,6 +42,8 @@ from emergency import (
     NearbyFacilitiesError,
     build_share_location_message,
 )
+from sms_service import send_sms, SMSError
+from whatsapp_service import send_whatsapp, WhatsAppError
 from health_education import (
     list_topics as list_education_topics,
     get_topic as get_education_topic,
@@ -49,7 +51,7 @@ from health_education import (
     translate_topic_summary,
     translate_topic_full,
 )
-from medlineplus import search_medlineplus, fetch_medlineplus_article
+from medlineplus import search_medlineplus, fetch_medlineplus_article, MedlinePlusError
 
 
 # ============================================================
@@ -229,12 +231,18 @@ class ShareLocationRequest(BaseModel):
     latitude: float
     longitude: float
     note: str = ""
+    emergency_contact_phone: str = ""  # E.164 format, e.g. +9198XXXXXXXX
 
 
 class SOSRequest(BaseModel):
     latitude: float
     longitude: float
     note: str = ""
+    emergency_contact_phone: str = ""  # E.164 format, e.g. +9198XXXXXXXX
+
+
+class WhatsAppRequest(BaseModel):
+    emergency_contact_phone: str = ""
 
 
 # ============================================================
@@ -2341,11 +2349,32 @@ def share_location(
     current_user: User = Depends(get_current_user)
 ):
 
-    return build_share_location_message(
+    share_location = build_share_location_message(
         location_data.latitude,
         location_data.longitude,
         location_data.note.strip()
     )
+
+    sms_status = None
+
+    if location_data.emergency_contact_phone:
+
+        try:
+
+            sms_status = send_sms(
+                location_data.emergency_contact_phone,
+                share_location["message"]
+            )
+
+        except SMSError as exc:
+
+            # The location message is still returned to the frontend even
+            # if the text fails to send, so the user can share it another way.
+            sms_status = {"error": str(exc)}
+
+    share_location["sms_status"] = sms_status
+
+    return share_location
 
 
 # ============================================================
@@ -2375,6 +2404,27 @@ def _sos_alert_to_dict(alert: "SOSAlert", db: Session):
             else None
         ),
     }
+
+
+@app.post("/emergency/send-whatsapp")
+def send_sos_whatsapp(
+    whatsapp_data: WhatsAppRequest,
+    current_user: User = Depends(get_current_user)
+):
+
+    if not whatsapp_data.emergency_contact_phone.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="Please provide an emergency contact phone number."
+        )
+
+    try:
+        return send_whatsapp(whatsapp_data.emergency_contact_phone)
+    except WhatsAppError as exc:
+        raise HTTPException(
+            status_code=502,
+            detail=str(exc)
+        )
 
 
 @app.post("/emergency/sos")
@@ -2409,6 +2459,23 @@ def trigger_sos(
         sos_data.note.strip()
     )
 
+    sms_status = None
+
+    if sos_data.emergency_contact_phone:
+
+        try:
+
+            sms_status = send_sms(
+                sos_data.emergency_contact_phone,
+                share_location["message"]
+            )
+
+        except SMSError as exc:
+
+            # The SOS alert must still be logged even if the text fails
+            # to send — the SMS is a bonus, not a requirement.
+            sms_status = {"error": str(exc)}
+
     alert = SOSAlert(
         user_id=current_user.id,
         latitude=sos_data.latitude,
@@ -2428,6 +2495,7 @@ def trigger_sos(
         "status": alert.status,
         "nearest_facility": nearest_facility,
         "share_location": share_location,
+        "sms_status": sms_status,
     }
 
 
@@ -2561,113 +2629,88 @@ def search_education(
     current_user: User = Depends(get_current_user)
 ):
     """
-    Search the local healthcare library and the MedlinePlus health
-    article library. This means the user is not restricted to the
-    small set of locally curated topics.
+    Health Education search. Results are returned only when the searched
+    keywords match the title of a curated health education article.
+    Matching is case-insensitive and supports partial keywords.
     """
 
     lang = _validated_lang(lang)
+
     query = (query or "").strip()
 
     if not query:
+
         raise HTTPException(
             status_code=400,
             detail="Please enter something to search for."
         )
 
-    local_matches = search_education_topics(query, limit=12)
+    local_matches = search_education_topics(query)
 
-    local_results = [
-        translate_topic_summary(topic, lang)
-        for topic in local_matches
-    ]
+    if local_matches:
 
-    external_results = search_medlineplus(
-        query,
-        lang=lang,
-        limit=12
-    )
+        return {
+            "language": lang,
+            "query": query,
+            "results": [
+                translate_topic_summary(topic, lang)
+                for topic in local_matches
+            ],
+            "message": None,
+        }
 
-    if lang != "en":
-        translated_external_results = []
+    medline_results = search_medlineplus(query, lang=lang)
 
-        for article in external_results:
-            translated_external_results.append({
-                **article,
-                "title": translate_to_language(
-                    article["title"],
-                    lang
-                ),
-                "category": translate_to_language(
-                    article["category"],
-                    lang
-                ),
-                "summary": translate_to_language(
-                    article["summary"],
-                    lang
-                ),
-            })
+    if medline_results:
 
-        external_results = translated_external_results
-
-    results = local_results + external_results
+        return {
+            "language": lang,
+            "query": query,
+            "results": medline_results,
+            "message": "Showing results from MedlinePlus.",
+        }
 
     return {
         "language": lang,
         "query": query,
-        "results": results,
+        "results": [],
         "message": (
-            f"Found {len(results)} healthcare article(s). "
-            "Open any article to read the full content and translate it "
-            "using the language selector."
-            if results
-            else (
-                "No healthcare articles were found. "
-                "Try another health condition, symptom, medicine, "
-                "nutrition, prevention, or wellness keyword."
-            )
-        ),
+            "No article title matched your search. "
+            "Try keywords that appear in the health article title."
+        )
     }
 
 
-@app.get("/education/articles")
+@app.get("/education/article")
 def get_education_article(
     url: str,
     lang: str = "en",
     current_user: User = Depends(get_current_user)
 ):
-    """
-    Open a MedlinePlus article selected from search results and translate
-    the complete readable article into the selected regional language.
-    """
+    """Full text of an external MedlinePlus article, translated on demand."""
 
     lang = _validated_lang(lang)
 
-    article = fetch_medlineplus_article(url)
+    try:
 
-    if article is None:
+        article = fetch_medlineplus_article(url)
+
+    except MedlinePlusError as exc:
+
         raise HTTPException(
-            status_code=404,
-            detail="Could not load the selected healthcare article."
+            status_code=502,
+            detail=str(exc)
         )
 
-    title = article["title"]
-    content = article["content"]
+    if lang != "en" and lang in SUPPORTED_LANGUAGES:
 
-    if lang != "en":
-        title = translate_to_language(title, lang)
-        content = translate_to_language(content, lang)
+        article = {
+            **article,
+            "title": translate_to_language(article["title"], lang),
+            "content": [
+                translate_to_language(paragraph, lang)
+                for paragraph in article["content"]
+            ],
+        }
 
-    paragraphs = [
-        paragraph.strip()
-        for paragraph in content.split("\n\n")
-        if paragraph.strip()
-    ]
-
-    return {
-        "language": lang,
-        "title": title,
-        "content": paragraphs,
-        "url": article["url"],
-        "source": article["source"],
-    }
+    return article

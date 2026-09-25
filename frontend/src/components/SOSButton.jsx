@@ -1,30 +1,32 @@
 import { useState } from "react";
-import { Siren, X, PhoneCall, Share2, Loader2, MapPin } from "lucide-react";
+import {
+  Siren,
+  X,
+  PhoneCall,
+  Share2,
+  Loader2,
+  MapPin,
+  MessageCircle,
+} from "lucide-react";
 
-import { triggerSOS } from "../services/api";
-
-// =====================================
-// SOSButton
-//
-// A floating, always-reachable panic button. One tap:
-//   1. Gets the person's current location.
-//   2. Logs an SOS record on the backend (visible to admins/doctors).
-//   3. Looks up the nearest hospital automatically.
-//   4. Shows one-tap "Call 108" and "Share location" actions right there —
-//      no navigation required, since every second counts.
-// =====================================
+import { triggerSOS, sendSOSWhatsApp } from "../services/api";
 
 export default function SOSButton() {
   const [open, setOpen] = useState(false);
-  const [status, setStatus] = useState("idle"); // idle | confirming | working | done | error
+  const [status, setStatus] = useState("idle");
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
+  const [contactPhone, setContactPhone] = useState("");
+  const [whatsappStatus, setWhatsappStatus] = useState("idle");
+  const [whatsappError, setWhatsappError] = useState("");
 
   const reset = () => {
     setOpen(false);
     setStatus("idle");
     setResult(null);
     setError("");
+    setWhatsappStatus("idle");
+    setWhatsappError("");
   };
 
   const handleConfirm = () => {
@@ -35,6 +37,9 @@ export default function SOSButton() {
     }
 
     setStatus("working");
+    setError("");
+    setWhatsappStatus("idle");
+    setWhatsappError("");
 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
@@ -42,8 +47,10 @@ export default function SOSButton() {
           const data = await triggerSOS(
             position.coords.latitude,
             position.coords.longitude,
-            "SOS triggered from quick-access button"
+            "SOS triggered from quick-access button",
+            contactPhone
           );
+
           setResult(data);
           setStatus("done");
         } catch (err) {
@@ -59,6 +66,28 @@ export default function SOSButton() {
       },
       { enableHighAccuracy: true, timeout: 15000 }
     );
+  };
+
+  const handleWhatsAppSOS = async () => {
+    if (!contactPhone.trim()) {
+      setWhatsappStatus("error");
+      setWhatsappError("Please enter an emergency contact phone number first.");
+      return;
+    }
+
+    setWhatsappStatus("working");
+    setWhatsappError("");
+
+    try {
+      await sendSOSWhatsApp(contactPhone);
+      setWhatsappStatus("done");
+    } catch (err) {
+      setWhatsappStatus("error");
+      setWhatsappError(
+        err?.response?.data?.detail ||
+          "Could not send the WhatsApp SOS alert."
+      );
+    }
   };
 
   if (!open) {
@@ -92,9 +121,19 @@ export default function SOSButton() {
               This will share your current location with our care team and
               show you the nearest hospital right away.
             </p>
+
+            <input
+              type="tel"
+              className="live-location-note"
+              placeholder="Emergency contact's phone (e.g. +9198XXXXXXXX)"
+              value={contactPhone}
+              onChange={(e) => setContactPhone(e.target.value)}
+            />
+
             <button className="emergency-sos-cta" onClick={handleConfirm}>
               Yes, send SOS now
             </button>
+
             <a className="emergency-secondary-button" href="tel:112">
               <PhoneCall size={15} /> Or call 112 directly
             </a>
@@ -122,9 +161,39 @@ export default function SOSButton() {
           <>
             <h3>Alert sent</h3>
             <p>Your location has been logged. Call an ambulance now:</p>
+
             <a className="emergency-sos-cta" href="tel:108">
               <PhoneCall size={16} /> Call 108
             </a>
+
+            <div className="sos-action-group">
+              <button
+                type="button"
+                className="emergency-primary-button"
+                onClick={handleWhatsAppSOS}
+                disabled={whatsappStatus === "working"}
+              >
+                {whatsappStatus === "working" ? (
+                  <>
+                    <Loader2 size={15} className="spin" /> Sending SOS via WhatsApp...
+                  </>
+                ) : (
+                  <>
+                    <MessageCircle size={15} /> Send SOS via WhatsApp
+                  </>
+                )}
+              </button>
+
+              {whatsappStatus === "done" && (
+                <p className="live-location-accuracy">
+                  WhatsApp SOS alert sent to your emergency contact.
+                </p>
+              )}
+
+              {whatsappStatus === "error" && (
+                <p className="emergency-error">{whatsappError}</p>
+              )}
+            </div>
 
             {result.nearest_facility && (
               <div className="nearest-hospital-suggestion">
@@ -156,6 +225,18 @@ export default function SOSButton() {
               >
                 <Share2 size={15} /> Share my location via WhatsApp
               </a>
+            )}
+
+            {result.sms_status?.sid && (
+              <p className="live-location-accuracy">
+                Text sent to your emergency contact.
+              </p>
+            )}
+
+            {result.sms_status?.error && (
+              <p className="emergency-error">
+                SMS not sent: {result.sms_status.error}
+              </p>
             )}
           </>
         )}

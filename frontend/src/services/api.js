@@ -23,7 +23,6 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-
 // =====================================
 // AUTH
 // =====================================
@@ -50,7 +49,6 @@ export async function registerUser(
   return response.data;
 }
 
-
 export async function loginUser(
   username,
   password
@@ -74,7 +72,6 @@ export async function loginUser(
   return response.data;
 }
 
-
 export async function getCurrentUser() {
   const response = await api.get(
     "/auth/me"
@@ -82,7 +79,6 @@ export async function getCurrentUser() {
 
   return response.data;
 }
-
 
 // =====================================
 // DOCUMENTS
@@ -101,7 +97,6 @@ export async function uploadDocument(file) {
   return response.data;
 }
 
-
 export async function processDocument(
   documentId
 ) {
@@ -111,7 +106,6 @@ export async function processDocument(
 
   return response.data;
 }
-
 
 export async function getDocument(
   documentId
@@ -123,7 +117,6 @@ export async function getDocument(
   return response.data;
 }
 
-
 export async function getDocuments() {
   const response = await api.get(
     "/documents"
@@ -131,7 +124,6 @@ export async function getDocuments() {
 
   return response.data;
 }
-
 
 // =====================================
 // DOCUMENT STATUS
@@ -147,7 +139,6 @@ export async function getDocumentStatus(
   return response.data;
 }
 
-
 // =====================================
 // DOCUMENT RESULT
 // =====================================
@@ -161,7 +152,6 @@ export async function getDocumentResult(
 
   return response.data;
 }
-
 
 // =====================================
 // OCR
@@ -177,7 +167,6 @@ export async function getDocumentOCR(
   return response.data;
 }
 
-
 // =====================================
 // MEDICATIONS
 // =====================================
@@ -192,12 +181,12 @@ export async function getMedications(
   return response.data;
 }
 
+// Alias used by some frontend files
 export async function getDocumentMedications(
   documentId
 ) {
   return getMedications(documentId);
 }
-
 
 // =====================================
 // TREATMENT
@@ -213,12 +202,12 @@ export async function getTreatment(
   return response.data;
 }
 
+// Alias used by some frontend files
 export async function getDocumentTreatment(
   documentId
 ) {
   return getTreatment(documentId);
 }
-
 
 // =====================================
 // TRANSLATION
@@ -234,6 +223,8 @@ export async function getTranslation(
   return response.data;
 }
 
+// IMPORTANT:
+// Translation.jsx expects this name
 export async function getDocumentTranslation(
   documentId,
   lang = "hi"
@@ -248,9 +239,8 @@ export async function getDocumentTranslation(
   return response.data;
 }
 
-
 // =====================================
-// SPEECH
+// SPEECH (text-to-speech audio)
 // =====================================
 
 export async function getDocumentSpeech(
@@ -267,7 +257,6 @@ export async function getDocumentSpeech(
 
   return response.data;
 }
-
 
 // =====================================
 // VOICE QUERY
@@ -294,7 +283,6 @@ export async function transcribeVoiceQuery(
   return response.data;
 }
 
-
 export async function sendVoiceQuery(
   documentId,
   questionTextEnglish,
@@ -303,14 +291,15 @@ export async function sendVoiceQuery(
   const response = await api.post(
     `/documents/${documentId}/voice-query/answer`,
     {
-      question_text_english: questionTextEnglish,
-      detected_language: detectedLanguage,
+      question_text_english:
+        questionTextEnglish,
+      detected_language:
+        detectedLanguage,
     }
   );
 
   return response.data;
 }
-
 
 // =====================================
 // DELETE DOCUMENT
@@ -326,7 +315,6 @@ export async function deleteDocument(
   return response.data;
 }
 
-
 // =====================================
 // MEDICAL EXTRACTIONS
 // =====================================
@@ -339,7 +327,6 @@ export async function getMedicalExtractions() {
   return response.data;
 }
 
-
 export async function getMedicalExtraction(
   extractionId
 ) {
@@ -349,7 +336,6 @@ export async function getMedicalExtraction(
 
   return response.data;
 }
-
 
 // =====================================
 // REPROCESS
@@ -364,7 +350,6 @@ export async function reprocessDocument(
 
   return response.data;
 }
-
 
 // =====================================
 // SEARCH
@@ -385,7 +370,6 @@ export async function searchDocuments(
   return response.data;
 }
 
-
 // =====================================
 // EMERGENCY — FIRST AID GUIDE
 // =====================================
@@ -397,7 +381,6 @@ export async function getFirstAidGuide() {
 
   return response.data;
 }
-
 
 // =====================================
 // EMERGENCY — CONTACT NUMBERS
@@ -411,9 +394,9 @@ export async function getEmergencyContacts() {
   return response.data;
 }
 
-
 // =====================================
 // EMERGENCY — NEARBY FACILITIES
+// type: "hospital" | "clinic" | "pharmacy" | "ambulance"
 // =====================================
 
 export async function getNearbyFacilities(
@@ -437,7 +420,6 @@ export async function getNearbyFacilities(
   return response.data;
 }
 
-
 // =====================================
 // EMERGENCY — SHARE MY LOCATION
 // =====================================
@@ -445,7 +427,8 @@ export async function getNearbyFacilities(
 export async function shareMyLocation(
   latitude,
   longitude,
-  note = ""
+  note = "",
+  contactPhone = ""
 ) {
   const response = await api.post(
     "/emergency/share-location",
@@ -453,12 +436,13 @@ export async function shareMyLocation(
       latitude,
       longitude,
       note,
+      emergency_contact_phone:
+        contactPhone,
     }
   );
 
   return response.data;
 }
-
 
 // =====================================
 // EMERGENCY — SOS
@@ -467,7 +451,8 @@ export async function shareMyLocation(
 export async function triggerSOS(
   latitude,
   longitude,
-  note = ""
+  note = "",
+  contactPhone = ""
 ) {
   const response = await api.post(
     "/emergency/sos",
@@ -475,12 +460,37 @@ export async function triggerSOS(
       latitude,
       longitude,
       note,
+      emergency_contact_phone:
+        contactPhone,
     }
   );
 
   return response.data;
 }
 
+// =====================================
+// EMERGENCY — SEND SOS VIA WHATSAPP
+// This is separate from "Share my location
+// via WhatsApp".
+// =====================================
+
+export async function sendSOSWhatsApp(
+  contactPhone = ""
+) {
+  const response = await api.post(
+    "/emergency/send-whatsapp",
+    {
+      emergency_contact_phone:
+        contactPhone,
+    }
+  );
+
+  return response.data;
+}
+
+// =====================================
+// EMERGENCY — SOS LOG
+// =====================================
 
 export async function getSOSLog() {
   const response = await api.get(
@@ -489,7 +499,6 @@ export async function getSOSLog() {
 
   return response.data;
 }
-
 
 export async function resolveSOS(
   sosId
@@ -500,7 +509,6 @@ export async function resolveSOS(
 
   return response.data;
 }
-
 
 // =====================================
 // MEDICAL REMINDERS
@@ -521,7 +529,6 @@ export async function getReminders(
   return response.data;
 }
 
-
 export async function getReminder(
   reminderId
 ) {
@@ -531,7 +538,6 @@ export async function getReminder(
 
   return response.data;
 }
-
 
 export async function createReminder(
   reminderData
@@ -543,7 +549,6 @@ export async function createReminder(
 
   return response.data;
 }
-
 
 export async function updateReminder(
   reminderId,
@@ -557,7 +562,6 @@ export async function updateReminder(
   return response.data;
 }
 
-
 export async function toggleReminder(
   reminderId
 ) {
@@ -568,7 +572,6 @@ export async function toggleReminder(
   return response.data;
 }
 
-
 export async function deleteReminder(
   reminderId
 ) {
@@ -578,7 +581,6 @@ export async function deleteReminder(
 
   return response.data;
 }
-
 
 // =====================================
 // HEALTH EDUCATION
@@ -597,7 +599,6 @@ export async function getEducationTopics(
   return response.data;
 }
 
-
 export async function getEducationTopic(
   topicId,
   lang = "en"
@@ -611,7 +612,6 @@ export async function getEducationTopic(
 
   return response.data;
 }
-
 
 export async function searchEducationTopics(
   query,
@@ -630,17 +630,12 @@ export async function searchEducationTopics(
   return response.data;
 }
 
-
-// =====================================
-// HEALTH EDUCATION — OPEN ARTICLE
-// =====================================
-
 export async function getEducationArticle(
   url,
   lang = "en"
 ) {
   const response = await api.get(
-    "/education/articles",
+    "/education/article",
     {
       params: {
         url,
@@ -651,7 +646,6 @@ export async function getEducationArticle(
 
   return response.data;
 }
-
 
 // =====================================
 // EXPORT AXIOS INSTANCE
