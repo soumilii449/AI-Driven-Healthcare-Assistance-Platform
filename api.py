@@ -49,7 +49,7 @@ from health_education import (
     translate_topic_summary,
     translate_topic_full,
 )
-from medlineplus import search_medlineplus
+from medlineplus import search_medlineplus, fetch_medlineplus_article
 
 
 # ============================================================
@@ -2561,42 +2561,113 @@ def search_education(
     current_user: User = Depends(get_current_user)
 ):
     """
-    Health Education search. Results are returned only when the searched
-    keywords match the title of a curated health education article.
-    Matching is case-insensitive and supports partial keywords.
+    Search the local healthcare library and the MedlinePlus health
+    article library. This means the user is not restricted to the
+    small set of locally curated topics.
     """
 
     lang = _validated_lang(lang)
-
     query = (query or "").strip()
 
     if not query:
-
         raise HTTPException(
             status_code=400,
             detail="Please enter something to search for."
         )
 
-    local_matches = search_education_topics(query)
+    local_matches = search_education_topics(query, limit=12)
 
-    if local_matches:
+    local_results = [
+        translate_topic_summary(topic, lang)
+        for topic in local_matches
+    ]
 
-        return {
-            "language": lang,
-            "query": query,
-            "results": [
-                translate_topic_summary(topic, lang)
-                for topic in local_matches
-            ],
-            "message": None,
-        }
+    external_results = search_medlineplus(
+        query,
+        lang=lang,
+        limit=12
+    )
+
+    if lang != "en":
+        translated_external_results = []
+
+        for article in external_results:
+            translated_external_results.append({
+                **article,
+                "title": translate_to_language(
+                    article["title"],
+                    lang
+                ),
+                "category": translate_to_language(
+                    article["category"],
+                    lang
+                ),
+                "summary": translate_to_language(
+                    article["summary"],
+                    lang
+                ),
+            })
+
+        external_results = translated_external_results
+
+    results = local_results + external_results
 
     return {
         "language": lang,
         "query": query,
-        "results": [],
+        "results": results,
         "message": (
-            "No article title matched your search. "
-            "Try keywords that appear in the health article title."
+            f"Found {len(results)} healthcare article(s). "
+            "Open any article to read the full content and translate it "
+            "using the language selector."
+            if results
+            else (
+                "No healthcare articles were found. "
+                "Try another health condition, symptom, medicine, "
+                "nutrition, prevention, or wellness keyword."
+            )
+        ),
+    }
+
+
+@app.get("/education/articles")
+def get_education_article(
+    url: str,
+    lang: str = "en",
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Open a MedlinePlus article selected from search results and translate
+    the complete readable article into the selected regional language.
+    """
+
+    lang = _validated_lang(lang)
+
+    article = fetch_medlineplus_article(url)
+
+    if article is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Could not load the selected healthcare article."
         )
+
+    title = article["title"]
+    content = article["content"]
+
+    if lang != "en":
+        title = translate_to_language(title, lang)
+        content = translate_to_language(content, lang)
+
+    paragraphs = [
+        paragraph.strip()
+        for paragraph in content.split("\n\n")
+        if paragraph.strip()
+    ]
+
+    return {
+        "language": lang,
+        "title": title,
+        "content": paragraphs,
+        "url": article["url"],
+        "source": article["source"],
     }

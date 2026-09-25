@@ -192,7 +192,6 @@ export async function getMedications(
   return response.data;
 }
 
-// Alias used by some frontend files
 export async function getDocumentMedications(
   documentId
 ) {
@@ -214,7 +213,6 @@ export async function getTreatment(
   return response.data;
 }
 
-// Alias used by some frontend files
 export async function getDocumentTreatment(
   documentId
 ) {
@@ -236,22 +234,29 @@ export async function getTranslation(
   return response.data;
 }
 
-// IMPORTANT:
-// Translation.jsx expects this name
-export async function getDocumentTranslation(documentId, lang = "hi") {
+export async function getDocumentTranslation(
+  documentId,
+  lang = "hi"
+) {
   const response = await api.get(
     `/documents/${documentId}/translation`,
-    { params: { lang } }
+    {
+      params: { lang },
+    }
   );
+
   return response.data;
 }
 
 
 // =====================================
-// SPEECH (text-to-speech audio)
+// SPEECH
 // =====================================
 
-export async function getDocumentSpeech(documentId, lang = "hi") {
+export async function getDocumentSpeech(
+  documentId,
+  lang = "hi"
+) {
   const response = await api.get(
     `/documents/${documentId}/speech`,
     {
@@ -260,20 +265,12 @@ export async function getDocumentSpeech(documentId, lang = "hi") {
     }
   );
 
-  return response.data; // Blob containing WAV audio
+  return response.data;
 }
 
 
 // =====================================
-// VOICE QUERY (speak a question about a
-// specific prescription, get a spoken +
-// text answer back)
-//
-// Two steps: transcribe the recorded
-// audio first (so the recognized text
-// can be shown for confirmation), then
-// send it off for an answer once the
-// person taps "Send".
+// VOICE QUERY
 // =====================================
 
 export async function transcribeVoiceQuery(
@@ -283,7 +280,11 @@ export async function transcribeVoiceQuery(
 ) {
   const formData = new FormData();
 
-  formData.append("audio", audioBlob, filename);
+  formData.append(
+    "audio",
+    audioBlob,
+    filename
+  );
 
   const response = await api.post(
     `/documents/${documentId}/voice-query/transcribe`,
@@ -390,7 +391,10 @@ export async function searchDocuments(
 // =====================================
 
 export async function getFirstAidGuide() {
-  const response = await api.get("/emergency/first-aid");
+  const response = await api.get(
+    "/emergency/first-aid"
+  );
+
   return response.data;
 }
 
@@ -400,14 +404,16 @@ export async function getFirstAidGuide() {
 // =====================================
 
 export async function getEmergencyContacts() {
-  const response = await api.get("/emergency/contacts");
+  const response = await api.get(
+    "/emergency/contacts"
+  );
+
   return response.data;
 }
 
 
 // =====================================
 // EMERGENCY — NEARBY FACILITIES
-// type: "hospital" | "clinic" | "pharmacy" | "ambulance"
 // =====================================
 
 export async function getNearbyFacilities(
@@ -416,9 +422,18 @@ export async function getNearbyFacilities(
   type = "hospital",
   radius = 5000
 ) {
-  const response = await api.get("/emergency/nearby-facilities", {
-    params: { lat: latitude, lng: longitude, type, radius },
-  });
+  const response = await api.get(
+    "/emergency/nearby-facilities",
+    {
+      params: {
+        lat: latitude,
+        lng: longitude,
+        type,
+        radius,
+      },
+    }
+  );
+
   return response.data;
 }
 
@@ -427,12 +442,20 @@ export async function getNearbyFacilities(
 // EMERGENCY — SHARE MY LOCATION
 // =====================================
 
-export async function shareMyLocation(latitude, longitude, note = "") {
-  const response = await api.post("/emergency/share-location", {
-    latitude,
-    longitude,
-    note,
-  });
+export async function shareMyLocation(
+  latitude,
+  longitude,
+  note = ""
+) {
+  const response = await api.post(
+    "/emergency/share-location",
+    {
+      latitude,
+      longitude,
+      note,
+    }
+  );
+
   return response.data;
 }
 
@@ -441,24 +464,40 @@ export async function shareMyLocation(latitude, longitude, note = "") {
 // EMERGENCY — SOS
 // =====================================
 
-export async function triggerSOS(latitude, longitude, note = "") {
-  const response = await api.post("/emergency/sos", {
-    latitude,
-    longitude,
-    note,
-  });
+export async function triggerSOS(
+  latitude,
+  longitude,
+  note = ""
+) {
+  const response = await api.post(
+    "/emergency/sos",
+    {
+      latitude,
+      longitude,
+      note,
+    }
+  );
+
   return response.data;
 }
 
 
 export async function getSOSLog() {
-  const response = await api.get("/emergency/sos");
+  const response = await api.get(
+    "/emergency/sos"
+  );
+
   return response.data;
 }
 
 
-export async function resolveSOS(sosId) {
-  const response = await api.patch(`/emergency/sos/${sosId}/resolve`);
+export async function resolveSOS(
+  sosId
+) {
+  const response = await api.patch(
+    `/emergency/sos/${sosId}/resolve`
+  );
+
   return response.data;
 }
 
@@ -467,25 +506,49 @@ export async function resolveSOS(sosId) {
 // MEDICAL REMINDERS
 // =====================================
 
-export async function getReminders(documentId) {
-  const response = await api.get("/reminders", {
-    params: documentId ? { document_id: documentId } : {},
-  });
+export async function getReminders(
+  documentId
+) {
+  const response = await api.get(
+    "/reminders",
+    {
+      params: documentId
+        ? { document_id: documentId }
+        : {},
+    }
+  );
 
   return response.data;
 }
 
-export async function getReminder(reminderId) {
-  const response = await api.get(`/reminders/${reminderId}`);
+
+export async function getReminder(
+  reminderId
+) {
+  const response = await api.get(
+    `/reminders/${reminderId}`
+  );
+
   return response.data;
 }
 
-export async function createReminder(reminderData) {
-  const response = await api.post("/reminders", reminderData);
+
+export async function createReminder(
+  reminderData
+) {
+  const response = await api.post(
+    "/reminders",
+    reminderData
+  );
+
   return response.data;
 }
 
-export async function updateReminder(reminderId, reminderData) {
+
+export async function updateReminder(
+  reminderId,
+  reminderData
+) {
   const response = await api.put(
     `/reminders/${reminderId}`,
     reminderData
@@ -494,7 +557,10 @@ export async function updateReminder(reminderId, reminderData) {
   return response.data;
 }
 
-export async function toggleReminder(reminderId) {
+
+export async function toggleReminder(
+  reminderId
+) {
   const response = await api.patch(
     `/reminders/${reminderId}/toggle`
   );
@@ -502,8 +568,14 @@ export async function toggleReminder(reminderId) {
   return response.data;
 }
 
-export async function deleteReminder(reminderId) {
-  const response = await api.delete(`/reminders/${reminderId}`);
+
+export async function deleteReminder(
+  reminderId
+) {
+  const response = await api.delete(
+    `/reminders/${reminderId}`
+  );
+
   return response.data;
 }
 
@@ -512,26 +584,70 @@ export async function deleteReminder(reminderId) {
 // HEALTH EDUCATION
 // =====================================
 
-export async function getEducationTopics(lang = "en") {
-  const response = await api.get("/education/topics", {
-    params: { lang },
-  });
+export async function getEducationTopics(
+  lang = "en"
+) {
+  const response = await api.get(
+    "/education/topics",
+    {
+      params: { lang },
+    }
+  );
 
   return response.data;
 }
 
-export async function getEducationTopic(topicId, lang = "en") {
-  const response = await api.get(`/education/topics/${topicId}`, {
-    params: { lang },
-  });
+
+export async function getEducationTopic(
+  topicId,
+  lang = "en"
+) {
+  const response = await api.get(
+    `/education/topics/${topicId}`,
+    {
+      params: { lang },
+    }
+  );
 
   return response.data;
 }
 
-export async function searchEducationTopics(query, lang = "en") {
-  const response = await api.get("/education/search", {
-    params: { query, lang },
-  });
+
+export async function searchEducationTopics(
+  query,
+  lang = "en"
+) {
+  const response = await api.get(
+    "/education/search",
+    {
+      params: {
+        query,
+        lang,
+      },
+    }
+  );
+
+  return response.data;
+}
+
+
+// =====================================
+// HEALTH EDUCATION — OPEN ARTICLE
+// =====================================
+
+export async function getEducationArticle(
+  url,
+  lang = "en"
+) {
+  const response = await api.get(
+    "/education/articles",
+    {
+      params: {
+        url,
+        lang,
+      },
+    }
+  );
 
   return response.data;
 }
@@ -542,4 +658,3 @@ export async function searchEducationTopics(query, lang = "en") {
 // =====================================
 
 export default api;
-

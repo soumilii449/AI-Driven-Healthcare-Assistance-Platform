@@ -6547,3 +6547,63 @@ body.dark-theme .edu-card-body {
     width: calc(100vw - 30px);
   }
 }
+
+
+/* ==========================================================
+   HEALTH EDUCATION - EXTENDED ARTICLE SEARCH
+   ========================================================== */
+
+.edu-library-description {
+  margin: -8px 0 var(--sp-5);
+  color: var(--txt-secondary);
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+}
+
+.edu-result-count {
+  margin: -4px 0 var(--sp-4);
+  color: var(--txt-muted);
+  font-size: var(--fs-sm);
+}
+
+.edu-source-badge {
+  display: inline-flex;
+  margin-top: 6px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--clr-info-bg);
+  color: var(--clr-primary-dark);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.edu-article-title {
+  margin: 0 0 var(--sp-4);
+  color: var(--txt-primary);
+  font-size: var(--fs-md);
+  line-height: 1.4;
+}
+
+.edu-article-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.edu-section-text a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--clr-primary);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.edu-section-text a:hover {
+  text-decoration: underline;
+}
+
+body.dark-theme .edu-source-badge {
+  background: rgba(255, 255, 255, 0.08);
+  color: #b7e4c7;
+}
