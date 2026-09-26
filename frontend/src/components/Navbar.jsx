@@ -14,6 +14,7 @@ import {
   Siren,
   Bell,
   BookCopyIcon,
+  ShieldCheck,
 } from "lucide-react";
 
 import { useAuth } from "../context/AuthContext";
@@ -31,6 +32,9 @@ export default function Navbar() {
   const [darkMode, setDarkMode] = useState(() => {
     return localStorage.getItem("theme") === "dark";
   });
+
+  const isAdmin =
+    user?.role?.toLowerCase() === "admin";
 
   useEffect(() => {
     document.body.classList.toggle(
@@ -61,43 +65,57 @@ export default function Navbar() {
     <>
       <nav className="navbar">
         <Link
-          to="/dashboard"
+          to={isAdmin ? "/admin" : "/dashboard"}
           className="nav-logo"
         >
           SwasthyaSetu
         </Link>
 
         <div className="nav-links">
-          <Link to="/dashboard">
-            <Home size={18} />
-            Dashboard
-          </Link>
+          {!isAdmin && (
+            <>
+              <Link to="/dashboard">
+                <Home size={18} />
+                Dashboard
+              </Link>
 
-          <Link to="/upload">
-            <Upload size={18} />
-            Upload
-          </Link>
+              <Link to="/upload">
+                <Upload size={18} />
+                Upload
+              </Link>
 
-          <Link to="/reminders">
-            <Bell size={18} />
-            Reminders
-          </Link>
+              <Link to="/reminders">
+                <Bell size={18} />
+                Reminders
+              </Link>
 
-          <Link
-            to="/emergency"
-            className="nav-link-emergency"
-          >
-            <Siren size={18} />
-            Emergency
-          </Link>
+              <Link
+                to="/emergency"
+                className="nav-link-emergency"
+              >
+                <Siren size={18} />
+                Emergency
+              </Link>
 
-          <Link
-            to="/education"
-            className="edu-page"
-          >
-            <BookCopyIcon size={18} />
-            Health Education
-          </Link>
+              <Link
+                to="/education"
+                className="edu-page"
+              >
+                <BookCopyIcon size={18} />
+                Health Education
+              </Link>
+            </>
+          )}
+
+          {isAdmin && (
+            <Link
+              to="/admin"
+              className="admin-nav-link"
+            >
+              <ShieldCheck size={18} />
+              Admin Dashboard
+            </Link>
+          )}
         </div>
 
         <div className="nav-user">
@@ -166,37 +184,61 @@ export default function Navbar() {
         role="navigation"
         aria-label="Mobile navigation"
       >
-        <Link
-          to="/dashboard"
-          className="mobile-nav-link"
-        >
-          <Home size={18} />
-          Dashboard
-        </Link>
+        {!isAdmin && (
+          <>
+            <Link
+              to="/dashboard"
+              className="mobile-nav-link"
+            >
+              <Home size={18} />
+              Dashboard
+            </Link>
 
-        <Link
-          to="/upload"
-          className="mobile-nav-link"
-        >
-          <Upload size={18} />
-          Upload Prescription
-        </Link>
+            <Link
+              to="/upload"
+              className="mobile-nav-link"
+            >
+              <Upload size={18} />
+              Upload Prescription
+            </Link>
 
-        <Link
-          to="/reminders"
-          className="mobile-nav-link"
-        >
-          <Bell size={18} />
-          Reminders
-        </Link>
+            <Link
+              to="/reminders"
+              className="mobile-nav-link"
+            >
+              <Bell size={18} />
+              Reminders
+            </Link>
 
-        <Link
-          to="/emergency"
-          className="mobile-nav-link mobile-nav-link--emergency"
-        >
-          <Siren size={18} />
-          Emergency
-        </Link>
+            <Link
+              to="/emergency"
+              className="mobile-nav-link mobile-nav-link--emergency"
+            >
+              <Siren size={18} />
+              Emergency
+            </Link>
+
+            <Link
+              to="/education"
+              className="mobile-nav-link"
+            >
+              <BookCopyIcon size={18} />
+              Health Education
+            </Link>
+          </>
+        )}
+
+        {isAdmin && (
+          <>
+            <Link
+              to="/admin"
+              className="mobile-nav-link"
+            >
+              <ShieldCheck size={18} />
+              Admin Dashboard
+            </Link>
+          </>
+        )}
 
         <div className="mobile-nav-divider" />
 
@@ -257,6 +299,20 @@ export default function Navbar() {
           </button>
         </div>
       </div>
+
+      <style>{`
+        .admin-nav-link {
+          display: flex;
+          align-items: center;
+          gap: 7px;
+        }
+
+        .mobile-nav-link {
+          display: flex;
+          align-items: center;
+          gap: 9px;
+        }
+      `}</style>
     </>
   );
 }

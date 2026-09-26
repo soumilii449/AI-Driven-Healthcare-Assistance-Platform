@@ -6,10 +6,6 @@ const api = axios.create({
   baseURL: API_BASE_URL,
 });
 
-// =====================================
-// AUTH TOKEN INTERCEPTOR
-// =====================================
-
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("access_token");
@@ -73,6 +69,56 @@ export async function loginUser(
 }
 
 export async function getCurrentUser() {
+  const response = await api.get(
+    "/auth/me"
+  );
+
+  return response.data;
+}
+
+export async function isAdminUser() {
+  try {
+    const user = await getCurrentUser();
+
+    return (
+      user?.role?.toLowerCase() === "admin"
+    );
+  } catch {
+    return false;
+  }
+}
+
+// =====================================
+// ADMIN
+// =====================================
+
+export async function getAdminUsers() {
+  const response = await api.get(
+    "/auth/users"
+  );
+
+  return response.data;
+}
+
+export async function deleteAdminUser(
+  userId
+) {
+  const response = await api.delete(
+    `/auth/users/${userId}`
+  );
+
+  return response.data;
+}
+
+export async function getAdminStatistics() {
+  const response = await api.get(
+    "/statistics"
+  );
+
+  return response.data;
+}
+
+export async function getAdminProfile() {
   const response = await api.get(
     "/auth/me"
   );
@@ -181,7 +227,6 @@ export async function getMedications(
   return response.data;
 }
 
-// Alias used by some frontend files
 export async function getDocumentMedications(
   documentId
 ) {
@@ -202,7 +247,6 @@ export async function getTreatment(
   return response.data;
 }
 
-// Alias used by some frontend files
 export async function getDocumentTreatment(
   documentId
 ) {
@@ -223,8 +267,6 @@ export async function getTranslation(
   return response.data;
 }
 
-// IMPORTANT:
-// Translation.jsx expects this name
 export async function getDocumentTranslation(
   documentId,
   lang = "hi"
@@ -240,7 +282,7 @@ export async function getDocumentTranslation(
 }
 
 // =====================================
-// SPEECH (text-to-speech audio)
+// SPEECH
 // =====================================
 
 export async function getDocumentSpeech(
@@ -371,7 +413,7 @@ export async function searchDocuments(
 }
 
 // =====================================
-// EMERGENCY — FIRST AID GUIDE
+// EMERGENCY — FIRST AID
 // =====================================
 
 export async function getFirstAidGuide() {
@@ -383,7 +425,7 @@ export async function getFirstAidGuide() {
 }
 
 // =====================================
-// EMERGENCY — CONTACT NUMBERS
+// EMERGENCY — CONTACTS
 // =====================================
 
 export async function getEmergencyContacts() {
@@ -396,7 +438,6 @@ export async function getEmergencyContacts() {
 
 // =====================================
 // EMERGENCY — NEARBY FACILITIES
-// type: "hospital" | "clinic" | "pharmacy" | "ambulance"
 // =====================================
 
 export async function getNearbyFacilities(
@@ -421,7 +462,7 @@ export async function getNearbyFacilities(
 }
 
 // =====================================
-// EMERGENCY — SHARE MY LOCATION
+// EMERGENCY — SHARE LOCATION
 // =====================================
 
 export async function shareMyLocation(
@@ -469,9 +510,7 @@ export async function triggerSOS(
 }
 
 // =====================================
-// EMERGENCY — SEND SOS VIA WHATSAPP
-// This is separate from "Share my location
-// via WhatsApp".
+// EMERGENCY — WHATSAPP SOS
 // =====================================
 
 export async function sendSOSWhatsApp(

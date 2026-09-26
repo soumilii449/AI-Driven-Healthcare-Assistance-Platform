@@ -14,9 +14,6 @@ import base64
 
 from dotenv import load_dotenv
 
-# Load variables from a .env file (if present) into the environment
-# BEFORE importing translator/tts/speech_to_text below — those modules
-# read SARVAM_API_KEY at import time, so this must run first.
 load_dotenv()
 
 from jose import JWTError, jwt
@@ -54,20 +51,12 @@ from health_education import (
 from medlineplus import search_medlineplus, fetch_medlineplus_article, MedlinePlusError
 
 
-# ============================================================
-# APP
-# ============================================================
-
 app = FastAPI(
     title="AI Healthcare Assistance Platform",
     description="AI-powered healthcare assistance platform for rural communities",
     version="1.0.0"
 )
 
-
-# ============================================================
-# CORS
-# ============================================================
 
 app.add_middleware(
     CORSMiddleware,
@@ -81,16 +70,8 @@ app.add_middleware(
 )
 
 
-# ============================================================
-# DATABASE
-# ============================================================
-
 Base.metadata.create_all(bind=engine)
 
-
-# ============================================================
-# JWT CONFIGURATION
-# ============================================================
 
 SECRET_KEY = "CHANGE_THIS_TO_A_LONG_RANDOM_SECRET_KEY_123456789"
 ALGORITHM = "HS256"
@@ -101,10 +82,6 @@ oauth2_scheme = OAuth2PasswordBearer(
 )
 
 
-# ============================================================
-# UPLOAD DIRECTORY
-# ============================================================
-
 UPLOAD_DIR = "uploads"
 
 os.makedirs(
@@ -112,10 +89,6 @@ os.makedirs(
     exist_ok=True
 )
 
-
-# ============================================================
-# USER MODEL
-# ============================================================
 
 class User(Base):
     __tablename__ = "users"
@@ -144,10 +117,6 @@ class User(Base):
         default="patient"
     )
 
-
-# ============================================================
-# PATIENT MODEL
-# ============================================================
 
 class Patient(Base):
     __tablename__ = "patients"
@@ -181,10 +150,6 @@ class Patient(Base):
 
 Base.metadata.create_all(bind=engine)
 
-
-# ============================================================
-# PYDANTIC MODELS
-# ============================================================
 
 class UserCreate(BaseModel):
     username: str
@@ -231,23 +196,19 @@ class ShareLocationRequest(BaseModel):
     latitude: float
     longitude: float
     note: str = ""
-    emergency_contact_phone: str = ""  # E.164 format, e.g. +9198XXXXXXXX
+    emergency_contact_phone: str = ""
 
 
 class SOSRequest(BaseModel):
     latitude: float
     longitude: float
     note: str = ""
-    emergency_contact_phone: str = ""  # E.164 format, e.g. +9198XXXXXXXX
+    emergency_contact_phone: str = ""
 
 
 class WhatsAppRequest(BaseModel):
     emergency_contact_phone: str = ""
 
-
-# ============================================================
-# PASSWORD FUNCTIONS
-# ============================================================
 
 def hash_password(password: str) -> str:
 
@@ -289,10 +250,6 @@ def verify_password(
         return False
 
 
-# ============================================================
-# JWT FUNCTIONS
-# ============================================================
-
 def create_access_token(
     data: dict,
     expires_delta: timedelta | None = None
@@ -322,10 +279,6 @@ def create_access_token(
         algorithm=ALGORITHM
     )
 
-
-# ============================================================
-# CURRENT USER
-# ============================================================
 
 def get_current_user(
     token: str = Depends(oauth2_scheme),
@@ -375,10 +328,6 @@ def get_current_user(
     return user
 
 
-# ============================================================
-# ROLE AUTHORIZATION
-# ============================================================
-
 def require_roles(
     *allowed_roles
 ):
@@ -401,10 +350,6 @@ def require_roles(
     return role_checker
 
 
-# ============================================================
-# ROOT
-# ============================================================
-
 @app.get("/")
 def root():
 
@@ -414,10 +359,6 @@ def root():
     }
 
 
-# ============================================================
-# HEALTH
-# ============================================================
-
 @app.get("/health")
 def health():
 
@@ -426,10 +367,6 @@ def health():
         "service": "AI Healthcare Assistance Platform"
     }
 
-
-# ============================================================
-# REGISTER
-# ============================================================
 
 @app.post("/auth/register")
 def register(
@@ -503,10 +440,6 @@ def register(
     }
 
 
-# ============================================================
-# LOGIN
-# ============================================================
-
 @app.post("/auth/login")
 def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
@@ -561,10 +494,6 @@ def login(
     }
 
 
-# ============================================================
-# CURRENT USER
-# ============================================================
-
 @app.get("/auth/me")
 def get_me(
     current_user: User = Depends(
@@ -578,10 +507,6 @@ def get_me(
         "role": current_user.role
     }
 
-
-# ============================================================
-# GET USERS - ADMIN
-# ============================================================
 
 @app.get("/auth/users")
 def get_users(
@@ -602,10 +527,6 @@ def get_users(
         for user in users
     ]
 
-
-# ============================================================
-# DELETE USER - ADMIN
-# ============================================================
 
 @app.delete("/auth/users/{user_id}")
 def delete_user(
@@ -638,10 +559,6 @@ def delete_user(
         "message": "User deleted successfully"
     }
 
-
-# ============================================================
-# CREATE PATIENT
-# ============================================================
 
 @app.post("/patients")
 def create_patient(
@@ -678,10 +595,6 @@ def create_patient(
     }
 
 
-# ============================================================
-# GET PATIENTS
-# ============================================================
-
 @app.get("/patients")
 def get_patients(
     db: Session = Depends(get_db),
@@ -706,10 +619,6 @@ def get_patients(
         for patient in patients
     ]
 
-
-# ============================================================
-# GET PATIENT
-# ============================================================
 
 @app.get("/patients/{patient_id}")
 def get_patient(
@@ -743,10 +652,6 @@ def get_patient(
         "contact_information": patient.contact_information
     }
 
-
-# ============================================================
-# UPLOAD DOCUMENT
-# ============================================================
 
 @app.post("/documents")
 async def create_document(
@@ -827,10 +732,6 @@ async def create_document(
     }
 
 
-# ============================================================
-# GET DOCUMENTS
-# ============================================================
-
 @app.get("/documents")
 def get_documents(
     db: Session = Depends(get_db),
@@ -863,10 +764,6 @@ def get_documents(
         for document in documents
     ]
 
-
-# ============================================================
-# GET SINGLE DOCUMENT
-# ============================================================
 
 @app.get("/documents/{document_id}")
 def get_document(
@@ -901,10 +798,6 @@ def get_document(
         "created_at": document.created_at
     }
 
-
-# ============================================================
-# DELETE DOCUMENT
-# ============================================================
 
 @app.delete("/documents/{document_id}")
 def delete_document(
@@ -959,10 +852,6 @@ def delete_document(
     }
 
 
-# ============================================================
-# PROCESS DOCUMENT
-# ============================================================
-
 @app.post("/documents/{document_id}/process")
 def process_document(
     document_id: int,
@@ -1006,17 +895,9 @@ def process_document(
 
         db.commit()
 
-        # ------------------------------------
-        # OCR
-        # ------------------------------------
-
         ocr_text = extract_text(
             document.file_path
         )
-
-        # ------------------------------------
-        # MEDICAL EXTRACTION
-        # ------------------------------------
 
         medical_information = (
             extract_medical_information(
@@ -1024,33 +905,17 @@ def process_document(
             )
         )
 
-        # ------------------------------------
-        # STANDARDIZATION
-        # ------------------------------------
-
         standardized_record = (
             standardize_record(
                 medical_information
             )
         )
 
-        # ------------------------------------
-        # SIMPLIFICATION
-        # ------------------------------------
-
         simplified_record = (
             simplify_record(
                 standardized_record
             )
         )
-
-        # ------------------------------------
-        # HINDI TRANSLATION
-        # (fixed: this now translates each field
-        # of the record properly instead of
-        # passing the whole dict to a
-        # string-only function)
-        # ------------------------------------
 
         hindi_record = (
             translate_medical_record(
@@ -1059,19 +924,11 @@ def process_document(
             )
         )
 
-        # ------------------------------------
-        # TREATMENT ENGLISH
-        # ------------------------------------
-
         treatment_english = (
             generate_treatment(
                 standardized_record
             )
         )
-
-        # ------------------------------------
-        # TREATMENT HINDI
-        # ------------------------------------
 
         treatment_hindi = (
             translate_to_language(
@@ -1079,10 +936,6 @@ def process_document(
                 "hi"
             )
         )
-
-        # ------------------------------------
-        # SAVE EXTRACTION
-        # ------------------------------------
 
         processed_data = {
             "medical_information":
@@ -1151,10 +1004,6 @@ def process_document(
         )
 
 
-# ============================================================
-# DOCUMENT STATUS
-# ============================================================
-
 @app.get("/documents/{document_id}/status")
 def document_status(
     document_id: int,
@@ -1184,10 +1033,6 @@ def document_status(
         "status": document.status
     }
 
-
-# ============================================================
-# DOCUMENT RESULT
-# ============================================================
 
 @app.get("/documents/{document_id}/result")
 def document_result(
@@ -1244,10 +1089,6 @@ def document_result(
     }
 
 
-# ============================================================
-# OCR
-# ============================================================
-
 @app.get("/documents/{document_id}/ocr")
 def document_ocr(
     document_id: int,
@@ -1284,10 +1125,6 @@ def document_ocr(
             extraction.raw_text
     }
 
-
-# ============================================================
-# MEDICATIONS
-# ============================================================
 
 @app.get("/documents/{document_id}/medications")
 def document_medications(
@@ -1345,10 +1182,6 @@ def document_medications(
     }
 
 
-# ============================================================
-# TREATMENT
-# ============================================================
-
 @app.get("/documents/{document_id}/treatment")
 def document_treatment(
     document_id: int,
@@ -1405,10 +1238,6 @@ def document_treatment(
     }
 
 
-# ============================================================
-# TRANSLATION (now supports any language via ?lang=)
-# ============================================================
-
 @app.get("/documents/{document_id}/translation")
 def document_translation(
     document_id: int,
@@ -1462,8 +1291,6 @@ def document_translation(
 
     if lang == "hi":
 
-        # Already generated during /process — no need
-        # to call the translator again.
         translated_info = (
             translated_data.get(
                 "hindi_information",
@@ -1518,8 +1345,6 @@ def document_translation(
         "treatment_translated":
             treatment_translated,
 
-        # legacy fields, kept so any old frontend code
-        # requesting the default (Hindi) still works
         "hindi_information":
             translated_info if lang == "hi" else {},
 
@@ -1528,18 +1353,11 @@ def document_translation(
     }
 
 
-# ============================================================
-# SUPPORTED LANGUAGES
-# ============================================================
-
 @app.get("/languages")
 def get_supported_languages():
 
     return SUPPORTED_LANGUAGES
 
-# ============================================================
-# SPEECH (text-to-speech audio for the treatment translation)
-# ============================================================
 
 @app.get("/documents/{document_id}/speech")
 def document_speech(
@@ -1591,16 +1409,6 @@ def document_speech(
 
     return Response(content=audio_bytes, media_type="audio/wav")
 
-
-# ============================================================
-# VOICE QUERY (speak a question, in any supported language, about
-# a specific prescription — get back a spoken + text answer)
-#
-# Split into two steps so the frontend can show the recognized
-# text and let the person confirm/edit before it's actually sent:
-#   1. /voice-query/transcribe — audio in, recognized text out
-#   2. /voice-query/answer     — confirmed text in, answer out
-# ============================================================
 
 @app.post("/documents/{document_id}/voice-query/transcribe")
 async def document_voice_query_transcribe(
@@ -1707,10 +1515,6 @@ def document_voice_query_answer(
     }
 
 
-# ============================================================
-# MEDICAL EXTRACTIONS
-# ============================================================
-
 @app.get("/medical-extractions")
 def get_medical_extractions(
     db: Session = Depends(get_db),
@@ -1756,10 +1560,6 @@ def get_medical_extractions(
         for extraction in extractions
     ]
 
-
-# ============================================================
-# SINGLE MEDICAL EXTRACTION
-# ============================================================
 
 @app.get("/medical-extractions/{extraction_id}")
 def get_medical_extraction(
@@ -1809,10 +1609,6 @@ def get_medical_extraction(
     }
 
 
-# ============================================================
-# DELETE MEDICAL EXTRACTION
-# ============================================================
-
 @app.delete("/medical-extractions/{extraction_id}")
 def delete_medical_extraction(
     extraction_id: int,
@@ -1846,10 +1642,6 @@ def delete_medical_extraction(
             "Medical extraction deleted successfully"
     }
 
-
-# ============================================================
-# REPROCESS DOCUMENT
-# ============================================================
 
 @app.post("/documents/{document_id}/reprocess")
 def reprocess_document(
@@ -1900,10 +1692,6 @@ def reprocess_document(
         current_user=current_user
     )
 
-
-# ============================================================
-# SEARCH DOCUMENTS
-# ============================================================
 
 @app.get("/documents/search")
 def search_documents(
@@ -1988,7 +1776,11 @@ def statistics(
     )
 
     total_patients = (
-        db.query(Patient).count()
+        db.query(User)
+        .filter(
+            User.role == "patient"
+        )
+        .count()
     )
 
     total_extractions = (
@@ -2018,15 +1810,6 @@ def statistics(
             total_extractions
     }
 
-# ============================================================
-# MEDICAL REMINDERS
-# ============================================================
-#
-# Reminders let a patient (or the doctor/admin managing their
-# care) set daily times to be prompted to take a medication.
-# Each reminder belongs to the user who created it; admins can
-# see and manage every reminder, everyone else only their own.
-# ============================================================
 
 def _reminder_to_dict(reminder: Reminder):
     return {
@@ -2281,10 +2064,6 @@ def delete_reminder(
     }
 
 
-# ============================================================
-# EMERGENCY — FIRST AID GUIDE
-# ============================================================
-
 @app.get("/emergency/first-aid")
 def get_first_aid_guide():
 
@@ -2293,10 +2072,6 @@ def get_first_aid_guide():
     }
 
 
-# ============================================================
-# EMERGENCY — CONTACT NUMBERS
-# ============================================================
-
 @app.get("/emergency/contacts")
 def get_emergency_contacts():
 
@@ -2304,10 +2079,6 @@ def get_emergency_contacts():
         "contacts": EMERGENCY_CONTACTS
     }
 
-
-# ============================================================
-# EMERGENCY — NEARBY FACILITIES
-# ============================================================
 
 @app.get("/emergency/nearby-facilities")
 def get_nearby_facilities(
@@ -2339,10 +2110,6 @@ def get_nearby_facilities(
     }
 
 
-# ============================================================
-# EMERGENCY — SHARE MY LOCATION
-# ============================================================
-
 @app.post("/emergency/share-location")
 def share_location(
     location_data: ShareLocationRequest,
@@ -2368,18 +2135,12 @@ def share_location(
 
         except SMSError as exc:
 
-            # The location message is still returned to the frontend even
-            # if the text fails to send, so the user can share it another way.
             sms_status = {"error": str(exc)}
 
     share_location["sms_status"] = sms_status
 
     return share_location
 
-
-# ============================================================
-# EMERGENCY — SOS
-# ============================================================
 
 def _sos_alert_to_dict(alert: "SOSAlert", db: Session):
 
@@ -2449,8 +2210,6 @@ def trigger_sos(
 
     except NearbyFacilitiesError:
 
-        # Nearest-hospital lookup is a bonus, not a requirement —
-        # the SOS alert still gets logged without it.
         nearest_facility = None
 
     share_location = build_share_location_message(
@@ -2472,8 +2231,6 @@ def trigger_sos(
 
         except SMSError as exc:
 
-            # The SOS alert must still be logged even if the text fails
-            # to send — the SMS is a bonus, not a requirement.
             sms_status = {"error": str(exc)}
 
     alert = SOSAlert(
@@ -2553,16 +2310,6 @@ def resolve_sos(
     }
 
 
-# ============================================================
-# HEALTH EDUCATION
-# ============================================================
-#
-# A library of commonly searched health topics, each with a short
-# summary (for cards) and full structured content (for the detail
-# view). Users can also type a free-text question/symptom and get
-# back the closest matching topics for guidance. Every topic can be
-# translated into any language in SUPPORTED_LANGUAGES.
-
 def _validated_lang(lang: str) -> str:
 
     lang = (lang or "en").lower().strip()
@@ -2585,7 +2332,6 @@ def get_education_topics(
     lang: str = "en",
     current_user: User = Depends(get_current_user)
 ):
-    """Most-searched-first list of topic cards (id, title, summary, tags...)."""
 
     lang = _validated_lang(lang)
 
@@ -2606,7 +2352,6 @@ def get_education_topic_detail(
     lang: str = "en",
     current_user: User = Depends(get_current_user)
 ):
-    """Full detail for one topic, including structured content sections."""
 
     lang = _validated_lang(lang)
 
@@ -2628,11 +2373,6 @@ def search_education(
     lang: str = "en",
     current_user: User = Depends(get_current_user)
 ):
-    """
-    Health Education search. Results are returned only when the searched
-    keywords match the title of a curated health education article.
-    Matching is case-insensitive and supports partial keywords.
-    """
 
     lang = _validated_lang(lang)
 
@@ -2687,7 +2427,6 @@ def get_education_article(
     lang: str = "en",
     current_user: User = Depends(get_current_user)
 ):
-    """Full text of an external MedlinePlus article, translated on demand."""
 
     lang = _validated_lang(lang)
 
@@ -2706,9 +2445,15 @@ def get_education_article(
 
         article = {
             **article,
-            "title": translate_to_language(article["title"], lang),
+            "title": translate_to_language(
+                article["title"],
+                lang
+            ),
             "content": [
-                translate_to_language(paragraph, lang)
+                translate_to_language(
+                    paragraph,
+                    lang
+                )
                 for paragraph in article["content"]
             ],
         }

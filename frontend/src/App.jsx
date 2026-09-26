@@ -19,6 +19,7 @@ import Translation from "./pages/Translation";
 import HealthEducation from "./pages/HealthEducation";
 import Emergency from "./pages/Emergency";
 import SOSLog from "./pages/emergency/SOSLog";
+import AdminDashboard from "./pages/AdminDashboard";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
@@ -31,10 +32,6 @@ function App() {
         <PrescriptionProvider>
           <Routes>
 
-            {/* =========================
-                PUBLIC ROUTES
-            ========================= */}
-
             <Route
               path="/"
               element={<Landing />}
@@ -45,12 +42,20 @@ function App() {
               element={<Login />}
             />
 
-            {/* =========================
-                PROTECTED ROUTES
-            ========================= */}
+            {/* ================================
+                PATIENT + DOCTOR ROUTES
+            ================================= */}
 
-            <Route element={<ProtectedRoute />}>
-
+            <Route
+              element={
+                <ProtectedRoute
+                  allowedRoles={[
+                    "patient",
+                    "doctor",
+                  ]}
+                />
+              }
+            >
               <Route
                 path="/dashboard"
                 element={
@@ -149,12 +154,33 @@ function App() {
                   </>
                 }
               />
-
             </Route>
 
-            {/* =========================
-                INVALID ROUTES
-            ========================= */}
+            {/* ================================
+                ADMIN ROUTES
+            ================================= */}
+
+            <Route
+              element={
+                <ProtectedRoute
+                  allowedRoles={["admin"]}
+                />
+              }
+            >
+              <Route
+                path="/admin"
+                element={
+                  <>
+                    <Navbar />
+                    <AdminDashboard />
+                  </>
+                }
+              />
+            </Route>
+
+            {/* ================================
+                FALLBACK
+            ================================= */}
 
             <Route
               path="*"
