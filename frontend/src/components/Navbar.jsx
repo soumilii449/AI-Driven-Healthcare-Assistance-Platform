@@ -15,6 +15,8 @@ import {
   Bell,
   BookCopyIcon,
   ShieldCheck,
+  Menu,
+  X,
 } from "lucide-react";
 
 import { useAuth } from "../context/AuthContext";
@@ -53,6 +55,7 @@ export default function Navbar() {
   }, [location.pathname]);
 
   const handleLogout = () => {
+    setMenuOpen(false);
     logout();
     navigate("/login");
   };
@@ -61,9 +64,14 @@ export default function Navbar() {
     setDarkMode((prev) => !prev);
   };
 
+  const toggleMenu = () => {
+    setMenuOpen((prev) => !prev);
+  };
+
   return (
     <>
       <nav className="navbar">
+
         <Link
           to={isAdmin ? "/admin" : "/dashboard"}
           className="nav-logo"
@@ -71,7 +79,9 @@ export default function Navbar() {
           SwasthyaSetu
         </Link>
 
+
         <div className="nav-links">
+
           {!isAdmin && (
             <>
               <Link to="/dashboard">
@@ -116,9 +126,12 @@ export default function Navbar() {
               Admin Dashboard
             </Link>
           )}
+
         </div>
 
+
         <div className="nav-user">
+
           <LanguageSelector />
 
           <MedicalNotificationCenter />
@@ -155,35 +168,43 @@ export default function Navbar() {
           >
             <LogOut size={18} />
           </button>
+
         </div>
 
+
         <button
+          type="button"
           className={`hamburger-button ${
             menuOpen ? "open" : ""
           }`}
-          onClick={() =>
-            setMenuOpen((value) => !value)
-          }
+          onClick={toggleMenu}
           aria-label={
             menuOpen
               ? "Close menu"
               : "Open menu"
           }
           aria-expanded={menuOpen}
+          aria-controls="mobile-navigation"
         >
-          <span className="hamburger-line" />
-          <span className="hamburger-line" />
-          <span className="hamburger-line" />
+          {menuOpen ? (
+            <X size={25} strokeWidth={2.2} />
+          ) : (
+            <Menu size={25} strokeWidth={2.2} />
+          )}
         </button>
+
       </nav>
 
+
       <div
+        id="mobile-navigation"
         className={`mobile-nav-drawer ${
           menuOpen ? "open" : ""
         }`}
         role="navigation"
         aria-label="Mobile navigation"
       >
+
         {!isAdmin && (
           <>
             <Link
@@ -228,31 +249,37 @@ export default function Navbar() {
           </>
         )}
 
+
         {isAdmin && (
-          <>
-            <Link
-              to="/admin"
-              className="mobile-nav-link"
-            >
-              <ShieldCheck size={18} />
-              Admin Dashboard
-            </Link>
-          </>
+          <Link
+            to="/admin"
+            className="mobile-nav-link"
+          >
+            <ShieldCheck size={18} />
+            Admin Dashboard
+          </Link>
         )}
+
 
         <div className="mobile-nav-divider" />
 
+
         <div className="mobile-language-row">
+
           <span>
             Language
           </span>
 
           <LanguageSelector />
+
         </div>
+
 
         <div className="mobile-nav-divider" />
 
+
         <div className="mobile-nav-user">
+
           <div>
             <div className="mobile-nav-username">
               {user?.username}
@@ -269,7 +296,9 @@ export default function Navbar() {
             </span>
           </div>
 
+
           <div className="mobile-theme-row">
+
             <span>
               {darkMode
                 ? "Dark Mode"
@@ -287,7 +316,9 @@ export default function Navbar() {
                 <Moon size={19} />
               )}
             </button>
+
           </div>
+
 
           <button
             className="mobile-nav-logout"
@@ -297,10 +328,14 @@ export default function Navbar() {
             <LogOut size={16} />
             Log Out
           </button>
+
         </div>
+
       </div>
 
+
       <style>{`
+
         .admin-nav-link {
           display: flex;
           align-items: center;
@@ -312,6 +347,65 @@ export default function Navbar() {
           align-items: center;
           gap: 9px;
         }
+
+        /*
+         * Hamburger button
+         */
+        .hamburger-button {
+          display: none;
+          align-items: center;
+          justify-content: center;
+          width: 40px;
+          height: 40px;
+          min-width: 40px;
+          padding: 0;
+          margin: 0;
+          border: 0;
+          border-radius: 10px;
+          background: transparent;
+          color: inherit;
+          cursor: pointer;
+          flex-shrink: 0;
+          z-index: 10001;
+        }
+
+        .hamburger-button svg {
+          display: block;
+          width: 25px;
+          height: 25px;
+          color: currentColor;
+        }
+
+        .hamburger-button:hover {
+          background: rgba(0, 0, 0, 0.06);
+        }
+
+        body.dark-theme .hamburger-button:hover {
+          background: rgba(255, 255, 255, 0.08);
+        }
+
+        @media (max-width: 900px) {
+          .hamburger-button {
+            display: flex !important;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .hamburger-button {
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .hamburger-button {
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
+          }
+        }
+
       `}</style>
     </>
   );

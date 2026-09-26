@@ -1,0 +1,2050 @@
+/* ============================================================
+   SWASTHYASETU
+   GLOBAL RESPONSIVE DESIGN
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  width: 100%;
+  max-width: 100%;
+  min-width: 320px;
+  overflow-x: hidden;
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+button,
+input,
+select,
+textarea {
+  max-width: 100%;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+a,
+td,
+th,
+li {
+  overflow-wrap: anywhere;
+}
+
+
+/* ============================================================
+   GLOBAL CONTAINERS
+   ============================================================ */
+
+.page-container,
+.container {
+  width: min(100% - 32px, 1350px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.dashboard-modern {
+  width: 100%;
+  max-width: 100%;
+}
+
+.dashboard-section {
+  width: 100%;
+}
+
+.dashboard-hero,
+.dashboard-section {
+  max-width: 1350px;
+}
+
+.upload-page-modern,
+.results-page,
+.translation-page,
+.reminders-page,
+.emergency-page,
+.admin-page {
+  width: 100%;
+  max-width: 100%;
+}
+
+
+/* ============================================================
+   NAVBAR - DESKTOP
+   ============================================================ */
+
+.navbar {
+  width: 100%;
+  max-width: 100vw;
+}
+
+.nav-logo {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.nav-links {
+  min-width: 0;
+}
+
+.nav-links a {
+  white-space: nowrap;
+}
+
+.nav-user {
+  min-width: 0;
+  flex-shrink: 0;
+}
+
+.nav-user > span {
+  white-space: nowrap;
+}
+
+.hamburger-button {
+  display: none;
+}
+
+
+/* ============================================================
+   LANDING PAGE
+   ============================================================ */
+
+.landing-page {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.landing-hero {
+  width: min(100% - 40px, 1350px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.landing-hero-content {
+  min-width: 0;
+}
+
+.landing-hero-content h1 {
+  font-size: clamp(32px, 5vw, 60px);
+  line-height: 1.1;
+}
+
+.landing-hero-content p {
+  max-width: 700px;
+}
+
+.landing-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.landing-primary-button,
+.landing-secondary-button {
+  min-height: 46px;
+}
+
+.landing-features-grid {
+  width: 100%;
+}
+
+.landing-feature-card {
+  min-width: 0;
+}
+
+.pipeline {
+  max-width: 100%;
+}
+
+
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+
+.dashboard-modern {
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+.dashboard-hero {
+  width: 100%;
+}
+
+.hero-content {
+  min-width: 0;
+}
+
+.hero-content h1 {
+  font-size: clamp(34px, 5vw, 58px);
+  line-height: 1.12;
+}
+
+.hero-content > p {
+  max-width: 100%;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 13px;
+}
+
+.hero-primary-button,
+.hero-secondary-button {
+  min-height: 46px;
+}
+
+.hero-visual {
+  flex-shrink: 0;
+}
+
+.quick-access-grid {
+  width: 100%;
+}
+
+.quick-access-card {
+  min-width: 0;
+}
+
+.prescription-history {
+  width: 100%;
+  min-width: 0;
+}
+
+.history-card {
+  min-width: 0;
+}
+
+.history-info {
+  min-width: 0;
+}
+
+.history-file-name {
+  overflow-wrap: anywhere;
+}
+
+.privacy-section {
+  width: 100%;
+}
+
+.dashboard-disclaimer {
+  max-width: 100%;
+}
+
+
+/* ============================================================
+   UPLOAD PAGE
+   ============================================================ */
+
+.upload-page-modern {
+  width: 100%;
+  max-width: 100%;
+  padding-left: max(15px, 5%);
+  padding-right: max(15px, 5%);
+  overflow-x: hidden;
+}
+
+.upload-container-modern {
+  width: 100%;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.glass-upload-card {
+  width: 100%;
+  min-width: 0;
+}
+
+.modern-drop-zone {
+  width: 100%;
+  max-width: 100%;
+}
+
+.selected-file-area,
+.selected-file-card {
+  width: 100%;
+  min-width: 0;
+}
+
+.file-details {
+  min-width: 0;
+}
+
+.file-details span,
+.file-details p {
+  overflow-wrap: anywhere;
+}
+
+.camera-capture-area {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.camera-video-preview {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+.upload-features {
+  width: 100%;
+}
+
+.upload-feature {
+  min-width: 0;
+}
+
+.upload-action {
+  width: 100%;
+}
+
+.modern-analyze-button,
+.modern-back-button,
+.use-camera-button,
+.retake-button,
+.remove-file-button {
+  max-width: 100%;
+}
+
+
+/* ============================================================
+   RESULTS PAGE
+   ============================================================ */
+
+.results-page {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.results-container {
+  width: min(100% - 30px, 1250px);
+  margin-left: auto;
+  margin-right: auto;
+  min-width: 0;
+}
+
+.results-header {
+  width: 100%;
+}
+
+.results-header h1,
+.result-title {
+  overflow-wrap: anywhere;
+}
+
+.results-grid {
+  width: 100%;
+}
+
+.result-card {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.result-card p,
+.result-card li,
+.ocr-text,
+.treatment-text,
+.simplified-info-body {
+  overflow-wrap: anywhere;
+}
+
+.medical-grid {
+  width: 100%;
+  min-width: 0;
+}
+
+.medication-list {
+  width: 100%;
+  min-width: 0;
+}
+
+.medication-item {
+  min-width: 0;
+}
+
+.result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.result-actions button,
+.result-actions a {
+  min-height: 44px;
+}
+
+
+/* ============================================================
+   TRANSLATION PAGE
+   ============================================================ */
+
+.translation-page {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.translation-container {
+  width: min(100% - 30px, 1000px);
+  margin-left: auto;
+  margin-right: auto;
+  min-width: 0;
+}
+
+.translation-card {
+  width: 100%;
+  min-width: 0;
+}
+
+.translation-content {
+  min-width: 0;
+}
+
+.translation-content p,
+.translated-medicine,
+.treatment-translated {
+  overflow-wrap: anywhere;
+}
+
+.translation-header {
+  width: 100%;
+}
+
+.speak-button {
+  max-width: 100%;
+}
+
+
+/* ============================================================
+   HEALTH EDUCATION
+   ============================================================ */
+
+.edu-page {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.edu-header {
+  width: 100%;
+}
+
+.edu-header h1 {
+  font-size: clamp(26px, 5vw, 42px);
+  line-height: 1.15;
+}
+
+.edu-controls {
+  width: 100%;
+  min-width: 0;
+}
+
+.edu-search-form {
+  width: 100%;
+}
+
+.edu-search-input-wrap {
+  min-width: 0;
+  flex: 1 1 300px;
+}
+
+.edu-search-input {
+  min-width: 0;
+}
+
+.edu-language-row {
+  flex-wrap: wrap;
+}
+
+.edu-results-section {
+  width: 100%;
+}
+
+.edu-card-grid {
+  width: 100%;
+}
+
+.edu-card {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.edu-card-header {
+  min-width: 0;
+}
+
+.edu-card-heading {
+  min-width: 0;
+}
+
+.edu-card-title,
+.edu-card-summary,
+.edu-section-text,
+.edu-section-list {
+  overflow-wrap: anywhere;
+}
+
+.edu-section-list {
+  padding-left: 22px;
+}
+
+.edu-article-content {
+  min-width: 0;
+}
+
+.edu-article-content img,
+.edu-section-text img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+.edu-source-badge {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+
+/* ============================================================
+   REMINDERS
+   ============================================================ */
+
+.reminders-page {
+  width: min(100% - 30px, 1100px);
+  margin-left: auto;
+  margin-right: auto;
+  min-width: 0;
+}
+
+.reminders-heading {
+  min-width: 0;
+}
+
+.reminders-heading h1,
+.reminders-heading h2 {
+  overflow-wrap: anywhere;
+}
+
+.reminders-notice {
+  width: 100%;
+}
+
+.reminder-list {
+  width: 100%;
+}
+
+.reminder-item {
+  min-width: 0;
+}
+
+.reminder-item-main {
+  min-width: 0;
+}
+
+.reminder-item-info {
+  min-width: 0;
+}
+
+.reminder-item-info h3,
+.reminder-item-meta,
+.reminder-item-notes {
+  overflow-wrap: anywhere;
+}
+
+.reminder-item-actions {
+  flex-shrink: 0;
+}
+
+.reminder-form {
+  width: 100%;
+}
+
+.reminder-field {
+  min-width: 0;
+}
+
+.reminder-field input,
+.reminder-field textarea {
+  width: 100%;
+  max-width: 100%;
+}
+
+.reminder-modal {
+  width: min(100%, 520px);
+}
+
+
+/* ============================================================
+   EMERGENCY PAGE
+   ============================================================ */
+
+.emergency-page {
+  width: min(100% - 30px, 900px);
+  margin-left: auto;
+  margin-right: auto;
+  min-width: 0;
+}
+
+.emergency-header {
+  min-width: 0;
+}
+
+.emergency-tabs {
+  width: 100%;
+}
+
+.emergency-tab {
+  min-height: 44px;
+}
+
+.emergency-tab-panel {
+  width: 100%;
+  min-width: 0;
+}
+
+.emergency-tab-panel > * {
+  max-width: 100%;
+}
+
+.emergency-primary-button,
+.emergency-secondary-button,
+.emergency-sos-cta {
+  max-width: 100%;
+}
+
+.facility-list {
+  width: 100%;
+}
+
+.facility-card {
+  min-width: 0;
+}
+
+.facility-card-main {
+  min-width: 0;
+}
+
+.facility-address {
+  overflow-wrap: anywhere;
+}
+
+.gmap-container,
+.gmap-container--tall {
+  width: 100%;
+  max-width: 100%;
+}
+
+
+/* ============================================================
+   ADMIN DASHBOARD
+   ============================================================ */
+
+.admin-page,
+.admin-container {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.admin-container {
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+.admin-content-grid,
+.admin-stat-grid {
+  width: 100%;
+}
+
+.admin-stat-card,
+.admin-panel {
+  min-width: 0;
+}
+
+.admin-panel-header {
+  min-width: 0;
+}
+
+.admin-title-row {
+  min-width: 0;
+}
+
+.admin-table-wrapper {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.admin-table {
+  width: 100%;
+  min-width: 700px;
+}
+
+.admin-table th,
+.admin-table td {
+  white-space: nowrap;
+}
+
+.admin-user-cell {
+  min-width: 0;
+}
+
+.admin-document-name {
+  overflow-wrap: anywhere;
+}
+
+
+/* ============================================================
+   SOS / EMERGENCY COMPONENT
+   ============================================================ */
+
+.sos-container,
+.sos-card,
+.sos-actions,
+.emergency-actions {
+  max-width: 100%;
+}
+
+.sos-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.sos-actions button,
+.emergency-actions button {
+  min-height: 46px;
+}
+
+.sos-card {
+  min-width: 0;
+}
+
+.sos-card p,
+.sos-card span {
+  overflow-wrap: anywhere;
+}
+
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+
+.table-container,
+.table-wrapper,
+.admin-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+table {
+  max-width: 100%;
+}
+
+td,
+th {
+  overflow-wrap: anywhere;
+}
+
+
+/* ============================================================
+   LARGE TABLET
+   901px - 1100px
+   ============================================================ */
+
+@media (max-width: 1100px) {
+
+  .navbar {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+
+  .nav-links {
+    gap: 3px;
+  }
+
+  .nav-links a {
+    padding: 8px 9px;
+    font-size: 13px;
+  }
+
+  .nav-user {
+    gap: 6px;
+  }
+
+  .dashboard-modern {
+    padding-left: 3%;
+    padding-right: 3%;
+  }
+
+  .dashboard-hero {
+    padding: 48px;
+    gap: 30px;
+  }
+
+  .quick-access-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .landing-features-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-container {
+    padding-left: 3%;
+    padding-right: 3%;
+  }
+}
+
+
+/* ============================================================
+   TABLET
+   <= 900px
+   ============================================================ */
+
+@media (max-width: 900px) {
+
+  .navbar {
+    height: 68px;
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  /*
+   * Hide desktop navigation.
+   * The mobile navigation drawer will be used instead.
+   */
+  .nav-links {
+    display: none !important;
+  }
+
+  /*
+   * Desktop user information is hidden.
+   * Notification and hamburger remain visible.
+   */
+  .nav-user > span {
+    display: none;
+  }
+
+  .nav-user > .role-badge {
+    display: none;
+  }
+
+  /*
+   * IMPORTANT:
+   * Do not hide every button in nav-user here.
+   * The previous version could accidentally hide
+   * the hamburger/notification controls.
+   */
+  .hamburger-button {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .mobile-nav-drawer {
+    top: 68px;
+  }
+
+  .dashboard-modern {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .dashboard-hero {
+    min-height: auto;
+    padding: 42px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-content {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .hero-visual {
+    width: 100%;
+    max-width: 100%;
+    height: 260px;
+  }
+
+  .quick-access-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .landing-hero {
+    width: min(100% - 40px, 900px);
+  }
+
+  .landing-features-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .upload-page-modern {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .results-container {
+    width: calc(100% - 40px);
+  }
+
+  .translation-container {
+    width: calc(100% - 40px);
+  }
+
+  .admin-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .admin-content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+/* ============================================================
+   MOBILE
+   <= 768px
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+  html,
+  body,
+  #root {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    font-size: 14px;
+  }
+
+
+  /* ==========================================================
+     MOBILE NAVBAR
+     ========================================================== */
+
+  .navbar {
+    width: 100%;
+    max-width: 100vw;
+    height: 65px;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    overflow: visible;
+  }
+
+  /*
+   * Logo takes available space.
+   */
+  .nav-logo {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 18px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /*
+   * Desktop links must disappear.
+   */
+  .nav-links {
+    display: none !important;
+  }
+
+  /*
+   * Right side controls.
+   */
+  .nav-user {
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 7px;
+    flex-shrink: 0;
+    min-width: 0;
+    margin-left: auto;
+  }
+
+  /*
+   * Hide username / role text on mobile.
+   */
+  .nav-user > span,
+  .nav-user .username,
+  .nav-user .user-name,
+  .nav-user .role-badge {
+    display: none !important;
+  }
+
+  /*
+   * Hide the DESKTOP language selector.
+   *
+   * The mobile language selector should be inside
+   * the mobile navigation drawer.
+   */
+  .navbar > select,
+  .navbar select,
+  .nav-user > select,
+  .nav-user select,
+  .nav-language,
+  .navbar-language,
+  .language-selector,
+  .language-dropdown {
+    display: none !important;
+  }
+
+  /*
+   * Keep notification button visible.
+   */
+  .notification-button {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /*
+   * HAMBURGER
+   *
+   * This is the important fix for the screenshot.
+   */
+  .navbar .hamburger-button,
+  .nav-user .hamburger-button,
+  button.hamburger-button {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    padding: 7px;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    z-index: 10001;
+  }
+
+  /*
+   * Support both common hamburger implementations:
+   * span elements and .hamburger-line.
+   */
+  .hamburger-button span,
+  .hamburger-button .hamburger-line {
+    display: block;
+    width: 22px;
+    height: 2px;
+    margin: 3px 0;
+  }
+
+  /*
+   * Mobile drawer.
+   */
+  .mobile-nav-drawer {
+    position: fixed;
+    top: 65px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: 100vw;
+    max-height: calc(100vh - 65px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 9999;
+    padding: 10px 12px 18px;
+  }
+
+  .mobile-nav-link {
+    width: 100%;
+    min-height: 46px;
+  }
+
+  .mobile-nav-user {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .mobile-language-row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .mobile-language-row select {
+    width: auto;
+    max-width: 100%;
+  }
+
+  .mobile-theme-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+
+  /* ==========================================================
+     LANDING
+     ========================================================== */
+
+  .landing-hero {
+    width: calc(100% - 30px);
+    min-height: auto;
+    padding: 35px 22px;
+  }
+
+  .landing-hero-content {
+    width: 100%;
+  }
+
+  .landing-hero-content h1 {
+    font-size: clamp(30px, 9vw, 46px);
+  }
+
+  .landing-hero-content p {
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  .landing-hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .landing-primary-button,
+  .landing-secondary-button {
+    width: 100%;
+  }
+
+  .landing-trust-row {
+    flex-wrap: wrap;
+  }
+
+  .landing-features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .landing-feature-card {
+    width: 100%;
+  }
+
+  .pipeline {
+    width: 100%;
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding-bottom: 10px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .pipeline-step {
+    min-width: 140px;
+    flex-shrink: 0;
+  }
+
+
+  /* ==========================================================
+     DASHBOARD
+     ========================================================== */
+
+  .dashboard-modern {
+    padding: 22px 15px 50px;
+  }
+
+  .dashboard-hero {
+    padding: 28px 22px;
+    border-radius: 24px;
+    margin-bottom: 35px;
+  }
+
+  .hero-content h1 {
+    font-size: clamp(30px, 8vw, 43px);
+    letter-spacing: -1px;
+  }
+
+  .hero-content > p {
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  .hero-actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-primary-button,
+  .hero-secondary-button {
+    width: 100%;
+  }
+
+  .hero-visual {
+    height: 230px;
+    transform: none;
+  }
+
+  .hero-medical-icon {
+    width: 135px;
+    height: 135px;
+    border-radius: 38px;
+  }
+
+  .floating-card {
+    padding: 9px 11px;
+  }
+
+  .floating-card-one {
+    left: 0;
+  }
+
+  .floating-card-two {
+    right: 0;
+  }
+
+  .dashboard-section {
+    margin-bottom: 40px;
+  }
+
+  .section-heading {
+    margin-bottom: 18px;
+  }
+
+  .section-heading h2,
+  .pipeline-header h2 {
+    font-size: 24px;
+  }
+
+  .quick-access-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .quick-access-card {
+    min-height: 155px;
+  }
+
+  .prescription-history {
+    overflow: hidden;
+  }
+
+
+  /* ==========================================================
+     UPLOAD
+     ========================================================== */
+
+  .upload-page-modern {
+    padding: 25px 15px 45px;
+  }
+
+  .upload-modern-header h1 {
+    font-size: clamp(28px, 8vw, 36px);
+  }
+
+  .upload-modern-header p {
+    font-size: 14px;
+  }
+
+  .glass-upload-card {
+    padding: 13px;
+    border-radius: 18px;
+  }
+
+  .modern-drop-zone {
+    min-height: 280px;
+    padding: 25px 14px;
+  }
+
+  .upload-progress-steps {
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding-bottom: 8px;
+  }
+
+  .upload-step {
+    min-width: 90px;
+    flex-shrink: 0;
+  }
+
+  .upload-step-label {
+    font-size: 10px;
+  }
+
+  .upload-features {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .upload-feature {
+    width: 100%;
+  }
+
+  .selected-file-card {
+    flex-wrap: wrap;
+  }
+
+  .file-details {
+    width: calc(100% - 55px);
+  }
+
+  .upload-action {
+    width: 100%;
+  }
+
+  .modern-analyze-button,
+  .modern-back-button,
+  .use-camera-button,
+  .retake-button {
+    width: 100%;
+  }
+
+
+  /* ==========================================================
+     RESULTS
+     ========================================================== */
+
+  .results-container {
+    width: calc(100% - 24px);
+    padding-top: 20px;
+    padding-bottom: 40px;
+  }
+
+  .results-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+  }
+
+  .results-grid .result-card,
+  .results-container > .result-card {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .result-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .result-actions button,
+  .result-actions a,
+  .medication-reminder-btn {
+    width: 100%;
+  }
+
+  .medical-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+
+  /* ==========================================================
+     TRANSLATION
+     ========================================================== */
+
+  .translation-container {
+    width: calc(100% - 24px);
+    padding-top: 20px;
+    padding-bottom: 40px;
+  }
+
+  .translation-header {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .translation-card {
+    padding: 18px;
+  }
+
+
+  /* ==========================================================
+     HEALTH EDUCATION
+     ========================================================== */
+
+  .edu-page {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .edu-header h1 {
+    font-size: clamp(26px, 8vw, 36px);
+  }
+
+  .edu-search-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .edu-search-input-wrap {
+    width: 100%;
+    flex-basis: auto;
+  }
+
+  .edu-search-button,
+  .edu-search-clear {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .edu-language-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .edu-language-row select {
+    width: 100%;
+  }
+
+  .edu-card-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .edu-card {
+    padding: 15px;
+  }
+
+  .edu-card-header {
+    align-items: flex-start;
+  }
+
+  .edu-card-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .edu-card-summary,
+  .edu-section-text,
+  .edu-section-list {
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+
+  /* ==========================================================
+     REMINDERS
+     ========================================================== */
+
+  .reminders-page {
+    width: calc(100% - 24px);
+  }
+
+  .reminders-heading {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  .reminders-add-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .reminders-notice {
+    align-items: flex-start;
+  }
+
+  .reminder-item {
+    flex-direction: column;
+    padding: 15px;
+  }
+
+  .reminder-item-main {
+    width: 100%;
+  }
+
+  .reminder-item-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .reminder-field-row {
+    grid-template-columns: 1fr;
+  }
+
+  .reminder-modal-backdrop {
+    padding: 10px;
+  }
+
+  .reminder-modal {
+    max-height: calc(100vh - 20px);
+    border-radius: 16px;
+  }
+
+  .reminder-modal-header {
+    padding: 16px;
+  }
+
+  .reminder-form {
+    padding: 18px 16px 22px;
+  }
+
+
+  /* ==========================================================
+     EMERGENCY
+     ========================================================== */
+
+  .emergency-page {
+    width: calc(100% - 24px);
+    padding-top: 20px;
+  }
+
+  .emergency-header h1 {
+    font-size: 28px;
+  }
+
+  .emergency-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .emergency-tab {
+    width: 100%;
+    justify-content: center;
+    padding: 10px 8px;
+    min-height: 46px;
+  }
+
+  .emergency-tab-panel {
+    padding: 18px;
+  }
+
+  .emergency-primary-button,
+  .emergency-secondary-button,
+  .emergency-sos-cta {
+    width: 100%;
+  }
+
+  .facility-type-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .facility-type-tab {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .facility-refresh-button {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .gmap-container,
+  .gmap-container--tall {
+    height: 250px;
+  }
+
+  .facility-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+
+  /* ==========================================================
+     ADMIN
+     ========================================================== */
+
+  .admin-container {
+    padding: 20px 15px 40px;
+  }
+
+  .admin-stat-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-title-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .admin-refresh-button {
+    width: 100%;
+  }
+
+  .admin-panel-header {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .admin-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  /* ==========================================================
+     NOTIFICATIONS
+     ========================================================== */
+
+  .medical-notification-panel {
+    position: fixed;
+    top: 70px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    max-width: none;
+    max-height: calc(100vh - 85px);
+  }
+
+  .medical-notification-content {
+    max-height: calc(100vh - 160px);
+  }
+
+  .medical-reminder-toast {
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    width: auto;
+    max-width: none;
+  }
+}
+
+
+/* ============================================================
+   SMALL MOBILE
+   <= 480px
+   ============================================================ */
+
+@media (max-width: 480px) {
+
+  body {
+    font-size: 13.5px;
+  }
+
+  /* ----------------------------------------------------------
+     NAVBAR
+     ---------------------------------------------------------- */
+
+  .navbar {
+    height: 62px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .nav-logo {
+    font-size: 18px;
+    max-width: calc(100% - 105px);
+  }
+
+  .nav-user {
+    gap: 5px;
+  }
+
+  .notification-button {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+  }
+
+  .navbar .hamburger-button,
+  .nav-user .hamburger-button,
+  button.hamburger-button {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    min-height: 38px;
+  }
+
+  .hamburger-button span,
+  .hamburger-button .hamburger-line {
+    width: 21px;
+  }
+
+  .mobile-nav-drawer {
+    top: 62px;
+    max-height: calc(100vh - 62px);
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+
+  /* ----------------------------------------------------------
+     DASHBOARD
+     ---------------------------------------------------------- */
+
+  .dashboard-modern {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .dashboard-hero {
+    padding: 24px 17px;
+    border-radius: 20px;
+  }
+
+  .hero-content h1 {
+    font-size: clamp(28px, 9vw, 38px);
+  }
+
+  .hero-medical-icon {
+    width: 115px;
+    height: 115px;
+    border-radius: 32px;
+  }
+
+  .floating-card {
+    padding: 8px 9px;
+    gap: 6px;
+  }
+
+  .floating-card strong {
+    font-size: 10px;
+  }
+
+  .floating-card span {
+    font-size: 9px;
+  }
+
+  .floating-card-one {
+    left: -4px;
+  }
+
+  .floating-card-two {
+    right: -4px;
+  }
+
+
+  /* ----------------------------------------------------------
+     LANDING
+     ---------------------------------------------------------- */
+
+  .landing-hero {
+    width: calc(100% - 20px);
+    padding: 28px 17px;
+    border-radius: 20px;
+  }
+
+  .landing-hero-content h1 {
+    font-size: clamp(28px, 10vw, 40px);
+  }
+
+  .landing-features-grid {
+    gap: 12px;
+  }
+
+  .landing-feature-card {
+    padding: 16px;
+  }
+
+
+  /* ----------------------------------------------------------
+     UPLOAD
+     ---------------------------------------------------------- */
+
+  .upload-page-modern {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .glass-upload-card {
+    padding: 10px;
+  }
+
+  .modern-drop-zone {
+    min-height: 240px;
+    padding: 20px 10px;
+  }
+
+
+  /* ----------------------------------------------------------
+     RESULTS
+     ---------------------------------------------------------- */
+
+  .results-container,
+  .translation-container,
+  .reminders-page,
+  .emergency-page {
+    width: calc(100% - 16px);
+  }
+
+  .result-card {
+    padding: 16px;
+  }
+
+  .translation-card {
+    padding: 15px;
+  }
+
+
+  /* ----------------------------------------------------------
+     HEALTH EDUCATION
+     ---------------------------------------------------------- */
+
+  .edu-page {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .edu-card {
+    padding: 13px;
+  }
+
+  .edu-card-header {
+    gap: 9px;
+  }
+
+  .edu-card-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .edu-card-title {
+    font-size: 14px;
+  }
+
+  .edu-section-list {
+    padding-left: 18px;
+  }
+
+
+  /* ----------------------------------------------------------
+     EMERGENCY
+     ---------------------------------------------------------- */
+
+  .emergency-tabs,
+  .facility-type-tabs {
+    grid-template-columns: 1fr;
+  }
+
+  .emergency-tab-panel {
+    padding: 14px;
+  }
+
+
+  /* ----------------------------------------------------------
+     REMINDERS
+     ---------------------------------------------------------- */
+
+  .reminder-item {
+    padding: 13px;
+  }
+
+  .reminder-item-actions {
+    justify-content: stretch;
+  }
+
+  .reminder-item-actions button {
+    flex: 1;
+  }
+
+  .reminder-time-row {
+    width: 100%;
+  }
+
+  .reminder-time-row input[type="time"] {
+    min-width: 0;
+  }
+
+
+  /* ----------------------------------------------------------
+     ADMIN
+     ---------------------------------------------------------- */
+
+  .admin-container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .admin-table {
+    min-width: 650px;
+  }
+}
+
+
+/* ============================================================
+   VERY SMALL PHONES
+   <= 360px
+   ============================================================ */
+
+@media (max-width: 360px) {
+
+  .navbar {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .nav-logo {
+    font-size: 17px;
+    max-width: calc(100% - 95px);
+  }
+
+  .notification-button {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+  }
+
+  .navbar .hamburger-button,
+  .nav-user .hamburger-button,
+  button.hamburger-button {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+  }
+
+  .dashboard-modern {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+
+  .dashboard-hero {
+    padding: 20px 13px;
+  }
+
+  .hero-actions {
+    gap: 9px;
+  }
+
+  .landing-hero {
+    width: calc(100% - 14px);
+    padding: 23px 13px;
+  }
+
+  .upload-page-modern {
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+
+  .results-container,
+  .translation-container,
+  .reminders-page,
+  .emergency-page {
+    width: calc(100% - 10px);
+  }
+
+  .mobile-nav-link {
+    padding: 10px 11px;
+    font-size: 14px;
+  }
+
+  .mobile-nav-user {
+    padding: 10px 11px;
+  }
+}
+
+
+/* ============================================================
+   DARK MODE RESPONSIVE FIXES
+   ============================================================ */
+
+body.dark-theme .mobile-language-row > span,
+body.dark-theme .mobile-theme-row > span {
+  color: #e7ece3;
+}
+
+body.dark-theme .hamburger-button {
+  background: transparent;
+}
+
+body.dark-theme .hamburger-button span,
+body.dark-theme .hamburger-button .hamburger-line {
+  background: #e7ece3;
+}
+
+body.dark-theme .mobile-nav-drawer {
+  background: rgba(25, 31, 25, 0.97);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+body.dark-theme .mobile-nav-link {
+  color: #e7ece3;
+}
+
+body.dark-theme .mobile-nav-link:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+body.dark-theme .mobile-nav-username {
+  color: #f0f2ec;
+}
+
+
+/* ============================================================
+   TOUCH DEVICES
+   ============================================================ */
+
+@media (hover: none) and (pointer: coarse) {
+
+  button,
+  a,
+  select,
+  input[type="button"],
+  input[type="submit"] {
+    min-height: 44px;
+  }
+
+  .mobile-nav-link {
+    min-height: 46px;
+  }
+
+  .emergency-tab,
+  .facility-type-tab {
+    min-height: 46px;
+  }
+}
