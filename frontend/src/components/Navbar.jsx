@@ -1,22 +1,47 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { LogOut, Home, Upload, X, Moon, Sun, Siren, Bell, Book, BookIcon, BookCopyIcon } from "lucide-react";
+import {
+  Link,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
+
+import {
+  LogOut,
+  Home,
+  Upload,
+  Moon,
+  Sun,
+  Siren,
+  Bell,
+  BookCopyIcon,
+} from "lucide-react";
+
 import { useAuth } from "../context/AuthContext";
 import MedicalNotificationCenter from "./MedicalNotificationCenter";
+import LanguageSelector from "./LanguageSelector";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
+
   const navigate = useNavigate();
   const location = useLocation();
 
   const [menuOpen, setMenuOpen] = useState(false);
+
   const [darkMode, setDarkMode] = useState(() => {
     return localStorage.getItem("theme") === "dark";
   });
 
   useEffect(() => {
-    document.body.classList.toggle("dark-theme", darkMode);
-    localStorage.setItem("theme", darkMode ? "dark" : "light");
+    document.body.classList.toggle(
+      "dark-theme",
+      darkMode
+    );
+
+    localStorage.setItem(
+      "theme",
+      darkMode ? "dark" : "light"
+    );
   }, [darkMode]);
 
   useEffect(() => {
@@ -35,13 +60,14 @@ export default function Navbar() {
   return (
     <>
       <nav className="navbar">
-
-        <Link to="/dashboard" className="nav-logo">
-         SwasthyaSetu
+        <Link
+          to="/dashboard"
+          className="nav-logo"
+        >
+          SwasthyaSetu
         </Link>
 
         <div className="nav-links">
-
           <Link to="/dashboard">
             <Home size={18} />
             Dashboard
@@ -57,33 +83,51 @@ export default function Navbar() {
             Reminders
           </Link>
 
-          <Link to="/emergency" className="nav-link-emergency">
+          <Link
+            to="/emergency"
+            className="nav-link-emergency"
+          >
             <Siren size={18} />
             Emergency
           </Link>
 
-          <Link to="/education" className="edu-page">
+          <Link
+            to="/education"
+            className="edu-page"
+          >
             <BookCopyIcon size={18} />
             Health Education
           </Link>
-
         </div>
 
         <div className="nav-user">
+          <LanguageSelector />
 
           <MedicalNotificationCenter />
 
-          <span>{user?.username}</span>
+          <span>
+            {user?.username}
+          </span>
 
-          <span className="role-badge">{user?.role}</span>
+          <span className="role-badge">
+            {user?.role}
+          </span>
 
           <button
             className="theme-button"
             onClick={toggleTheme}
             aria-label="Toggle theme"
-            title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+            title={
+              darkMode
+                ? "Switch to light mode"
+                : "Switch to dark mode"
+            }
           >
-            {darkMode ? <Sun size={19} /> : <Moon size={19} />}
+            {darkMode ? (
+              <Sun size={19} />
+            ) : (
+              <Moon size={19} />
+            )}
           </button>
 
           <button
@@ -93,71 +137,113 @@ export default function Navbar() {
           >
             <LogOut size={18} />
           </button>
-
         </div>
 
         <button
-          className={`hamburger-button ${menuOpen ? "open" : ""}`}
-          onClick={() => setMenuOpen((v) => !v)}
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          className={`hamburger-button ${
+            menuOpen ? "open" : ""
+          }`}
+          onClick={() =>
+            setMenuOpen((value) => !value)
+          }
+          aria-label={
+            menuOpen
+              ? "Close menu"
+              : "Open menu"
+          }
           aria-expanded={menuOpen}
         >
           <span className="hamburger-line" />
           <span className="hamburger-line" />
           <span className="hamburger-line" />
         </button>
-
       </nav>
 
       <div
-        className={`mobile-nav-drawer ${menuOpen ? "open" : ""}`}
+        className={`mobile-nav-drawer ${
+          menuOpen ? "open" : ""
+        }`}
         role="navigation"
         aria-label="Mobile navigation"
       >
-
-        <Link to="/dashboard" className="mobile-nav-link">
+        <Link
+          to="/dashboard"
+          className="mobile-nav-link"
+        >
           <Home size={18} />
           Dashboard
         </Link>
 
-        <Link to="/upload" className="mobile-nav-link">
+        <Link
+          to="/upload"
+          className="mobile-nav-link"
+        >
           <Upload size={18} />
           Upload Prescription
         </Link>
 
-        <Link to="/reminders" className="mobile-nav-link">
+        <Link
+          to="/reminders"
+          className="mobile-nav-link"
+        >
           <Bell size={18} />
           Reminders
         </Link>
 
-        <Link to="/emergency" className="mobile-nav-link mobile-nav-link--emergency">
+        <Link
+          to="/emergency"
+          className="mobile-nav-link mobile-nav-link--emergency"
+        >
           <Siren size={18} />
           Emergency
         </Link>
 
         <div className="mobile-nav-divider" />
 
+        <div className="mobile-language-row">
+          <span>
+            Language
+          </span>
+
+          <LanguageSelector />
+        </div>
+
+        <div className="mobile-nav-divider" />
+
         <div className="mobile-nav-user">
           <div>
-            <div className="mobile-nav-username">{user?.username}</div>
+            <div className="mobile-nav-username">
+              {user?.username}
+            </div>
 
             <span
               className="role-badge"
-              style={{ marginTop: 4, display: "inline-block" }}
+              style={{
+                marginTop: 4,
+                display: "inline-block",
+              }}
             >
               {user?.role}
             </span>
           </div>
 
           <div className="mobile-theme-row">
-            <span>{darkMode ? "Dark Mode" : "Light Mode"}</span>
+            <span>
+              {darkMode
+                ? "Dark Mode"
+                : "Light Mode"}
+            </span>
 
             <button
               className="theme-button"
               onClick={toggleTheme}
               aria-label="Toggle theme"
             >
-              {darkMode ? <Sun size={19} /> : <Moon size={19} />}
+              {darkMode ? (
+                <Sun size={19} />
+              ) : (
+                <Moon size={19} />
+              )}
             </button>
           </div>
 
@@ -170,7 +256,6 @@ export default function Navbar() {
             Log Out
           </button>
         </div>
-
       </div>
     </>
   );
